@@ -1,0 +1,620 @@
+import React, { useState } from 'react';
+import { FiMoreVertical, FiLink, FiUsers, FiBell, FiX, FiCheck, FiSettings } from 'react-icons/fi';
+import { FaCrown } from 'react-icons/fa';
+import useGroupStore from '../../Store/group';
+import MemberManagement from '../Message/MemberManagement';
+import { toast } from 'react-hot-toast';
+import useAuthStore from "../../Store/Auth";
+
+const RecentActivity = () => {
+  const {
+    currentGroup,
+    leaveGroup,
+    changeMemberRole,
+    updateGroupSettings,
+    removeGroupMember
+  } = useGroupStore();
+
+  const [showMembersList, setShowMembersList] = useState(false);
+  const [selectedMembers, setSelectedMembers] = useState([]);
+  const [showPaymentOrderModal, setShowPaymentOrderModal] = useState(false);
+  const [paymentOrder, setPaymentOrder] = useState([]);
+  const [showMemberManagement, setShowMemberManagement] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [actionType, setActionType] = useState(null);
+  const [showActionModal, setShowActionModal] = useState(false);
+  const [selectedActionMember, setSelectedActionMember] = useState(null);
+
+  const [groupSettings, setGroupSettings] = useState({
+    name: currentGroup?.name || '',
+    description: currentGroup?.description || '',
+    frequency: currentGroup?.frequency || 'weekly',
+    savingsAmount: currentGroup?.savingsAmount || 50,
+    maxMembers: currentGroup?.maxMembers || 5,
+    allowLatePayments: currentGroup?.rules?.allowLatePayments || false,
+    latePaymentFee: currentGroup?.rules?.latePaymentFee || 0
+  });
+
+  const currentUserId = useAuthStore.getState().user?._id;
+  const isAdmin = currentGroup?.admin?._id === currentUserId;
+
+  const toggleMemberSelection = (memberId) => {
+    setSelectedMembers(prev =>
+      prev.includes(memberId)
+        ? prev.filter(id => id !== memberId)
+        : [...prev, memberId]
+    );
+  };
+
+  const handleRoleChange = async (memberId, currentRole) => {
+    try {
+      const newRole = currentRole === 'admin' ? 'member' : 'admin';
+      await changeMemberRole(currentGroup._id, memberId, newRole);
+      toast.success(`Role changed to ${newRole}`);
+    } catch (error) {
+      toast.error(error.message || 'Failed to change role');
+    }
+  };
+
+  const handleMemberAction = (member, type) => {
+    setSelectedActionMember(member);
+    setActionType(type);
+    setShowActionModal(true);
+  };
+
+  const confirmMemberAction = async () => {
+    try {
+      if (actionType === 'role') {
+        await handleRoleChange(selectedActionMember._id, selectedActionMember.role);
+      } else if (actionType === 'remove') {
+        await removeGroupMember(currentGroup._id, selectedActionMember._id);
+        toast.success('Member removed successfully');
+      }
+      setShowActionModal(false);
+    } catch (error) {
+      toast.error(error.message || 'Failed to perform action');
+    }
+  };
+
+  const handleSendRequest = () => {
+    toast.success(`Request sent to ${selectedMembers.length} members`);
+    setSelectedMembers([]);
+  };
+
+  const handleAssignPaymentOrder = () => {
+    if (selectedMembers.length === 0) {
+      toast.error("Please select at least one member");
+      return;
+    }
+    setShowPaymentOrderModal(true);
+  };
+
+  const confirmPaymentOrder = async () => {
+    try {
+      await updateGroupSettings(currentGroup._id, {
+        payoutOrder: [...currentGroup.payoutOrder, ...paymentOrder]
+      });
+      setShowPaymentOrderModal(false);
+      setPaymentOrder([]);
+      toast.success("Payment order updated successfully");
+    } catch (error) {
+      toast.error("Failed to update payment order");
+    }
+  };
+
+  const copyGroupLink = () => {
+    if (!currentGroup?._id) return;
+    navigator.clipboard.writeText(`${window.location.origin}/groups/${currentGroup._id}/join`);
+    toast.success('Group link copied to clipboard!');
+  };
+
+  const handleSettingsChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setGroupSettings(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSettingsSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await updateGroupSettings(currentGroup._id, {
+        name: groupSettings.name,
+        description: groupSettings.description,
+        frequency: groupSettings.frequency,
+        savingsAmount: groupSettings.savingsAmount,
+        maxMembers: groupSettings.maxMembers,
+        rules: {
+          allowLatePayments: groupSettings.allowLatePayments,
+          latePaymentFee: groupSettings.latePaymentFee
+        }
+      });
+      setShowSettingsModal(false);
+      toast.success('Group settings updated successfully');
+    } catch (error) {
+      toast.error('Failed to update settings');
+    }
+  };
+  console.log("currentGroup",currentGroup);
+
+  return (
+    <div className="p-3 sm:p-4 space-y-4">
+      {showMemberManagement ? (
+        <MemberManagement onBack={() => setShowMemberManagement(false)} />
+      ) : (
+        <>
+          {/* Header */}
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg sm:text-xl font-medium">Group Setup</h2>
+            <div className="relative">
+              <button
+                onClick={() => setShowDropdown(!showDropdown)}
+                className="text-gray-500 hover:text-gray-700 transition-colors p-1"
+                aria-label="More options"
+              >
+                <FiMoreVertical size={20} className="sm:w-6 sm:h-6" />
+              </button>
+
+              {showDropdown && (
+                <div className="absolute right-0 mt-2 w-40 sm:w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                  <div className="py-1">
+                    <button
+                      onClick={() => {
+                        setShowDropdown(false);
+                        copyGroupLink();
+                      }}
+                      className="flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-50 w-full text-left transition-colors"
+                    >
+                      <FiLink className="mr-2 w-3 h-3 sm:w-4 sm:h-4" /> 
+                      <span>Copy Group Link</span>
+                    </button>
+
+                    {isAdmin && (
+                      <button
+                        onClick={() => {
+                          setShowDropdown(false);
+                          setShowSettingsModal(true);
+                        }}
+                        className="flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-50 w-full text-left transition-colors"
+                      >
+                        <FiSettings className="mr-2 w-3 h-3 sm:w-4 sm:h-4" /> 
+                        <span>Group Settings</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Group Image */}
+          <img 
+              className="h-10 w-10 rounded-full" 
+              src={`https://api.joinonemai.com${currentGroup?.image}`} 
+              alt={currentGroup?.name ?? 'Group'} 
+            />
+
+          {/* Group Name */}
+          <h3 className="text-center font-semibold text-sm sm:text-base">
+            {currentGroup?.name || 'Loading...'}
+          </h3>
+
+          {/* Action Buttons */}
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              onClick={() => setShowMemberManagement(true)}
+              className="flex flex-col items-center bg-gray-100 p-2 rounded hover:bg-gray-200 transition-colors"
+              aria-label="Manage members"
+            >
+              <FiUsers className="text-gray-700 w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-xs mt-1">Members</span>
+            </button>
+            <button
+              onClick={() => currentGroup?._id && leaveGroup(currentGroup._id)}
+              className="flex flex-col items-center bg-gray-100 p-2 rounded hover:bg-gray-200 transition-colors"
+              aria-label="Leave group"
+            >
+              <span className="text-gray-700 text-sm sm:text-base">↩️</span>
+              <span className="text-xs mt-1">Leave</span>
+            </button>
+            <button
+              onClick={copyGroupLink}
+              className="flex flex-col items-center bg-gray-100 p-2 rounded hover:bg-gray-200 transition-colors"
+              aria-label="Copy group link"
+            >
+              <FiLink className="text-gray-700 w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-xs mt-1">Link</span>
+            </button>
+          </div>
+
+          {/* Conditional Rendering for Recent Activity or Members List */}
+          {showMembersList ? (
+            <div>
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 sm:mb-4 gap-2">
+                <h4 className="font-medium text-sm sm:text-base">Group Members</h4>
+                {selectedMembers.length > 0 && (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleSendRequest}
+                      className="bg-blue-500 text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm"
+                    >
+                      Send Request
+                    </button>
+                    {isAdmin && (
+                      <button
+                        onClick={handleAssignPaymentOrder}
+                        className="bg-green-500 text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm"
+                      >
+                        Assign Payment
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-3 sm:space-y-4">
+                {currentGroup?.members?.map((member) => (
+                  <div
+                    key={member._id}
+                    className={`flex items-center gap-2 sm:gap-3 p-2 rounded-lg transition ${
+                      selectedMembers.includes(member._id) 
+                        ? 'bg-blue-50 border border-blue-200' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="relative flex-shrink-0">
+                      <img
+                        src={member.user.avatar || `https://ui-avatars.com/api/?name=${member.user.name}&background=random`}
+                        alt={member.user.name}
+                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow"
+                      />
+                      {member.role === 'admin' && (
+                        <FaCrown className="absolute -bottom-1 -right-1 text-yellow-500 bg-white rounded-full p-0.5 sm:p-1 w-3 h-3 sm:w-4 sm:h-4" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-xs sm:text-sm truncate">
+                        {member.user.name}
+                      </p>
+                      <p className="text-xs text-gray-500 capitalize">
+                        {member.role}
+                      </p>
+                    </div>
+                    <span className={`text-2xs sm:text-xs px-2 py-0.5 sm:py-1 rounded-full ${
+                      member.status === 'active' 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      {member.status === 'active' ? 'Online' : 'Offline'}
+                    </span>
+                    
+                    {isAdmin && member.user._id !== currentUserId && (
+                      <div className="flex gap-1 sm:gap-2">
+                        <button
+                          onClick={() => handleMemberAction(member, 'role')}
+                          className={`px-2 sm:px-3 py-0.5 sm:py-1 text-2xs sm:text-xs rounded-full ${
+                            member.role === 'admin' 
+                              ? 'bg-purple-100 text-purple-800 hover:bg-purple-200' 
+                              : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                          }`}
+                        >
+                          {member.role === 'admin' ? 'Make Member' : 'Make Admin'}
+                        </button>
+                        <button
+                          onClick={() => handleMemberAction(member, 'remove')}
+                          className="px-2 sm:px-3 py-0.5 sm:py-1 text-2xs sm:text-xs bg-red-100 text-red-800 rounded-full hover:bg-red-200"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div>
+              <h4 className="font-medium text-sm sm:text-base mb-2">Recent Activity</h4>
+              <div className="space-y-3 sm:space-y-4">
+                {currentGroup?.activities?.slice(0, 3).map((activity) => (
+                  <div key={activity._id} className="flex items-start gap-2 sm:gap-3">
+                    <div className="bg-blue-100 p-1 sm:p-2 rounded-full">
+                      <FiBell className="text-blue-600 w-3 h-3 sm:w-4 sm:h-4" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs sm:text-sm font-medium">
+                        {activity.text}
+                      </p>
+                      <p className="text-2xs sm:text-xs text-gray-500">
+                        {new Date(activity.createdAt).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          ...(window.innerWidth < 640 ? {} : {
+                            day: 'numeric',
+                            month: 'short'
+                          })
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Action Confirmation Modal */}
+          {showActionModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md">
+                <div className="flex justify-between items-center mb-3 sm:mb-4">
+                  <h3 className="text-base sm:text-lg font-semibold">
+                    {actionType === 'role' 
+                      ? 'Change Member Role' 
+                      : 'Remove Member'}
+                  </h3>
+                  <button
+                    onClick={() => setShowActionModal(false)}
+                    className="text-gray-500 hover:text-gray-700 transition-colors"
+                    aria-label="Close modal"
+                  >
+                    <FiX size={20} className="sm:w-6 sm:h-6" />
+                  </button>
+                </div>
+
+                <div className="mb-4 text-sm sm:text-base">
+                  <p>
+                    {actionType === 'role' 
+                      ? `Are you sure you want to change ${selectedActionMember?.user?.name}'s role to ${selectedActionMember?.role === 'admin' ? 'member' : 'admin'}?`
+                      : `Are you sure you want to remove ${selectedActionMember?.user?.name} from the group?`}
+                  </p>
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => setShowActionModal(false)}
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-xs sm:text-sm"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmMemberAction}
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-xs sm:text-sm"
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Payment Order Modal */}
+          {showPaymentOrderModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md">
+                <div className="flex justify-between items-center mb-3 sm:mb-4">
+                  <h3 className="text-base sm:text-lg font-semibold">Assign Payment Order</h3>
+                  <button
+                    onClick={() => setShowPaymentOrderModal(false)}
+                    className="text-gray-500 hover:text-gray-700 transition-colors"
+                    aria-label="Close modal"
+                  >
+                    <FiX size={20} className="sm:w-6 sm:h-6" />
+                  </button>
+                </div>
+
+                <div className="mb-4">
+                  <h4 className="font-medium text-sm sm:text-base mb-2">Selected Members:</h4>
+                  <div className="flex flex-wrap gap-1 sm:gap-2">
+                    {selectedMembers.map(memberId => {
+                      const member = currentGroup.members.find(m => m._id === memberId);
+                      return (
+                        <div key={memberId} className="flex items-center bg-gray-100 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full">
+                          <span className="mr-1 sm:mr-2 text-xs sm:text-sm truncate max-w-[80px] sm:max-w-[120px]">
+                            {member?.user?.name || 'Unknown'}
+                          </span>
+                          <button
+                            onClick={() => setPaymentOrder(prev => [...prev, memberId])}
+                            className="text-green-500 hover:text-green-700 transition-colors"
+                            aria-label="Add to payment order"
+                          >
+                            <FiCheck size={12} className="sm:w-4 sm:h-4" />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <h4 className="font-medium text-sm sm:text-base mb-2">Payment Order:</h4>
+                  <div className="space-y-1 sm:space-y-2">
+                    {paymentOrder.length === 0 ? (
+                      <p className="text-gray-500 text-xs sm:text-sm">No members added yet</p>
+                    ) : (
+                      paymentOrder.map((memberId, index) => {
+                        const member = currentGroup.members.find(m => m._id === memberId);
+                        return (
+                          <div key={memberId} className="flex items-center justify-between bg-blue-50 px-2 sm:px-3 py-1 sm:py-2 rounded">
+                            <div className="text-xs sm:text-sm">
+                              <span className="font-medium">{index + 1}.</span> {member?.user?.name || 'Unknown'}
+                            </div>
+                            <button
+                              onClick={() => setPaymentOrder(prev => prev.filter(id => id !== memberId))}
+                              className="text-red-500 hover:text-red-700 transition-colors"
+                              aria-label="Remove from payment order"
+                            >
+                              <FiX size={12} className="sm:w-4 sm:h-4" />
+                            </button>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => setShowPaymentOrderModal(false)}
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-xs sm:text-sm"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmPaymentOrder}
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-xs sm:text-sm"
+                  >
+                    Confirm Order
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Group Settings Modal */}
+          {showSettingsModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg w-full max-w-md">
+                <div className="flex justify-between items-center border-b p-3 sm:p-4">
+                  <h3 className="text-base sm:text-lg font-semibold">Group Settings</h3>
+                  <button
+                    onClick={() => setShowSettingsModal(false)}
+                    className="text-gray-500 hover:text-gray-700 transition-colors"
+                    aria-label="Close modal"
+                  >
+                    <FiX size={20} className="sm:w-6 sm:h-6" />
+                  </button>
+                </div>
+
+                <form onSubmit={handleSettingsSubmit} className="p-3 sm:p-4 space-y-3 sm:space-y-4">
+                  <div>
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Group Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={groupSettings.name}
+                      onChange={handleSettingsChange}
+                      className="w-full p-2 border rounded text-xs sm:text-sm"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea
+                      name="description"
+                      value={groupSettings.description}
+                      onChange={handleSettingsChange}
+                      className="w-full p-2 border rounded text-xs sm:text-sm"
+                      rows="3"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 sm:gap-4">
+                    <div>
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Frequency</label>
+                      <select
+                        name="frequency"
+                        value={groupSettings.frequency}
+                        onChange={handleSettingsChange}
+                        className="w-full p-2 border rounded text-xs sm:text-sm"
+                      >
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Amount ($)</label>
+                      <input
+                        type="number"
+                        name="savingsAmount"
+                        value={groupSettings.savingsAmount}
+                        onChange={handleSettingsChange}
+                        className="w-full p-2 border rounded text-xs sm:text-sm"
+                        required
+                        min="1"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Max Members</label>
+                    <input
+                      type="number"
+                      name="maxMembers"
+                      value={groupSettings.maxMembers}
+                      onChange={handleSettingsChange}
+                      className="w-full p-2 border rounded text-xs sm:text-sm"
+                      required
+                      min="2"
+                      max="20"
+                    />
+                  </div>
+
+                  <div className="pt-1 sm:pt-2">
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="allowLatePayments"
+                        checked={groupSettings.allowLatePayments}
+                        onChange={handleSettingsChange}
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-3 h-3 sm:w-4 sm:h-4"
+                      />
+                      <span className="ml-2 text-xs sm:text-sm text-gray-700">Allow Late Payments</span>
+                    </label>
+                  </div>
+
+                  {groupSettings.allowLatePayments && (
+                    <div>
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Late Payment Fee ($)</label>
+                      <input
+                        type="number"
+                        name="latePaymentFee"
+                        value={groupSettings.latePaymentFee}
+                        onChange={handleSettingsChange}
+                        className="w-full p-2 border rounded text-xs sm:text-sm"
+                        min="0"
+                      />
+                    </div>
+                  )}
+
+                  <div className="pt-3 sm:pt-4 border-t flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowSettingsModal(false)}
+                      className="px-3 sm:px-4 py-1.5 sm:py-2 border border-gray-300 rounded text-xs sm:text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors flex items-center text-xs sm:text-sm"
+                    >
+                      <FiCheck className="mr-1 w-3 h-3 sm:w-4 sm:h-4" /> 
+                      <span>Save Changes</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* Delete Button (only show for admin) */}
+          {isAdmin && (
+            <button
+              onClick={() => currentGroup?._id && leaveGroup(currentGroup._id)}
+              className="w-full bg-red-100 text-red-600 font-medium py-2 rounded hover:bg-red-200 transition-colors text-xs sm:text-sm"
+            >
+              Delete Group
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
+
+export default RecentActivity;

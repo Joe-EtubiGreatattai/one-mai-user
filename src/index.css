@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@utility flex-center {
+  @apply flex items-center justify-center;
+}
+
+@layer base {
+  button {
+    @apply cursor-pointer;
+  }
+}
+
+.sm-para {
+  @apply mb-4 pb-4 border-b-1 border-b-gray-200 text-sm text-black opacity-50;
+}
