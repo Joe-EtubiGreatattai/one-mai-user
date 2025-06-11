@@ -89,65 +89,6 @@ function App() {
     <>
       <Toaster />
 
-      {/* PWA Install Banner - Updated to top with less height */}
-      {showBanner && (
-        <div className="fixed top-0 left-0 right-0 bg-blue-600 text-white p-2 z-50 shadow-md">
-          <div className="container mx-auto flex justify-between items-center">
-            <div className="text-sm">
-              <h3 className="font-bold text-base">Install Our App</h3>
-              <p className="text-xs">
-                Get the best experience by installing to your home screen
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowBanner(false)}
-                className="px-3 py-1 bg-white text-blue-600 rounded text-sm"
-              >
-                Later
-              </button>
-              <button
-                onClick={triggerInstall}
-                className="px-3 py-1 bg-white text-blue-600 rounded font-bold text-sm"
-              >
-                Install
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Service Worker Update Notification - Also updated to top */}
-      {(offlineReady || needRefresh) && (
-        <div className="fixed top-0 left-0 right-0 bg-green-600 text-white p-2 z-50 shadow-md">
-          <div className="container mx-auto flex justify-between items-center">
-            <div className="text-sm">
-              {offlineReady ? (
-                <p>App is ready for offline use</p>
-              ) : (
-                <p>New content available, click reload to update</p>
-              )}
-            </div>
-            <div className="flex gap-2">
-              {needRefresh && (
-                <button
-                  onClick={() => updateServiceWorker(true)}
-                  className="px-3 py-1 bg-white text-green-600 rounded font-bold text-sm"
-                >
-                  Reload
-                </button>
-              )}
-              <button
-                onClick={closePrompt}
-                className="px-3 py-1 bg-white text-green-600 rounded text-sm"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <Routes>
         <Route element={<PublicRoute />}>
           <Route path="/" element={<HomePage />} />
