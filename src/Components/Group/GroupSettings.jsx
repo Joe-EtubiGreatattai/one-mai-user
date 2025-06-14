@@ -216,7 +216,7 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
           {/* Group Configuration */}
           <div className=" rounded-lg sm:rounded-xl ">
             {/* <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
-              <FiUsers className="mr-2 text-indigo-500 w-4 h-4 sm:w-5 sm:h-5" />
+              <FiUsers className="mr-2 text-blue-500 w-4 h-4 sm:w-5 sm:h-5" />
               Group Configuration
             </label> */}
             <div className="grid grid-cols-1 gap-3 sm:gap-4">
@@ -329,7 +329,7 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
             disabled={!isFormValid()}
             className={`flex-1 py-2 sm:py-3 text-sm sm:text-base font-medium rounded-md sm:rounded-lg transition-all mb-3 sm:mb-0 ${
               isFormValid()
-                ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md hover:shadow-lg hover:from-blue-600 hover:to-indigo-700"
+                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md hover:shadow-lg hover:from-blue-600 hover:to-blue-700"
                 : "bg-gray-200 text-gray-500 cursor-not-allowed"
             }`}
           >

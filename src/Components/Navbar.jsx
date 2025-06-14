@@ -126,7 +126,7 @@ const Navbar = ({ toggleSidebar }) => {
       onClick={onClick}
       className={({ isActive }) => 
         `flex items-center p-3 rounded-lg transition-colors ${isActive ? 
-          'bg-indigo-50 text-indigo-600 font-medium' : 
+          'bg-blue-50 text-blue-600 font-medium' : 
           'text-gray-600 hover:bg-gray-50'}`
       }
       end
@@ -141,7 +141,7 @@ const Navbar = ({ toggleSidebar }) => {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="md:hidden fixed bottom-4 right-4 z-40 bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition-colors mobile-menu-button"
+        className="md:hidden fixed bottom-4 right-4 z-40 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors mobile-menu-button"
         aria-label="Toggle menu"
       >
         {mobileMenuOpen ? <FiX size={20} /> : <FiMenu size={20} />}
@@ -248,7 +248,7 @@ const Navbar = ({ toggleSidebar }) => {
                 <img
                   src={profileImageUrl}
                   alt="Profile"
-                  className="h-8 w-8 rounded-full object-cover border-2 border-indigo-100 group-hover:border-indigo-200 transition-colors duration-200"
+                  className="h-8 w-8 rounded-full object-cover border-2 border-blue-100 group-hover:border-blue-200 transition-colors duration-200"
                   onError={() => setImageError(true)}
                 />
               ) : (

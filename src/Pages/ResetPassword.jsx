@@ -164,7 +164,7 @@ const ResetPassword = () => {
                     placeholder=""
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   {error && (
                     <p className="text-red-600 text-xs sm:text-sm mt-1">
@@ -177,7 +177,7 @@ const ResetPassword = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className={`w-full cursor-pointer py-2 sm:py-3 px-4 bg-indigo-600 text-white text-sm sm:text-base font-medium rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors ${
+                    className={`w-full cursor-pointer py-2 sm:py-3 px-4 bg-blue-600 text-white text-sm sm:text-base font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${
                       loading ? "opacity-70 cursor-not-allowed" : ""
                     }`}
                   >
@@ -213,7 +213,7 @@ const ResetPassword = () => {
                   <div className="text-center">
                     <Link
                       to="/signin"
-                      className="text-indigo-600 hover:text-indigo-500 text-sm sm:text-base font-medium transition-colors"
+                      className="text-blue-600 hover:text-blue-500 text-sm sm:text-base font-medium transition-colors"
                     >
                       Back to Sign In
                     </Link>
@@ -281,7 +281,7 @@ const ResetPassword = () => {
                             type={showPassword ? "text" : "password"}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm sm:text-base"
+                            className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                             required
                             minLength="8"
                           />
@@ -316,7 +316,7 @@ const ResetPassword = () => {
                             type={showConfirmPassword ? "text" : "password"}
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm sm:text-base"
+                            className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                             required
                             minLength="8"
                           />

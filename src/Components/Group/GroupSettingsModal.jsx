@@ -31,7 +31,7 @@ const GroupSettingsModal = ({ currentSettings, onClose, onSave }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-lg w-full max-w-md mx-auto shadow-2xl transform transition-all">
         {/* Header */}
-        <div className="flex justify-between items-center border-b p-4 sm:p-6 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-t-lg">
+        <div className="flex justify-between items-center border-b p-4 sm:p-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white rounded-t-lg">
           <h3 className="text-xl sm:text-2xl font-semibold">Group Settings</h3>
           <button 
             onClick={onClose} 
@@ -53,7 +53,7 @@ const GroupSettingsModal = ({ currentSettings, onClose, onSave }) => {
               name="name"
               value={settings.name}
               onChange={handleChange}
-              className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               required
             />
           </div>
@@ -67,7 +67,7 @@ const GroupSettingsModal = ({ currentSettings, onClose, onSave }) => {
               name="description"
               value={settings.description}
               onChange={handleChange}
-              className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               rows="3"
             />
           </div>
@@ -110,7 +110,7 @@ const GroupSettingsModal = ({ currentSettings, onClose, onSave }) => {
                 name="frequency"
                 value={settings.frequency}
                 onChange={handleChange}
-                className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 required
               >
                 <option value="daily">Daily</option>
@@ -129,7 +129,7 @@ const GroupSettingsModal = ({ currentSettings, onClose, onSave }) => {
                 value={settings.savingsAmount}
                 onChange={handleChange}
                 min="1"
-                className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 required
               />
             </div>
@@ -146,7 +146,7 @@ const GroupSettingsModal = ({ currentSettings, onClose, onSave }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 sm:px-6 sm:py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 flex items-center justify-center gap-2 transition"
+              className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center justify-center gap-2 transition"
             >
               <FiSave size={16} className="sm:w-5 sm:h-5" />
               <span>Save Changes</span>

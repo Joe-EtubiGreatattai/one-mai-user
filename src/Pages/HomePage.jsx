@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import InstallBanner from "../InstallBanner";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -106,10 +105,7 @@ function HomePage() {
         </div>
       </div>
 
-      {/* Install Banner - positioned at bottom on all screens */}
-      <div className="relative z-10 w-full">
-        <InstallBanner />
-      </div>
+    
     </div>
   );
 }

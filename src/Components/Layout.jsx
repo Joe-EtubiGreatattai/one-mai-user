@@ -1,3 +1,4 @@
+// Layout.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Outlet, NavLink, useNavigate, Link } from "react-router-dom";
 import Logo from "../assets/MAI.png";
@@ -12,7 +13,6 @@ import {
   FiSearch,
   FiLogOut,
 } from "react-icons/fi";
-import { IoMdPerson } from "react-icons/io";
 import { FaUserCircle } from "react-icons/fa";
 import useAuthStore from "../Store/Auth";
 
@@ -23,7 +23,6 @@ const Layout = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const profileButtonRef = useRef(null);
   const dropdownRef = useRef(null);
-  const mobileSidebarRef = useRef(null);
   const tabletSidebarRef = useRef(null);
   const mobileToggleRef = useRef(null);
   const tabletToggleRef = useRef(null);
@@ -33,10 +32,6 @@ const Layout = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      const isOutsideMobile =
-        mobileMenuOpen &&
-        mobileSidebarRef.current &&
-        !mobileSidebarRef.current.contains(event.target);
       const isOutsideTablet =
         mobileMenuOpen &&
         tabletSidebarRef.current &&
@@ -46,7 +41,7 @@ const Layout = () => {
           mobileToggleRef.current.contains(event.target)) ||
         (tabletToggleRef.current &&
           tabletToggleRef.current.contains(event.target));
-      if ((isOutsideMobile || isOutsideTablet) && !isToggleButton) {
+      if (isOutsideTablet && !isToggleButton) {
         setMobileMenuOpen(false);
       }
     };
@@ -86,92 +81,22 @@ const Layout = () => {
     setShowDropdown(false);
   };
 
-  const NavItem = ({ to, icon, text, onClick }) => (
-    <NavLink
-      to={to}
-      onClick={onClick}
-      className={({ isActive }) =>
-        `flex items-center p-3 rounded-lg transition-colors relative ${
-          isActive
-            ? "bg-indigo-50 text-indigo-600 font-medium dark:bg-gray-700 dark:text-white"
-            : "text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800"
-        }`
-      }
-      end
-    >
-      {({ isActive }) => (
-        <>
-          <span className="flex-shrink-0">{icon}</span>
-          <span className="ml-3 text-sm">{text}</span>
-          {isActive && (
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-600 rounded-r-md"></div>
-          )}
-        </>
-      )}
-    </NavLink>
-  );
-
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Desktop Sidebar - Visible on lg screens and up */}
-      <div
-        className={`hidden lg:block fixed inset-y-0 left-0 z-30 w-64 shadow-lg border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 ${
-          mobileMenuOpen ? "translate-x-0" : ""
-        }`}
-      >
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block fixed inset-y-0 left-0 z-30 w-64 shadow-lg border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
         <div className="flex justify-between items-center h-20 p-4 border-b border-gray-200 dark:border-gray-700">
           <img src={Logo} alt="MAI Logo" className="h-12" />
-          <button
-            onClick={toggleMobileMenu}
-            className="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
-          >
-            <FiX className="h-5 w-5" />
-          </button>
         </div>
-
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          <NavItem
-            to="/dashboard"
-            icon={<FiHome size={20} />}
-            text="Home"
-            onClick={toggleMobileMenu}
-          />
-          <NavItem
-            to="/notification"
-            icon={<FiBell size={20} />}
-            text="Notifications"
-            onClick={toggleMobileMenu}
-          />
-          {/* <NavItem
-            to="/profile"
-            icon={<IoMdPerson size={20} />}
-            text="Profile"
-            onClick={toggleMobileMenu}
-          /> */}
-          <NavItem
-            to="/group"
-            icon={<FiUsers size={20} />}
-            text="Groups"
-            onClick={toggleMobileMenu}
-          />
-          <NavItem
-            to="/profile"
-            icon={<FiUser size={20} />}
-            text="Profile"
-            onClick={toggleMobileMenu}
-          />
+          <NavItem to="/dashboard" icon={<FiHome size={20} />} text="Home" />
+          <NavItem to="/notification" icon={<FiBell size={20} />} text="Notifications" />
+          <NavItem to="/group" icon={<FiUsers size={20} />} text="Groups" />
+          <NavItem to="/profile" icon={<FiUser size={20} />} text="Profile" />
         </nav>
-
-        {/* <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-          <NavItem
-            to="/profile"
-            icon={<FiSettings size={20} />}
-            text="Settings"
-          />
-        </div> */}
       </div>
 
-      {/* Tablet Sidebar - Visible on md screens */}
+      {/* Tablet Sidebar */}
       <div
         ref={tabletSidebarRef}
         className={`hidden md:block lg:hidden fixed inset-y-0 left-0 z-30 w-64 shadow-lg border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 transform ${
@@ -180,191 +105,44 @@ const Layout = () => {
       >
         <div className="flex justify-between items-center h-20 p-4 border-b border-gray-200 dark:border-gray-700">
           <img src={Logo} alt="MAI Logo" className="h-12" />
-          <button
-            onClick={toggleMobileMenu}
-            className="p-2 rounded-md text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
-          >
+          <button onClick={toggleMobileMenu} className="p-2 text-gray-500">
             <FiX className="h-5 w-5" />
           </button>
         </div>
-
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          <NavItem
-            to="/dashboard"
-            icon={<FiHome size={20} />}
-            text="Home"
-            onClick={toggleMobileMenu}
-          />
-          <NavItem
-            to="/notification"
-            icon={<FiBell size={20} />}
-            text="Notifications"
-            onClick={toggleMobileMenu}
-          />
-          {/* <NavItem
-            to="/profile"
-            icon={<IoMdPerson size={20} />}
-            text="Profile"
-            onClick={toggleMobileMenu}
-          /> */}
-          <NavItem
-            to="/group"
-            icon={<FiUsers size={20} />}
-            text="Groups"
-            onClick={toggleMobileMenu}
-          />
-          <NavItem
-            to="/profile"
-            icon={<FiUser size={20} />}
-            text="Profile"
-            onClick={toggleMobileMenu}
-          />
+          <NavItem to="/dashboard" icon={<FiHome size={20} />} text="Home" onClick={toggleMobileMenu} />
+          <NavItem to="/notification" icon={<FiBell size={20} />} text="Notifications" onClick={toggleMobileMenu} />
+          <NavItem to="/group" icon={<FiUsers size={20} />} text="Groups" onClick={toggleMobileMenu} />
+          <NavItem to="/profile" icon={<FiUser size={20} />} text="Profile" onClick={toggleMobileMenu} />
         </nav>
-
-        {/* <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-          <NavItem
-            to="/profile"
-            icon={<FiSettings size={20} />}
-            text="Settings"
-            onClick={toggleMobileMenu}
-          />
-        </div> */}
       </div>
 
-      {/* Mobile Sidebar - Visible on sm screens and down */}
-      <div
-        ref={mobileSidebarRef}
-        className={`md:hidden fixed inset-y-0 left-0 z-30 w-64 transform ${
-          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out bg-white dark:bg-gray-900 shadow-lg border-r border-gray-200 dark:border-gray-700`}
-      >
-        <div className="flex justify-between items-center h-20 p-4 border-b border-gray-200 dark:border-gray-700">
-          <img src={Logo} alt="MAI Logo" className="h-12" />
-          <button
-            onClick={toggleMobileMenu}
-            className="p-2 rounded-md text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
-          >
-            <FiX className="h-5 w-5" />
-          </button>
-        </div>
-
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          <NavItem
-            to="/dashboard"
-            icon={<FiHome size={20} />}
-            text="Home"
-            onClick={toggleMobileMenu}
-          />
-          <NavItem
-            to="/notification"
-            icon={<FiBell size={20} />}
-            text="Notifications"
-            onClick={toggleMobileMenu}
-          />
-          {/* <NavItem
-            to="/profile"
-            icon={<IoMdPerson size={20} />}
-            text="Profile"
-            onClick={toggleMobileMenu}
-          /> */}
-          <NavItem
-            to="/group"
-            icon={<FiUsers size={20} />}
-            text="Groups"
-            onClick={toggleMobileMenu}
-          />
-          <NavItem
-            to="/profile"
-            icon={<FiUser size={20} />}
-            text="Profile"
-            onClick={toggleMobileMenu}
-          />
-        </nav>
-
-        {/* <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-          <NavItem
-            to="/profile"
-            icon={<FiSettings size={20} />}
-            text="Settings"
-            onClick={toggleMobileMenu}
-          />
-        </div> */}
-      </div>
-
-      {/* Main Content Area */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-64">
-        {/* Navbar */}
         <header className="fixed top-0 left-0 right-0 z-20 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between h-16 px-4">
             <div className="flex items-center">
-              <button
-                onClick={toggleMobileMenu}
-                className="md:hidden p-2 rounded-md text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
-              >
-                <FiMenu className="h-5 w-5" ref={mobileToggleRef} />
-              </button>
-              <button
-                onClick={toggleMobileMenu}
-                className="hidden md:block lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
-              >
-                <FiMenu className="h-5 w-5" ref={tabletToggleRef} />
-              </button>
-              <h1 className="ml-2 text-lg font-semibold text-gray-800 dark:text-white">
-                Dashboard
-              </h1>
+              <h1 className="ml-2 text-lg font-semibold">Dashboard</h1>
             </div>
-
             <div className="flex items-center space-x-4">
-              <button className="p-2 rounded-full text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
-                <FiSearch className="h-5 w-5" />
-              </button>
-              <Link to="notification">
-                <button className="cursor-pointer p-2 rounded-full text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 relative">
-                  <FiBell className="h-5 w-5" />
-                  <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
-                </button>
+              <Link to="/notification">
+                <FiBell className="h-5 w-5 relative" />
               </Link>
-
               <div className="relative">
-                <div
-                  ref={profileButtonRef}
-                  onClick={toggleDropdown}
-                  className="flex items-center cursor-pointer p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                >
+                <div ref={profileButtonRef} onClick={toggleDropdown} className="cursor-pointer">
                   {user?.image ? (
-                    <img
-                      src={
-                        user.image.startsWith("/uploads/")
-                          ? `https://api.joinonemai.com${user.image}`
-                          : user.image
-                      }
-                      alt="Profile"
-                      className="h-8 w-8 rounded-full object-cover border-2 border-indigo-100 dark:border-gray-600"
-                    />
+                    <img src={user.image.startsWith("/uploads/") ? `https://api.joinonemai.com${user.image}` : user.image} className="h-8 w-8 rounded-full object-cover" />
                   ) : (
-                    <FaUserCircle className="h-8 w-8 text-gray-400 dark:text-gray-300" />
+                    <FaUserCircle className="h-8 w-8 text-gray-400" />
                   )}
                 </div>
-
                 {showDropdown && (
-                  <div
-                    ref={dropdownRef}
-                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50"
-                  >
-                    <NavLink
-                      to="/profile"
-                      onClick={() => setShowDropdown(false)}
-                      className="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      <FiUser className="mr-3" size={16} />
-                      Profile
+                  <div ref={dropdownRef} className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50">
+                    <NavLink to="/profile" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-sm">
+                      <FiUser className="inline mr-2" /> Profile
                     </NavLink>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      <FiLogOut className="mr-3" size={16} />
-                      Logout
+                    <button onClick={handleLogout} className="block w-full px-4 py-2 text-sm text-left">
+                      <FiLogOut className="inline mr-2" /> Logout
                     </button>
                   </div>
                 )}
@@ -373,19 +151,54 @@ const Layout = () => {
           </div>
         </header>
 
-        {/* Main Content */}
-        <main
-          className={`flex-1 overflow-y-auto pt-16 transition-all duration-300 ${
-            mobileMenuOpen ? "md:ml-64" : "ml-0"
-          }`}
-        >
+        <main className="flex-1 overflow-y-auto pt-16 pb-16">
           <div className="p-4 sm:p-6">
             <Outlet />
           </div>
         </main>
       </div>
+
+      {/* Mobile Bottom Tab Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 z-30 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 flex justify-around items-center h-16 sm:hidden">
+        <MobileTab to="/dashboard" icon={<FiHome size={20} />} label="Home" />
+        <MobileTab to="/notification" icon={<FiBell size={20} />} label="Alerts" />
+        <MobileTab to="/group" icon={<FiUsers size={20} />} label="Groups" />
+        <MobileTab to="/profile" icon={<FiUser size={20} />} label="Profile" />
+      </div>
     </div>
   );
 };
+
+const NavItem = ({ to, icon, text, onClick }) => (
+  <NavLink
+    to={to}
+    onClick={onClick}
+    className={({ isActive }) =>
+      `flex items-center p-3 rounded-lg transition-colors relative ${
+        isActive
+          ? "bg-blue-50 text-blue-600 font-medium dark:bg-gray-700 dark:text-white"
+          : "text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800"
+      }`
+    }
+    end
+  >
+    <span className="flex-shrink-0">{icon}</span>
+    <span className="ml-3 text-sm">{text}</span>
+  </NavLink>
+);
+
+const MobileTab = ({ to, icon, label }) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) =>
+      `flex flex-col items-center justify-center text-xs ${
+        isActive ? "text-blue-600 dark:text-white" : "text-gray-500 dark:text-gray-300"
+      }`
+    }
+  >
+    {icon}
+    <span className="text-[11px] mt-1">{label}</span>
+  </NavLink>
+);
 
 export default Layout;

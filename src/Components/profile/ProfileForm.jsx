@@ -158,7 +158,7 @@ const ProfileForm = ({ user, updateProfile, darkMode, setError, setSuccess }) =>
             <img
               src={avatar}
               alt="Profile"
-              className="h-24 w-24 rounded-full object-cover border-2 border-indigo-100 dark:border-gray-600"
+              className="h-24 w-24 rounded-full object-cover border-2 border-blue-100 dark:border-gray-600"
               onError={() => setImageError(true)}
             />
           ) : (

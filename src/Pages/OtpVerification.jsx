@@ -209,7 +209,7 @@ const OtpVerification = () => {
       </div>
 
       {/* Right side - Image (hidden on mobile) */}
-      <div className="hidden md:flex md:w-1/2 relative bg-indigo-900">
+      <div className="hidden md:flex md:w-1/2 relative bg-blue-900">
         <img
           src={Family}
           alt="Family enjoying savings"

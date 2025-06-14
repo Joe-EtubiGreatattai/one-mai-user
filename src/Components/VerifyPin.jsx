@@ -66,7 +66,7 @@ const VerifyPin = () => {
                     maxLength="1"
                     value={pin[index]}
                     onChange={(e) => handlePinChange(e, index)}
-                    className="w-12 h-12 sm:w-16 sm:h-16 text-center text-xl sm:text-2xl border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-12 h-12 sm:w-16 sm:h-16 text-center text-xl sm:text-2xl border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 ))}
               </div>
@@ -76,8 +76,8 @@ const VerifyPin = () => {
                 disabled={loading || pin.some((digit) => !digit)}
                 className={`w-full py-2 sm:py-3 px-4 text-white text-sm sm:text-base font-medium rounded-md ${
                   loading
-                    ? "bg-indigo-400"
-                    : "bg-indigo-600 hover:bg-indigo-700"
+                    ? "bg-blue-400"
+                    : "bg-blue-600 hover:bg-blue-700"
                 } transition-colors duration-200`}
               >
                 {loading ? "Verifying..." : "Verify PIN"}

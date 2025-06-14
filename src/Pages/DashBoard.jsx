@@ -109,7 +109,7 @@ function DashBoard({ welcomeOnly = undefined }) {
                   : user.image
               }
               alt="Profile"
-              className="h-10 w-10 rounded-full object-cover border-2 border-indigo-100 dark:border-gray-600"
+              className="h-10 w-10 rounded-full object-cover border-2 border-blue-100 dark:border-gray-600"
             />
           ) : (
             <FaUserCircle className="h-8 w-8 text-gray-400 dark:text-gray-300" />

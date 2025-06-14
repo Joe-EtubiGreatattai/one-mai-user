@@ -1,3 +1,4 @@
+// GroupListPage.jsx
 import React, { useEffect } from "react";
 import { FiEye, FiPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
@@ -24,7 +25,6 @@ const GroupListTable = ({ titleInside = undefined }) => {
       fetchUserGroups();
     }
   }, [fetchUserGroups, currentUser]);
-  console.log("groups", groups);
 
   const requestToJoinGroup = async (groupId) => {
     try {
@@ -56,50 +56,39 @@ const GroupListTable = ({ titleInside = undefined }) => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 relative dark:bg-gray-900 ">
-      {/* Floating action button */}
+    <div className="min-h-screen bg-gray-50 relative dark:bg-gray-900 px-2 sm:px-4 pb-24">
       <Link
         to="/groupCreation"
-        className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 z-10"
+        className="fixed bottom-20 right-6 sm:bottom-24 sm:right-8 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 z-20"
         aria-label="Create new group"
       >
         <FiPlus className="h-5 w-5 sm:h-6 sm:w-6" />
       </Link>
 
-      {error && (
-        <AlertMessage message={error} type="red" onClose={clearError} />
-      )}
+      {error && <AlertMessage message={error} type="red" onClose={clearError} />}
       {successMessage && (
-        <AlertMessage
-          message={successMessage}
-          type="green"
-          onClose={clearSuccessMessage}
-        />
+        <AlertMessage message={successMessage} type="green" onClose={clearSuccessMessage} />
       )}
 
       {!titleInside ? (
-        <>
-          <div className="px-4 sm:py-4">
-            <h1 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white ">
-              Groups
-            </h1>
-            <p className="text-xs sm:text-sm text-gray-500 mt-1">
-              {groups.length} group{groups.length !== 1 ? "s" : ""} found
-            </p>
-          </div>
-        </>
+        <div className="pt-4">
+          <h1 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white">
+            Groups
+          </h1>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1">
+            {groups.length} group{groups.length !== 1 ? "s" : ""} found
+          </p>
+        </div>
       ) : null}
 
-      <div className="max-w-8xl mx-auto mt-4 bg-white rounded-lg shadow-sm overflow-hidden">
-        {titleInside ? (
-          <>
-            <div className="px-4 sm:pt-4 -mb-6">
-              <h1 className="text-lg sm:text-lg font-semibold text-gray-800 dark:text-white ">
-                Recent Groups
-              </h1>
-            </div>
-          </>
-        ) : null}
+      <div className="mt-4 bg-white rounded-lg shadow-sm overflow-hidden">
+        {titleInside && (
+          <div className="px-4 pt-4 -mb-6">
+            <h1 className="text-lg font-semibold text-gray-800 dark:text-white">
+              Recent Groups
+            </h1>
+          </div>
+        )}
         {loading ? (
           <div className="text-center py-8 sm:py-12">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
@@ -108,23 +97,15 @@ const GroupListTable = ({ titleInside = undefined }) => {
         ) : groups.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="overflow-x-auto pt-12 px-6 pb-6">
+          <div className="overflow-x-auto pt-12 px-2 sm:px-6 pb-6">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr className="rounded-xl">
                   <TableHeader>Group Name</TableHeader>
                   <TableHeader>Members</TableHeader>
-                  <TableHeader className="hidden sm:table-cell">
-                    Time Left
-                  </TableHeader>
-                  <TableHeader className="hidden sm:table-cell">
-                    Progress
-                  </TableHeader>
-                  {!titleInside && (
-                    <>
-                      <TableHeader align="right">Action</TableHeader>
-                    </>
-                  )}
+                  <TableHeader className="hidden sm:table-cell">Time Left</TableHeader>
+                  <TableHeader className="hidden sm:table-cell">Progress</TableHeader>
+                  {!titleInside && <TableHeader align="right">Action</TableHeader>}
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -145,18 +126,6 @@ const GroupListTable = ({ titleInside = undefined }) => {
       </div>
     </div>
   );
-};
-
-const calculateTimeLeft = (payoutDate) => {
-  if (!payoutDate) return "N/A";
-  const now = new Date();
-  const payout = new Date(payoutDate);
-  const diff = payout - now;
-  if (diff < 0) return "Completed";
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  if (days > 0) return `${days} day${days !== 1 ? "s" : ""}`;
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  return `${hours} hour${hours !== 1 ? "s" : ""}`;
 };
 
 const TableHeader = ({ children, align = "left", className = "" }) => (
@@ -190,7 +159,7 @@ const TableRow = ({
         <div className="flex items-center">
           <div className="flex-shrink-0 h-10 w-10">
             <img
-              className="h-10 w-10 rounded-full"
+              className="h-10 w-10 rounded-full object-cover"
               src={`https://api.joinonemai.com${group.image}`}
               alt={group.name}
             />
@@ -222,16 +191,14 @@ const TableRow = ({
         <ProgressBar progress={progress} />
       </td>
       {!titleInside && (
-        <>
-          <td className="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap text-right text-sm font-medium">
-            <GroupActions
-              group={group}
-              onJoinRequest={onJoinRequest}
-              currentUser={currentUser}
-              getGroupDetails={getGroupDetails}
-            />
-          </td>
-        </>
+        <td className="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap text-right text-sm font-medium">
+          <GroupActions
+            group={group}
+            onJoinRequest={onJoinRequest}
+            currentUser={currentUser}
+            getGroupDetails={getGroupDetails}
+          />
+        </td>
       )}
     </tr>
   );
@@ -247,9 +214,7 @@ const ProgressBar = ({ progress }) => (
         />
       </div>
     </div>
-    <span className="text-xs sm:text-sm font-medium text-gray-700">
-      {progress}%
-    </span>
+    <span className="text-xs sm:text-sm font-medium text-gray-700">{progress}%</span>
   </div>
 );
 
@@ -304,13 +269,23 @@ const EmptyState = () => (
         />
       </svg>
     </div>
-    <h3 className="mt-2 text-sm font-semibold text-gray-900">
-      No groups found
-    </h3>
+    <h3 className="mt-2 text-sm font-semibold text-gray-900">No groups found</h3>
     <p className="mt-1 text-xs sm:text-sm text-gray-500">
       Create or join a group to get started.
     </p>
   </div>
 );
+
+const calculateTimeLeft = (payoutDate) => {
+  if (!payoutDate) return "N/A";
+  const now = new Date();
+  const payout = new Date(payoutDate);
+  const diff = payout - now;
+  if (diff < 0) return "Completed";
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  if (days > 0) return `${days} day${days !== 1 ? "s" : ""}`;
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  return `${hours} hour${hours !== 1 ? "s" : ""}`;
+};
 
 export default GroupListTable;

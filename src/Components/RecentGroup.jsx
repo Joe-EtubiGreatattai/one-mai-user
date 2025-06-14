@@ -132,7 +132,7 @@ const RecentGroup = () => {
     return (
       <button
         onClick={handleJoinClick}
-        className="flex items-center px-3 py-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs rounded-full shadow-md hover:opacity-90 transition-all"
+        className="flex items-center px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs rounded-full shadow-md hover:opacity-90 transition-all"
         disabled={joinStatus === "pending"}
       >
         {joinStatus === "pending" ? (
@@ -183,7 +183,7 @@ const RecentGroup = () => {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-1.5">
                   <div
-                    className="bg-gradient-to-r from-blue-500 to-indigo-600 h-1.5 rounded-full"
+                    className="bg-gradient-to-r from-blue-500 to-blue-600 h-1.5 rounded-full"
                     style={{ width: `${group?.progress || 0}%` }}
                   ></div>
                 </div>
@@ -229,7 +229,7 @@ const RecentGroup = () => {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-1.5">
                 <div
-                  className="bg-gradient-to-r from-blue-500 to-indigo-600 h-1.5 rounded-full"
+                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-1.5 rounded-full"
                   style={{ width: `${currentGroup?.progress || 0}%` }}
                 ></div>
               </div>

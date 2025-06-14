@@ -164,7 +164,7 @@ const ProfileSidebar = ({
                     : profileImg
                 }
                 alt="Profile"
-                className="h-8 w-8 rounded-full object-cover border-2 border-indigo-100 group-hover:border-indigo-200 transition-colors duration-200"
+                className="h-8 w-8 rounded-full object-cover border-2 border-blue-100 group-hover:border-blue-200 transition-colors duration-200"
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src =
