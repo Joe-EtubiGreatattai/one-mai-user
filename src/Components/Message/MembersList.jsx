@@ -47,7 +47,7 @@ const MembersList = ({
               </span>
               <button
                 onClick={sendRequestToSelectedUsers}
-                className="flex items-center justify-center text-xs sm:text-sm bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition-colors"
+                className="flex items-center justify-center text-xs sm:text-sm bg-[#3390d5] text-white px-3 py-1 rounded-lg hover:bg-[#3390d5] transition-colors"
               >
                 <FiUserPlus className="mr-1 w-3 h-3 sm:w-4 sm:h-4" /> 
                 <span>Send Request</span>
@@ -74,7 +74,7 @@ const MembersList = ({
                       }}
                       className={`w-4 h-4 sm:w-5 sm:h-5 rounded border flex-shrink-0 ${
                         selectedUsers.includes(member._id) 
-                          ? 'bg-blue-500 border-blue-500 text-white' 
+                          ? 'bg-[#3390d5] border-blue-500 text-white' 
                           : 'border-gray-300'
                       }`}
                       aria-label={selectedUsers.includes(member._id) ? "Deselect user" : "Select user"}
@@ -115,7 +115,7 @@ const MembersList = ({
                           e.stopPropagation();
                           setShowRoleMenu(showRoleMenu === member._id ? null : member._id);
                         }}
-                        className="text-gray-400 hover:text-blue-500 transition-colors p-0.5"
+                        className="text-gray-400 hover:text-[#3390d5] transition-colors p-0.5"
                         aria-label="Change role"
                       >
                         <FiSettings size={14} className="sm:w-4 sm:h-4" />
@@ -139,7 +139,7 @@ const MembersList = ({
                             }}
                             className="flex items-center px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-50 w-full text-left transition-colors"
                           >
-                            <FiShield className="mr-2 text-blue-500 w-3 h-3 sm:w-4 sm:h-4" /> 
+                            <FiShield className="mr-2 text-[#3390d5] w-3 h-3 sm:w-4 sm:h-4" /> 
                             <span>Make Moderator</span>
                           </button>
                           <button
@@ -173,7 +173,7 @@ const MembersList = ({
                       e.stopPropagation();
                       navigator.clipboard.writeText(member._id);
                     }}
-                    className="text-gray-400 hover:text-blue-500 transition-colors p-0.5"
+                    className="text-gray-400 hover:text-[#3390d5] transition-colors p-0.5"
                     aria-label="Copy user ID"
                   >
                     <FiCopy size={14} className="sm:w-4 sm:h-4" />

@@ -323,7 +323,7 @@ const CreateAccount = () => {
                     type="checkbox"
                     checked={formData.agreed}
                     onChange={handleChange}
-                    className="h-4 w-4 text-[#3390D5] focus:ring-[#3390D5] border-[#EAEAEA] rounded"
+                    className="h-4 w-4 text-blue focus:ring-blue border-[#EAEAEA] rounded"
                   />
                 </div>
                 <div className="">
@@ -331,7 +331,7 @@ const CreateAccount = () => {
                     I agree to the{" "}
                     <a
                       href="/terms"
-                      className="text-[#3390D5] hover:text-[#3390D5]"
+                      className="text-blue hover:text-blue"
                     >
                       Terms and Conditions
                     </a>
@@ -349,8 +349,8 @@ const CreateAccount = () => {
                 type="submit"
                 disabled={loading}
                 className={`cursor-pointer w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
-                  loading ? "bg-blue-400" : "bg-[#3390D5] hover:bg-blue-700"
-                } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#3390D5]`}
+                  loading ? "bg-[#3390d5]" : "bg-blue hover:bg-blue-700"
+                } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue`}
               >
                 {loading ? (
                   <>
@@ -387,7 +387,7 @@ const CreateAccount = () => {
                 Already have an account?{" "}
                 <Link
                   to="/signin"
-                  className="font-medium text-[#3390D5] hover:text-[#3390D5]"
+                  className="font-medium text-blue hover:text-blue"
                 >
                   Sign in
                 </Link>

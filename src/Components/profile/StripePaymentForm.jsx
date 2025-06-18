@@ -58,8 +58,8 @@ const StripePaymentForm = ({ amount, onSubmit, loading, darkMode, returnUrl }) =
         className={`
           w-full py-3 px-4 rounded-lg shadow transition-all duration-200
           ${darkMode ?
-            'bg-blue-600 hover:bg-blue-700 focus:bg-blue-700' :
-            'bg-blue-600 hover:bg-blue-700 focus:bg-blue-700'}
+            'bg-[#3390d5] hover:bg-blue-700 focus:bg-blue-700' :
+            'bg-[#3390d5] hover:bg-blue-700 focus:bg-blue-700'}
           text-white font-medium
            'hover:shadow-lg'}
           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50

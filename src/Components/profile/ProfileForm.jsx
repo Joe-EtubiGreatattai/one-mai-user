@@ -170,7 +170,7 @@ const ProfileForm = ({ user, updateProfile, darkMode, setError, setSuccess }) =>
         </div>
 
         <div className="flex flex-col items-center">
-          <label className={`cursor-pointer ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'} text-sm md:text-base flex items-center transition`}>
+          <label className={`cursor-pointer ${darkMode ? 'text-[#3390d5] hover:text-blue-300' : 'text-[#3390d5] hover:text-blue-800'} text-sm md:text-base flex items-center transition`}>
             <FiUpload className="mr-1 h-4 w-4" />
             <span>Change Photo</span>
             <input
@@ -246,8 +246,8 @@ const ProfileForm = ({ user, updateProfile, darkMode, setError, setSuccess }) =>
       <button
         type="submit"
         className={`w-full mt-6 py-3 px-4 rounded-lg font-medium shadow transition flex items-center justify-center ${darkMode
-            ? 'bg-blue-600 hover:bg-blue-700 text-white'
-            : 'bg-blue-600 hover:bg-blue-700 text-white'
+            ? 'bg-[#3390d5] hover:bg-[#3390d5] text-white'
+            : 'bg-[#3390d5] hover:bg-[#3390d5] text-white'
           } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${darkMode ? 'focus:ring-offset-gray-800' : 'focus:ring-offset-white'} ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
         disabled={loading}
       >

@@ -177,7 +177,7 @@ const BankDetailsForm = ({ darkMode = false, accounts = [], setError = () => {},
       <button
         type="submit"
         className={`w-full mt-6 py-2 md:py-3 px-4 rounded-md ${
-          darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 hover:bg-blue-700'
+          darkMode ? 'bg-[#3390d5] hover:bg-blue-700' : 'bg-[#3390d5] hover:bg-blue-700'
         } text-white font-medium flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
           darkMode ? 'focus:ring-offset-gray-800' : 'focus:ring-offset-white'
         } transition`}

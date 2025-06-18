@@ -23,7 +23,7 @@ const RecentTransactions = () => {
       case "referral":
         return <FiGift className={`text-green-500 ${iconSize}`} />;
       case "deposit":
-        return <FiArrowDownCircle className={`text-blue-500 ${iconSize}`} />;
+        return <FiArrowDownCircle className={`text-[#3390d5] ${iconSize}`} />;
       default:
         return <FiArrowDownCircle className={`text-purple-500 ${iconSize}`} />;
     }
@@ -54,7 +54,7 @@ const RecentTransactions = () => {
         {transactions?.length > 0 && (
           <Link
             to="/profile"
-            className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 flex items-center"
+            className="text-xs sm:text-sm text-[#3390d5] hover:text-blue-800 flex items-center"
           >
             View All <FiExternalLink className="ml-1" />
           </Link>
@@ -130,7 +130,7 @@ const RecentTransactions = () => {
         <div className="p-2 sm:p-3 border-t border-gray-100 text-center bg-gray-50">
           <Link
             to="/transactions"
-            className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 font-medium inline-flex items-center"
+            className="text-xs sm:text-sm text-[#3390d5] hover:text-blue-800 font-medium inline-flex items-center"
           >
             View All Transactions <FiExternalLink className="ml-1" />
           </Link>

@@ -238,7 +238,7 @@ const RecentActivity = () => {
                   <div className="flex gap-2">
                     <button
                       onClick={handleSendRequest}
-                      className="bg-blue-500 text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm"
+                      className="bg-[#3390d5] text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm"
                     >
                       Send Request
                     </button>
@@ -320,8 +320,8 @@ const RecentActivity = () => {
               <div className="space-y-3 sm:space-y-4">
                 {currentGroup?.activities?.slice(0, 3).map((activity) => (
                   <div key={activity._id} className="flex items-start gap-2 sm:gap-3">
-                    <div className="bg-blue-100 p-1 sm:p-2 rounded-full">
-                      <FiBell className="text-blue-600 w-3 h-3 sm:w-4 sm:h-4" />
+                    <div className="bg-[#3390d5] p-1 sm:p-2 rounded-full">
+                      <FiBell className="text-[#3390d5] w-3 h-3 sm:w-4 sm:h-4" />
                     </div>
                     <div className="flex-1">
                       <p className="text-xs sm:text-sm font-medium">
@@ -380,7 +380,7 @@ const RecentActivity = () => {
                   </button>
                   <button
                     onClick={confirmMemberAction}
-                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-xs sm:text-sm"
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#3390d5] text-white rounded-md hover:bg-[#3390d5] transition-colors text-xs sm:text-sm"
                   >
                     Confirm
                   </button>
@@ -463,7 +463,7 @@ const RecentActivity = () => {
                   </button>
                   <button
                     onClick={confirmPaymentOrder}
-                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-xs sm:text-sm"
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#3390d5] text-white rounded-md hover:bg-[#3390d5] transition-colors text-xs sm:text-sm"
                   >
                     Confirm Order
                   </button>
@@ -561,7 +561,7 @@ const RecentActivity = () => {
                         name="allowLatePayments"
                         checked={groupSettings.allowLatePayments}
                         onChange={handleSettingsChange}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-3 h-3 sm:w-4 sm:h-4"
+                        className="rounded border-gray-300 text-[#3390d5] focus:ring-blue-500 w-3 h-3 sm:w-4 sm:h-4"
                       />
                       <span className="ml-2 text-xs sm:text-sm text-gray-700">Allow Late Payments</span>
                     </label>
@@ -591,7 +591,7 @@ const RecentActivity = () => {
                     </button>
                     <button
                       type="submit"
-                      className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors flex items-center text-xs sm:text-sm"
+                      className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#3390d5] text-white rounded hover:bg-[#3390d5] transition-colors flex items-center text-xs sm:text-sm"
                     >
                       <FiCheck className="mr-1 w-3 h-3 sm:w-4 sm:h-4" /> 
                       <span>Save Changes</span>

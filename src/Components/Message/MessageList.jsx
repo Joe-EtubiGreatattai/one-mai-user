@@ -24,7 +24,7 @@ const MessageList = ({ groupMessages, currentUser, onDeleteMessage }) => {
             <div 
               className={`max-w-[75%] sm:max-w-xs md:max-w-md rounded-lg p-2 sm:p-3 ${
                 isCurrentUser 
-                  ? 'bg-blue-500 text-white' 
+                  ? 'bg-[#3390d5] text-white' 
                   : 'bg-white border border-gray-200'
               }`}
             >
@@ -41,7 +41,7 @@ const MessageList = ({ groupMessages, currentUser, onDeleteMessage }) => {
                     </span>
                   )}
                   {msg.sender.role === 'moderator' && (
-                    <span className="bg-blue-100 text-blue-800 text-2xs sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full flex items-center">
+                    <span className="bg-[#3390d5] text-blue-800 text-2xs sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full flex items-center">
                       <FiShield className="inline mr-0.5 sm:mr-1 w-2 h-2 sm:w-3 sm:h-3" /> 
                       <span>Moderator</span>
                     </span>
@@ -54,7 +54,7 @@ const MessageList = ({ groupMessages, currentUser, onDeleteMessage }) => {
 
               {/* Message Meta */}
               <div className={`flex items-center text-2xs sm:text-xs mt-1 ${
-                isCurrentUser ? 'text-blue-100' : 'text-gray-500'
+                isCurrentUser ? 'text-[#3390d5]' : 'text-gray-500'
               }`}>
                 <span>
                   {new Date(msg.createdAt).toLocaleTimeString([], { 
@@ -72,7 +72,7 @@ const MessageList = ({ groupMessages, currentUser, onDeleteMessage }) => {
                   <button 
                     onClick={() => onDeleteMessage && onDeleteMessage(msg._id)}
                     className={`ml-2 hover:underline ${
-                      isCurrentUser ? 'hover:text-blue-200' : 'hover:text-gray-600'
+                      isCurrentUser ? 'hover:text-[#3390d5]' : 'hover:text-gray-600'
                     }`}
                     aria-label="Delete message"
                   >

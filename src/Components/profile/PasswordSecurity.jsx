@@ -218,8 +218,8 @@ console.log("user from profile form",user)
                 type="submit"
                 className={`w-full py-3 px-4 rounded-lg font-medium shadow transition flex items-center justify-center ${
                   darkMode 
-                    ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    ? 'bg-[#3390d5] hover:bg-blue-700 text-white' 
+                    : 'bg-[#3390d5] hover:bg-blue-700 text-white'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                   darkMode ? 'focus:ring-offset-gray-800' : 'focus:ring-offset-white'
                 } ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}

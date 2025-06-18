@@ -134,7 +134,7 @@ const MemberManagement = ({ onBack }) => {
                 className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white shadow"
               />
               {selectedMembers.includes(member._id) && (
-                <div className="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full p-0.5 sm:p-1">
+                <div className="absolute -top-1 -right-1 bg-[#3390d5] text-white rounded-full p-0.5 sm:p-1">
                   <FiCheck size={10} className="sm:w-3 sm:h-3" />
                 </div>
               )}
@@ -150,7 +150,7 @@ const MemberManagement = ({ onBack }) => {
                         e.stopPropagation();
                         setRoleMenuOpen(roleMenuOpen === member._id ? null : member._id);
                       }}
-                      className="text-gray-400 hover:text-blue-500 p-1 transition-colors"
+                      className="text-gray-400 hover:text-[#3390d5] p-1 transition-colors"
                       aria-label="Change role"
                     >
                       <FiUser size={14} className="sm:w-4 sm:h-4" />
@@ -167,7 +167,7 @@ const MemberManagement = ({ onBack }) => {
                           onClick={() => handleRoleChange(member._id, 'moderator')}
                           className="flex items-center px-3 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-50 w-full text-left transition-colors"
                         >
-                          <FiShield className="mr-2 text-blue-500 w-3 h-3 sm:w-4 sm:h-4" /> Make Moderator
+                          <FiShield className="mr-2 text-[#3390d5] w-3 h-3 sm:w-4 sm:h-4" /> Make Moderator
                         </button>
                         <button
                           onClick={() => handleRoleChange(member._id, 'member')}
@@ -186,7 +186,7 @@ const MemberManagement = ({ onBack }) => {
                 <>
                   <button
                     onClick={() => toggleMemberSelection(member._id)}
-                    className="p-1 text-gray-400 hover:text-blue-500 transition-colors"
+                    className="p-1 text-gray-400 hover:text-[#3390d5] transition-colors"
                     aria-label={selectedMembers.includes(member._id) ? "Deselect member" : "Select member"}
                   >
                     {selectedMembers.includes(member._id) ? (
@@ -242,7 +242,7 @@ const MemberManagement = ({ onBack }) => {
                   handleRoleChange(memberId, 'admin');
                 });
               }}
-              className="flex items-center px-3 py-1.5 sm:py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-xs sm:text-sm"
+              className="flex items-center px-3 py-1.5 sm:py-2 bg-[#3390d5] text-white rounded hover:bg-[#3390d5] transition-colors text-xs sm:text-sm"
               disabled={loading}
             >
               <FiShield className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" /> Make Admin

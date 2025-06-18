@@ -338,17 +338,17 @@ function AffiliateRegistration() {
                     type="checkbox"
                     checked={formData.agreed}
                     onChange={handleChange}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-[#3390d5] focus:ring-blue-500 border-gray-300 rounded"
                   />
                 </div>
                 <div className="ml-3">
                   <label htmlFor="agreed" className="text-sm text-gray-700">
                     I agree to the{' '}
-                    <a href="/terms" className="text-blue-600 hover:text-blue-500">
+                    <a href="/terms" className="text-[#3390d5] hover:text-[#3390d5]">
                       Terms and Conditions
                     </a>{' '}
                     and{' '}
-                    <a href="/privacy" className="text-blue-600 hover:text-blue-500">
+                    <a href="/privacy" className="text-[#3390d5] hover:text-[#3390d5]">
                       Privacy Policy
                     </a>
                   </label>
@@ -363,7 +363,7 @@ function AffiliateRegistration() {
                 type="submit"
                 disabled={loading}
                 className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
-                  loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+                  loading ? 'bg-[#3390d5]' : 'bg-[#3390d5] hover:bg-blue-700'
                 } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200`}
               >
                 {loading ? (
@@ -383,7 +383,7 @@ function AffiliateRegistration() {
             <div className="mt-4 text-center">
               <p className="text-sm text-gray-600">
                 Already an affiliate?{' '}
-                <Link to="/signin" className="font-medium text-blue-600 hover:text-blue-500">
+                <Link to="/signin" className="font-medium text-[#3390d5] hover:text-[#3390d5]">
                   Sign in
                 </Link>
               </p>

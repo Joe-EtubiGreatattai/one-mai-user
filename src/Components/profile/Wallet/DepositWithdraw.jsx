@@ -120,7 +120,7 @@ const DepositWithdraw = ({
             )}
             <button
               type="submit"
-              className={`w-full py-3 rounded-lg shadow transition ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 hover:bg-blue-700'} text-white`}
+              className={`w-full py-3 rounded-lg shadow transition ${darkMode ? 'bg-[#3390d5] hover:bg-blue-700' : 'bg-[#3390d5] hover:bg-blue-700'} text-white`}
               
             >
               Request Withdrawal

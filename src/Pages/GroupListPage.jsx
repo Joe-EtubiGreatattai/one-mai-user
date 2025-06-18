@@ -59,7 +59,7 @@ const GroupListTable = ({ titleInside = undefined }) => {
     <div className="min-h-screen bg-gray-50 relative dark:bg-gray-900 px-2 sm:px-4 pb-24">
       <Link
         to="/groupCreation"
-        className="fixed bottom-20 right-6 sm:bottom-24 sm:right-8 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 z-20"
+        className="fixed bottom-20 right-6 sm:bottom-24 sm:right-8 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-blue-100 text-white hover:bg-blue-700 transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 z-20"
         aria-label="Create new group"
       >
         <FiPlus className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -209,7 +209,7 @@ const ProgressBar = ({ progress }) => (
     <div className="w-24 sm:w-32 mr-2">
       <div className="w-full bg-gray-200 rounded-full h-2">
         <div
-          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+          className="bg-blue-100 h-2 rounded-full transition-all duration-300"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -227,7 +227,7 @@ const GroupActions = ({ group, onJoinRequest, currentUser }) => {
     return (
       <Link
         to={`/group/${group._id}`}
-        className="inline-flex items-center text-blue-600 hover:text-blue-900 text-xs sm:text-sm"
+        className="inline-flex items-center text-[#3390d5] hover:text-blue-900 text-xs sm:text-sm"
       >
         <FiEye className="mr-1" /> View
       </Link>
@@ -245,7 +245,7 @@ const GroupActions = ({ group, onJoinRequest, currentUser }) => {
   return (
     <button
       onClick={() => onJoinRequest(group._id)}
-      className="inline-flex items-center text-blue-600 hover:text-blue-900 text-xs sm:text-sm"
+      className="inline-flex items-center text-[#3390d5] hover:text-blue-900 text-xs sm:text-sm"
     >
       <FiPlus className="mr-1" /> Join
     </button>

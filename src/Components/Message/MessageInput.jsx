@@ -55,7 +55,7 @@ const MessageInput = ({
           className={`rounded-full p-1 sm:p-2 transition-colors ${
             !message.trim() || !isConnected || isSending
               ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              : 'bg-blue-500 hover:bg-blue-600 text-white'
+              : 'bg-[#3390d5] hover:bg-[#3390d5] text-white'
           }`}
           aria-label="Send message"
         >

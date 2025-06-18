@@ -84,7 +84,7 @@ const GroupBasicInfo = ({
             ) : (
               <div
                 className={`w-24 h-24 rounded-full ${
-                  isImageHovered ? "bg-blue-100" : "bg-gray-100"
+                  isImageHovered ? "bg-[#3390d5]" : "bg-gray-100"
                 } flex items-center justify-center transition-colors duration-200 border-2 ${
                   isImageHovered ? "border-blue-400" : "border-gray-200"
                 }`}
@@ -161,7 +161,7 @@ const GroupBasicInfo = ({
           </button>
           <button
             onClick={() => setCurrentStep(3)}
-            className={`flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 ${
+            className={`flex-1 bg-[#3390d5] text-white py-2 rounded-lg hover:bg-[#3390d5] transition-colors duration-200 ${
               isMobile ? "text-sm" : ""
             } ${!groupData.name ? "opacity-50 cursor-not-allowed" : ""}`}
             disabled={!groupData.name}

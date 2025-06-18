@@ -30,8 +30,8 @@ const CreateNewPassword = () => {
         {/* Header Section */}
         <div className="text-center mb-6 sm:mb-8">
           <div className="flex justify-center mb-3 sm:mb-4">
-            <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
-              <FiLock className="text-blue-600 text-xl sm:text-2xl" />
+            <div className="bg-[#3390d5] p-2 sm:p-3 rounded-full">
+              <FiLock className="text-[#3390d5] text-xl sm:text-2xl" />
             </div>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">
@@ -119,7 +119,7 @@ const CreateNewPassword = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-blue-600 text-white text-sm sm:text-base font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              className="w-full py-2 px-4 bg-[#3390d5] text-white text-sm sm:text-base font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
               Update Password
             </button>
@@ -129,7 +129,7 @@ const CreateNewPassword = () => {
           <div className="mt-3 sm:mt-4 text-center">
             <Link 
               to="/signin" 
-              className="text-xs sm:text-sm text-blue-600 hover:text-blue-500 transition-colors"
+              className="text-xs sm:text-sm text-[#3390d5] hover:text-[#3390d5] transition-colors"
             >
               Back to Sign In
             </Link>
@@ -153,7 +153,7 @@ const CreateNewPassword = () => {
               </p>
               <button
                 onClick={handleProceedToLogin}
-                className="w-full py-2 px-4 bg-blue-600 text-white text-sm sm:text-base font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                className="w-full py-2 px-4 bg-[#3390d5] text-white text-sm sm:text-base font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
               >
                 Proceed to Login
               </button>

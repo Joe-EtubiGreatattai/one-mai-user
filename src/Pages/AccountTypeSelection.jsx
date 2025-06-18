@@ -71,10 +71,10 @@ const AccountTypeSelection = () => {
           className="bg-white rounded-xl p-4 sm:p-6 lg:p-8 flex-1 cursor-pointer border-2 border-transparent hover:border-blue-500 transition-all"
         >
           <div className="flex flex-col items-center text-center h-full">
-            <div className="bg-blue-100 p-3 sm:p-4 rounded-full mb-4 sm:mb-6">
+            <div className="bg-[#3390d5] p-3 sm:p-4 rounded-full mb-4 sm:mb-6">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 sm:h-10 sm:w-10 text-blue-600"
+                className="h-8 w-8 sm:h-10 sm:w-10 text-[#3390d5]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -143,7 +143,7 @@ const AccountTypeSelection = () => {
             </ul>
             <motion.button
               whileTap={{ scale: 0.95 }}
-              className="w-full py-2 sm:py-3 px-4 sm:px-6 bg-blue-600 hover:bg-blue-700 text-white text-sm sm:text-base font-medium rounded-lg transition-colors"
+              className="w-full py-2 sm:py-3 px-4 sm:px-6 bg-[#3390d5] hover:bg-blue-700 text-white text-sm sm:text-base font-medium rounded-lg transition-colors"
             >
               Get Started
             </motion.button>
@@ -248,7 +248,7 @@ const AccountTypeSelection = () => {
           Already have an account?{" "}
           <button
             onClick={() => navigate("/signIn")}
-            className="text-blue-600 hover:text-blue-800 font-medium"
+            className="text-[#3390d5] hover:text-blue-800 font-medium"
           >
             Sign In
           </button>

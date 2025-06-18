@@ -98,7 +98,7 @@ const CreatePin = () => {
                         ? (e) => handlePinChange(e, index)
                         : (e) => handleConfirmPinChange(e, index)
                     }
-                    className="w-12 h-12 sm:w-16 sm:h-16 text-center text-xl sm:text-2xl border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#3390D5]"
+                    className="w-12 h-12 sm:w-16 sm:h-16 text-center text-xl sm:text-2xl border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue"
                   />
                 ))}
               </div>
@@ -110,7 +110,7 @@ const CreatePin = () => {
                   (step === 1 && pin.some((digit) => !digit)) ||
                   (step === 2 && confirmPin.some((digit) => !digit))
                 }
-                className={`w-full cursor-pointer py-2 sm:py-3 px-4 text-white text-sm sm:text-base font-medium rounded-md bg-[#3390D5] transition-colors duration-200`}
+                className={`w-full cursor-pointer py-2 sm:py-3 px-4 text-white text-sm sm:text-base font-medium rounded-md bg-blue transition-colors duration-200`}
               >
                 {loading
                   ? "Processing..."
@@ -124,7 +124,7 @@ const CreatePin = () => {
                   type="button"
                   onClick={() => setStep(1)}
                   disabled={loading}
-                  className="w-full cursor-pointer text-center text-[#3390D5] text-sm sm:text-base font-medium transition-colors duration-200"
+                  className="w-full cursor-pointer text-center text-blue text-sm sm:text-base font-medium transition-colors duration-200"
                 >
                   Back to create PIN
                 </button>

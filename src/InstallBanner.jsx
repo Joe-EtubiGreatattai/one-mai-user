@@ -19,7 +19,7 @@ export default function InstallBanner() {
   if (!showBanner) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-blue-600 text-white p-4 z-50 shadow-lg">
+    <div className="fixed bottom-0 left-0 right-0 bg-[#3390d5] text-white p-4 z-50 shadow-lg">
       <div className="container mx-auto flex justify-between items-center">
         <div>
           <h3 className="font-bold">Install Our App</h3>
@@ -28,13 +28,13 @@ export default function InstallBanner() {
         <div className="flex gap-2">
           <button 
             onClick={() => setShowBanner(false)}
-            className="px-4 py-2 bg-white text-blue-600 rounded"
+            className="px-4 py-2 bg-white text-[#3390d5] rounded"
           >
             Later
           </button>
           <button 
             onClick={triggerInstall}
-            className="px-4 py-2 bg-white text-blue-600 rounded font-bold"
+            className="px-4 py-2 bg-white text-[#3390d5] rounded font-bold"
           >
             Install Now
           </button>

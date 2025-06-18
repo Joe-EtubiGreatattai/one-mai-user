@@ -157,7 +157,7 @@ function DashBoard({ welcomeOnly = undefined }) {
             <div className="flex items-center gap-1.5">
               <div className="w-full bg-gray-700 rounded-full h-2 mb-1">
                 <div
-                  className="bg-blue-400 h-2 rounded-full transition-all duration-300"
+                  className="bg-[#3390d5] h-2 rounded-full transition-all duration-300"
                   style={{ width: `${profileCompletion}%` }}
                 />
               </div>
@@ -169,7 +169,7 @@ function DashBoard({ welcomeOnly = undefined }) {
 
           <Link
             to="/profile"
-            className="text-[#58B8FF] flex items-center gap-1.5"
+            className="text-blue flex items-center gap-1.5"
           >
             <span>Complete Profile</span>
             <svg
@@ -181,7 +181,7 @@ function DashBoard({ welcomeOnly = undefined }) {
             >
               <path
                 d="M0.990783 9.80211L4.87327 5.36939C4.91935 5.31662 4.95192 5.25945 4.97097 5.19789C4.99032 5.13632 5 5.07036 5 5C5 4.92964 4.99032 4.86368 4.97097 4.80211C4.95192 4.74055 4.91935 4.68338 4.87327 4.63061L0.990783 0.184697C0.883256 0.0615655 0.748847 0 0.587557 0C0.426267 0 0.288018 0.0659631 0.172811 0.197889C0.0576034 0.329815 0 0.483729 0 0.659631C0 0.835532 0.0576034 0.989446 0.172811 1.12137L3.55991 5L0.172811 8.87863C0.0652843 9.00176 0.0115204 9.15339 0.0115204 9.33351C0.0115204 9.51398 0.0691242 9.67019 0.184331 9.80211C0.299539 9.93404 0.433948 10 0.587557 10C0.741167 10 0.875576 9.93404 0.990783 9.80211Z"
-                fill="#58B8FF"
+                fill="#3390d5"
               />
             </svg>
           </Link>

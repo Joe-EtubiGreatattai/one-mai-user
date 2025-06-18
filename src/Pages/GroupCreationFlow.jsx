@@ -175,7 +175,7 @@ const GroupCreationFlow = () => {
               <div key={step} className="flex flex-col items-center">
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    currentStep >= step ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
+                    currentStep >= step ? 'bg-[#3390d5] text-white' : 'bg-gray-200 text-gray-600'
                   }`}
                 >
                   {step}
@@ -183,7 +183,7 @@ const GroupCreationFlow = () => {
                 {step < 5 && (
                   <div
                     className={`h-1 w-8 ${
-                      currentStep > step ? 'bg-blue-600' : 'bg-gray-200'
+                      currentStep > step ? 'bg-[#3390d5]' : 'bg-gray-200'
                     }`}
                   ></div>
                 )}
@@ -199,9 +199,9 @@ const GroupCreationFlow = () => {
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center ${
                   currentStep > index + 1
-                    ? 'bg-blue-100 text-blue-600'
+                    ? 'bg-[#3390d5] text-[#3390d5]'
                     : currentStep === index + 1
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-[#3390d5] text-white'
                     : 'bg-gray-200 text-gray-600'
                 }`}
               >
@@ -209,7 +209,7 @@ const GroupCreationFlow = () => {
               </div>
               <span
                 className={`mt-2 text-sm font-medium ${
-                  currentStep >= index + 1 ? 'text-blue-600' : 'text-gray-500'
+                  currentStep >= index + 1 ? 'text-[#3390d5]' : 'text-gray-500'
                 }`}
               >
                 {label}

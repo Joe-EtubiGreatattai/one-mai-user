@@ -92,14 +92,14 @@ const GroupMembers = ({
             <div className="flex space-x-2">
               <button
                 onClick={handleShare}
-                className="p-2 text-blue-500 hover:text-blue-600 rounded-full hover:bg-blue-100 transition-colors"
+                className="p-2 text-[#3390d5] hover:text-[#3390d5] rounded-full hover:bg-[#3390d5] transition-colors"
                 aria-label="Share invite link"
               >
                 <FiShare2 size={18} />
               </button>
               <button
                 onClick={handleCopy}
-                className="p-2 text-blue-500 hover:text-blue-600 rounded-full hover:bg-blue-100 transition-colors"
+                className="p-2 text-[#3390d5] hover:text-[#3390d5] rounded-full hover:bg-[#3390d5] transition-colors"
                 aria-label="Copy invite code"
               >
                 {copied ? (
@@ -138,7 +138,7 @@ const GroupMembers = ({
             />
             <button
               onClick={handleAddMember}
-              className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              className="p-2 bg-[#3390d5] text-white rounded-lg hover:bg-[#3390d5] transition-colors"
               aria-label="Add member"
             >
               <FiUserPlus size={18} />
@@ -165,7 +165,7 @@ const GroupMembers = ({
           <button
             onClick={handleCreateGroup}
             disabled={loading}
-            className={`flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors ${
+            className={`flex-1 bg-[#3390d5] text-white py-2 rounded-lg hover:bg-[#3390d5] transition-colors ${
               isMobile ? "text-sm" : ""
             } ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
           >

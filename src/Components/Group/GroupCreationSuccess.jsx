@@ -56,13 +56,13 @@ const GroupCreationSuccess = ({ groupData }) => {
           Group Created Successfully!
         </h1>
         <p className="text-gray-600 mb-6">
-          Your new group <span className="font-medium text-blue-600">"{groupData.name}"</span> is ready to use.
+          Your new group <span className="font-medium text-[#3390d5]">"{groupData.name}"</span> is ready to use.
         </p>
 
         {/* Group Info Card */}
         <div className="bg-blue-50 rounded-lg p-4 mb-6 text-left">
           <div className="flex items-center mb-3">
-            <FiUsers className="text-blue-500 mr-2" />
+            <FiUsers className="text-[#3390d5] mr-2" />
             <span className="font-medium text-gray-700">Invite Code:</span>
           </div>
           <div className="flex justify-between items-center bg-white rounded-md p-2 border border-gray-200">
@@ -71,7 +71,7 @@ const GroupCreationSuccess = ({ groupData }) => {
             </code>
             <button 
               onClick={copyInviteLink}
-              className="ml-2 p-1 text-blue-500 hover:text-blue-600 rounded hover:bg-blue-100 transition-colors"
+              className="ml-2 p-1 text-[#3390d5] hover:text-[#3390d5] rounded hover:bg-[#3390d5] transition-colors"
               aria-label="Copy invite code"
             >
               <FiCopy size={18} />
@@ -85,7 +85,7 @@ const GroupCreationSuccess = ({ groupData }) => {
         {/* Action Buttons */}
         <div className="space-y-3">
           <button
-            className={`w-full flex items-center justify-center py-3 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors ${
+            className={`w-full flex items-center justify-center py-3 px-4 bg-[#3390d5] text-white rounded-lg hover:bg-[#3390d5] transition-colors ${
               isMobile ? 'text-sm' : ''
             }`}
             onClick={() => navigate(`/groups/${groupData.inviteCode}`)}
@@ -94,7 +94,7 @@ const GroupCreationSuccess = ({ groupData }) => {
           </button>
           
           <button
-            className={`w-full flex items-center justify-center py-3 px-4 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 transition-colors ${
+            className={`w-full flex items-center justify-center py-3 px-4 border border-blue-500 text-[#3390d5] rounded-lg hover:bg-blue-50 transition-colors ${
               isMobile ? 'text-sm' : ''
             }`}
             onClick={shareGroup}
@@ -109,15 +109,15 @@ const GroupCreationSuccess = ({ groupData }) => {
           <h3 className="text-sm font-medium text-gray-500 mb-3">Next Steps:</h3>
           <ul className="text-sm text-gray-600 space-y-2">
             <li className="flex items-start">
-              <span className="text-blue-500 mr-2">•</span>
+              <span className="text-[#3390d5] mr-2">•</span>
               <span>Invite members using the share button</span>
             </li>
             <li className="flex items-start">
-              <span className="text-blue-500 mr-2">•</span>
+              <span className="text-[#3390d5] mr-2">•</span>
               <span>Set up your first savings target</span>
             </li>
             <li className="flex items-start">
-              <span className="text-blue-500 mr-2">•</span>
+              <span className="text-[#3390d5] mr-2">•</span>
               <span>Schedule your first contribution</span>
             </li>
           </ul>

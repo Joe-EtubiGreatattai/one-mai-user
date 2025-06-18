@@ -177,7 +177,7 @@ const ResetPassword = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className={`w-full cursor-pointer py-2 sm:py-3 px-4 bg-blue-600 text-white text-sm sm:text-base font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${
+                    className={`w-full cursor-pointer py-2 sm:py-3 px-4 bg-[#3390d5] text-white text-sm sm:text-base font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${
                       loading ? "opacity-70 cursor-not-allowed" : ""
                     }`}
                   >
@@ -213,7 +213,7 @@ const ResetPassword = () => {
                   <div className="text-center">
                     <Link
                       to="/signin"
-                      className="text-blue-600 hover:text-blue-500 text-sm sm:text-base font-medium transition-colors"
+                      className="text-[#3390d5] hover:text-[#3390d5] text-sm sm:text-base font-medium transition-colors"
                     >
                       Back to Sign In
                     </Link>
@@ -262,7 +262,7 @@ const ResetPassword = () => {
                             autoFocus={index === 0}
                             ref={(el) => (otpRefs.current[index] = el)}
                             className="w-16 h-18 sm:w-16 sm:h-18 text-center text-xl sm:text-2xl font-semibold border border-[#F3F4F6] rounded-md 
-                              focus:outline-none bg-[#F9FAFB] focus:ring-2 focus:ring-[#3390D5] focus:border-[#3390D5]"
+                              focus:outline-none bg-[#F9FAFB] focus:ring-2 focus:ring-blue focus:border-blue"
                           />
                         ))}
                       </div>
@@ -345,7 +345,7 @@ const ResetPassword = () => {
                         id="verify-button"
                         type="submit"
                         disabled={loading || otp.join("").length !== 4}
-                        className={`cursor-pointer w-full mt-6 py-2 sm:py-2 px-4 text-white text-base sm:text-lg font-medium rounded-md transition-colors bg-[#3390D5]`}
+                        className={`cursor-pointer w-full mt-6 py-2 sm:py-2 px-4 text-white text-base sm:text-lg font-medium rounded-md transition-colors bg-blue`}
                       >
                         {loading ? (
                           <span className="flex items-center justify-center">

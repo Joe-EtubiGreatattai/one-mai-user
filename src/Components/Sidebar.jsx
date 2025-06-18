@@ -33,7 +33,7 @@ function Sidebar() {
       onClick={() => setMobileOpen(false)}
       className={({ isActive }) => 
         `flex items-center p-3 rounded-lg transition-colors ${isActive ? 
-          'bg-blue-50 text-blue-600 font-medium' : 
+          'bg-blue-50 text-[#3390d5] font-medium' : 
           'text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800'}`
       }
       end
@@ -48,7 +48,7 @@ function Sidebar() {
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMobileMenu}
-        className="md:hidden fixed bottom-4 right-4 z-40 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+        className="md:hidden fixed bottom-4 right-4 z-40 bg-[#3390d5] text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
         aria-label="Toggle menu"
       >
         {mobileOpen ? <FiX size={20} /> : <FiMenu size={20} />}

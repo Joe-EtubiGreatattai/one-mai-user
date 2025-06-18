@@ -76,8 +76,8 @@ const VerifyPin = () => {
                 disabled={loading || pin.some((digit) => !digit)}
                 className={`w-full py-2 sm:py-3 px-4 text-white text-sm sm:text-base font-medium rounded-md ${
                   loading
-                    ? "bg-blue-400"
-                    : "bg-blue-600 hover:bg-blue-700"
+                    ? "bg-[#3390d5]"
+                    : "bg-[#3390d5] hover:bg-blue-700"
                 } transition-colors duration-200`}
               >
                 {loading ? "Verifying..." : "Verify PIN"}

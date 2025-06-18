@@ -112,7 +112,7 @@ const RecentGroup = () => {
     if (isActiveMember) {
       return (
         <button
-          className="p-2 bg-white rounded-full shadow-md text-gray-600 hover:text-blue-600 transition-colors"
+          className="p-2 bg-white rounded-full shadow-md text-gray-600 hover:text-[#3390d5] transition-colors"
           title="View Group"
           onClick={() => joinGroupRoom(currentGroup._id)}
         >
@@ -177,7 +177,7 @@ const RecentGroup = () => {
                   <span className="text-xs font-medium text-gray-600">
                     Progress
                   </span>
-                  <span className="text-xs font-semibold text-blue-600">
+                  <span className="text-xs font-semibold text-[#3390d5]">
                     {group?.progress || 0}%
                   </span>
                 </div>
@@ -223,7 +223,7 @@ const RecentGroup = () => {
                 <span className="text-xs font-medium text-gray-600">
                   Progress
                 </span>
-                <span className="text-xs font-semibold text-blue-600">
+                <span className="text-xs font-semibold text-[#3390d5]">
                   {currentGroup?.progress || 0}%
                 </span>
               </div>

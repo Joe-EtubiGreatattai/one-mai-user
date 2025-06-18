@@ -261,7 +261,7 @@ const ChatPage = () => {
     <div className="flex h-screen bg-gray-100">
       {/* Mobile sidebar toggle button */}
       <button
-        className="md:hidden fixed bottom-6 right-6 z-50 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
+        className="md:hidden fixed bottom-6 right-6 z-50 bg-[#3390d5] text-white p-3 rounded-full shadow-lg hover:bg-[#3390d5] transition-colors"
         onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
         aria-label="Toggle sidebar"
       >

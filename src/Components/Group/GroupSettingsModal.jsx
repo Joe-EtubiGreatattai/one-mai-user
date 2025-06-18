@@ -146,7 +146,7 @@ const GroupSettingsModal = ({ currentSettings, onClose, onSave }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center justify-center gap-2 transition"
+              className="px-4 py-2 sm:px-6 sm:py-3 bg-[#3390d5] text-white rounded-md hover:bg-blue-700 flex items-center justify-center gap-2 transition"
             >
               <FiSave size={16} className="sm:w-5 sm:h-5" />
               <span>Save Changes</span>

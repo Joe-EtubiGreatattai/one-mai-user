@@ -91,7 +91,7 @@ function Referrals() {
           <div className="bg-blue-50 p-2 sm:p-3 rounded-lg w-full sm:w-auto">
             <p className="text-xs sm:text-sm text-gray-600 flex flex-wrap items-center gap-1">
               My Referral Code:
-              <span className="font-mono bg-blue-100 px-2 py-1 rounded text-xs sm:text-sm">
+              <span className="font-mono bg-[#3390d5] px-2 py-1 rounded text-xs sm:text-sm">
                 {referralData.affiliateStats.referralCode}
               </span>
             </p>

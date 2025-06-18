@@ -128,8 +128,8 @@ const SignIn = () => {
                 disabled={loading || pin.some((digit) => !digit)}
                 className={`w-full py-3 px-4 text-white font-medium rounded-md ${
                   loading
-                    ? "bg-blue-400"
-                    : "bg-blue-600 hover:bg-blue-700"
+                    ? "bg-[#3390d5]"
+                    : "bg-[#3390d5] hover:bg-blue-700"
                 }`}
               >
                 {loading ? "Verifying..." : "Verify PIN"}
@@ -226,7 +226,7 @@ const SignIn = () => {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-[#3390d5] focus:ring-blue-500 border-gray-300 rounded"
                     disabled={loading}
                   />
                   <label
@@ -238,7 +238,7 @@ const SignIn = () => {
                 </div>
                 <Link
                   to="/reset-password"
-                  className="text-sm font-medium text-blue-600 hover:text-blue-500 whitespace-nowrap"
+                  className="text-sm font-medium text-[#3390d5] hover:text-[#3390d5] whitespace-nowrap"
                 >
                   Forgot password?
                 </Link>
@@ -249,8 +249,8 @@ const SignIn = () => {
                 disabled={loading}
                 className={`max-sm:mt-4  w-full py-2 px-4 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${
                   loading
-                    ? "bg-blue-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700"
+                    ? "bg-[#3390d5] cursor-not-allowed"
+                    : "bg-[#3390d5] hover:bg-blue-700"
                 }`}
               >
                 {loading ? (
@@ -288,7 +288,7 @@ const SignIn = () => {
                 Don't have an account?{" "}
                 <Link
                   to="/signup"
-                  className="font-medium text-blue-600 hover:text-blue-500"
+                  className="font-medium text-[#3390d5] hover:text-[#3390d5]"
                 >
                   Create account
                 </Link>

@@ -45,7 +45,7 @@ const GroupCreationStart = ({ setCurrentStep }) => {
 
         <div className="space-y-4">
           <button
-            className={`w-full border-none text-[#3390D5] flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 bg-[#3390D524] ${
+            className={`w-full border-none text-blue flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 bg-[#3390D524] ${
               isHoveringJoin
                 ? "bg-gray-100 shadow-md transform -translate-y-0.5"
                 : " border shadow-sm"
@@ -62,8 +62,8 @@ const GroupCreationStart = ({ setCurrentStep }) => {
           <button
             className={`w-full flex items-center justify-center py-3 px-4 rounded-lg transition-all duration-300 ${
               isHoveringCreate
-                ? "bg-blue-600 shadow-md transform -translate-y-0.5"
-                : "bg-blue-500 shadow-sm"
+                ? "bg-[#3390d5] shadow-md transform -translate-y-0.5"
+                : "bg-[#3390d5] shadow-sm"
             } text-white`}
             onClick={() => setCurrentStep(2)}
             onMouseEnter={() => setIsHoveringCreate(true)}
@@ -81,15 +81,15 @@ const GroupCreationStart = ({ setCurrentStep }) => {
           </h3>
           <ul className="text-sm text-gray-600 space-y-2">
             <li className="flex items-start">
-              <span className="text-blue-500 mr-2">•</span>
+              <span className="text-[#3390d5] mr-2">•</span>
               <span>Create a group and invite members</span>
             </li>
             <li className="flex items-start">
-              <span className="text-blue-500 mr-2">•</span>
+              <span className="text-[#3390d5] mr-2">•</span>
               <span>Set savings goals and rules</span>
             </li>
             <li className="flex items-start">
-              <span className="text-blue-500 mr-2">•</span>
+              <span className="text-[#3390d5] mr-2">•</span>
               <span>Track contributions and withdrawals</span>
             </li>
           </ul>

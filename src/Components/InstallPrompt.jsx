@@ -49,7 +49,7 @@ export default function InstallPrompt() {
       <div className="bg-white dark:bg-gray-800 p-4 rounded-t-lg sm:rounded-lg shadow-xl max-w-md mx-auto sm:mx-0 border border-gray-200 dark:border-gray-700 sm:max-w-xs w-full">
         <div className="flex items-start">
           <div className="mr-3 mt-0.5">
-            <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
+            <div className="p-2 rounded-full bg-[#3390d5] dark:bg-blue-900/50 text-[#3390d5] dark:text-[#3390d5]">
               <FiDownload size={18} aria-hidden="true" />
             </div>
           </div>
@@ -80,7 +80,7 @@ export default function InstallPrompt() {
               </button>
               <button
                 onClick={handleInstall}
-                className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                className="flex-1 px-3 py-2 bg-[#3390d5] hover:bg-blue-700 text-white text-sm rounded transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                 autoFocus
               >
                 Install

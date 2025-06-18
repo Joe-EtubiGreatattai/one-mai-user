@@ -144,7 +144,7 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
           {/* Savings Plan */}
           <div className=" rounded-lg sm:rounded-xl  ">
             {/* <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
-              <FiDollarSign className="mr-2 text-blue-500 w-4 h-4 sm:w-5 sm:h-5" />
+              <FiDollarSign className="mr-2 text-[#3390d5] w-4 h-4 sm:w-5 sm:h-5" />
               Savings Plan
             </label> */}
             <div className="grid grid-cols-1 gap-3 sm:gap-4">
@@ -216,7 +216,7 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
           {/* Group Configuration */}
           <div className=" rounded-lg sm:rounded-xl ">
             {/* <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
-              <FiUsers className="mr-2 text-blue-500 w-4 h-4 sm:w-5 sm:h-5" />
+              <FiUsers className="mr-2 text-[#3390d5] w-4 h-4 sm:w-5 sm:h-5" />
               Group Configuration
             </label> */}
             <div className="grid grid-cols-1 gap-3 sm:gap-4">
@@ -269,7 +269,7 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
                           onClick={() => handleDateSelect(month.value)}
                           className={`w-full text-left px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded hover:bg-blue-50 transition-colors ${
                             groupData.payoutDate === month.value
-                              ? "bg-blue-100 text-blue-600 font-medium"
+                              ? "bg-[#3390d5] text-[#3390d5] font-medium"
                               : ""
                           }`}
                         >

@@ -176,7 +176,7 @@ const NavItem = ({ to, icon, text, onClick }) => (
     className={({ isActive }) =>
       `flex items-center p-3 rounded-lg transition-colors relative ${
         isActive
-          ? "bg-blue-50 text-blue-600 font-medium dark:bg-gray-700 dark:text-white"
+          ? "bg-blue-50 text-[#3390d5] font-medium dark:bg-gray-700 dark:text-white"
           : "text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800"
       }`
     }
@@ -192,7 +192,7 @@ const MobileTab = ({ to, icon, label }) => (
     to={to}
     className={({ isActive }) =>
       `flex flex-col items-center justify-center text-xs ${
-        isActive ? "text-blue-600 dark:text-white" : "text-gray-500 dark:text-gray-300"
+        isActive ? "text-[#3390d5] dark:text-white" : "text-gray-500 dark:text-gray-300"
       }`
     }
   >

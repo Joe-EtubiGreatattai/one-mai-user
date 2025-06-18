@@ -34,8 +34,8 @@ const NotificationSettings = ({ darkMode }) => {
                 />
                 <div className={`w-11 h-6 md:w-12 md:h-7 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 md:after:h-6 md:after:w-6 after:transition-all ${
                   darkMode 
-                    ? 'bg-gray-700 peer-checked:bg-blue-500 after:border-gray-600' 
-                    : 'bg-gray-200 peer-checked:bg-blue-500 after:border-gray-300'
+                    ? 'bg-gray-700 peer-checked:bg-[#3390d5] after:border-gray-600' 
+                    : 'bg-gray-200 peer-checked:bg-[#3390d5] after:border-gray-300'
                 }`}></div>
               </label>
             </div>
@@ -59,8 +59,8 @@ const NotificationSettings = ({ darkMode }) => {
                 />
                 <div className={`w-11 h-6 md:w-12 md:h-7 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 md:after:h-6 md:after:w-6 after:transition-all ${
                   darkMode 
-                    ? 'bg-gray-700 peer-checked:bg-blue-500 after:border-gray-600' 
-                    : 'bg-gray-200 peer-checked:bg-blue-500 after:border-gray-300'
+                    ? 'bg-gray-700 peer-checked:bg-[#3390d5] after:border-gray-600' 
+                    : 'bg-gray-200 peer-checked:bg-[#3390d5] after:border-gray-300'
                 }`}></div>
               </label>
             </div>
@@ -84,8 +84,8 @@ const NotificationSettings = ({ darkMode }) => {
                 />
                 <div className={`w-11 h-6 md:w-12 md:h-7 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 md:after:h-6 md:after:w-6 after:transition-all ${
                   darkMode 
-                    ? 'bg-gray-700 peer-checked:bg-blue-500 after:border-gray-600' 
-                    : 'bg-gray-200 peer-checked:bg-blue-500 after:border-gray-300'
+                    ? 'bg-gray-700 peer-checked:bg-[#3390d5] after:border-gray-600' 
+                    : 'bg-gray-200 peer-checked:bg-[#3390d5] after:border-gray-300'
                 }`}></div>
               </label>
             </div>
@@ -117,8 +117,8 @@ const NotificationSettings = ({ darkMode }) => {
                 />
                 <div className={`w-11 h-6 md:w-12 md:h-7 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 md:after:h-6 md:after:w-6 after:transition-all ${
                   darkMode 
-                    ? 'bg-gray-700 peer-checked:bg-blue-500 after:border-gray-600' 
-                    : 'bg-gray-200 peer-checked:bg-blue-500 after:border-gray-300'
+                    ? 'bg-gray-700 peer-checked:bg-[#3390d5] after:border-gray-600' 
+                    : 'bg-gray-200 peer-checked:bg-[#3390d5] after:border-gray-300'
                 }`}></div>
               </label>
             </div>
@@ -142,8 +142,8 @@ const NotificationSettings = ({ darkMode }) => {
                 />
                 <div className={`w-11 h-6 md:w-12 md:h-7 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 md:after:h-6 md:after:w-6 after:transition-all ${
                   darkMode 
-                    ? 'bg-gray-700 peer-checked:bg-blue-500 after:border-gray-600' 
-                    : 'bg-gray-200 peer-checked:bg-blue-500 after:border-gray-300'
+                    ? 'bg-gray-700 peer-checked:bg-[#3390d5] after:border-gray-600' 
+                    : 'bg-gray-200 peer-checked:bg-[#3390d5] after:border-gray-300'
                 }`}></div>
               </label>
             </div>
