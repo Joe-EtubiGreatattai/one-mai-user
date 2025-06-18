@@ -88,7 +88,7 @@ const useGroupStore = create(
             get().socket.disconnect();
           }
 
-          const socket = io("http://localhost:5000", {
+          const socket = io("https://api.joinonemai.com", {
             transports: ["websocket"],
             query: { userId: user._id }
           });
