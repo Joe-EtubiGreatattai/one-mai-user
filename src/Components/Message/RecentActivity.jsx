@@ -104,9 +104,9 @@ const RecentActivity = () => {
   };
 
   const copyGroupLink = () => {
-    if (!currentGroup?._id) return;
-    navigator.clipboard.writeText(`${window.location.origin}/groups/${currentGroup._id}/join`);
-    toast.success('Group link copied to clipboard!');
+    if (!currentGroup?.inviteCode) return;
+    navigator.clipboard.writeText(currentGroup.inviteCode);
+    toast.success('Group invite code copied to clipboard!');
   };
 
   const handleSettingsChange = (e) => {
@@ -137,7 +137,6 @@ const RecentActivity = () => {
       toast.error('Failed to update settings');
     }
   };
-  console.log("currentGroup",currentGroup);
 
   return (
     <div className="p-3 sm:p-4 space-y-4">
@@ -168,7 +167,7 @@ const RecentActivity = () => {
                       className="flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-50 w-full text-left transition-colors"
                     >
                       <FiLink className="mr-2 w-3 h-3 sm:w-4 sm:h-4" /> 
-                      <span>Copy Group Link</span>
+                      <span>Copy Invite Code</span>
                     </button>
 
                     {isAdmin && (
@@ -222,10 +221,10 @@ const RecentActivity = () => {
             <button
               onClick={copyGroupLink}
               className="flex flex-col items-center bg-gray-100 p-2 rounded hover:bg-gray-200 transition-colors"
-              aria-label="Copy group link"
+              aria-label="Copy group invite code"
             >
               <FiLink className="text-gray-700 w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="text-xs mt-1">Link</span>
+              <span className="text-xs mt-1">Invite Code</span>
             </button>
           </div>
 

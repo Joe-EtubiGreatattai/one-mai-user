@@ -202,6 +202,23 @@ const useGroupStore = create(
 
       // Send message
 
+      fetchGroupByInviteCode: async (code) => {
+        set({ loading: true });
+        try {
+          const response = await axios.get(`/api/group/invite/${code}`);
+          const group = response.data.group;
+
+          if (!group) throw new Error("Group not found");
+
+          return group;
+        } catch (error) {
+          const message = error.response?.data?.message || "Invalid or expired invite code";
+          set({ error: message });
+          throw new Error(message);
+        } finally {
+          set({ loading: false });
+        }
+      },
 
       // Delete message
       deleteMessage: async (messageId) => {
@@ -230,6 +247,30 @@ const useGroupStore = create(
           throw error;
         }
       },
+
+  joinGroupWithCode: async (inviteCode) => {
+  set({ loading: true });
+  try {
+    const response = await axios.post('/api/group/join', {
+      invite_code: inviteCode
+    });
+
+    if (response.data.message === "Group not found") {
+      throw new Error("Group not found");
+    }
+
+    return response.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Failed to join group";
+    set({ error: message });
+    throw new Error(message);
+  } finally {
+    set({ loading: false });
+  }
+},
+
+
+
 
       // Disconnect socket
       disconnectSocket: () => {

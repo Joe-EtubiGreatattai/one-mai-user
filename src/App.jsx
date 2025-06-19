@@ -33,6 +33,7 @@ import DashboardLayout from "./Components/DashboardLayout";
 import ProfilePage from "./Components/profile/ProfilePage";
 import ChatPage from "./Components/ChatPage";
 import VerifyPin from "./Components/VerifyPin";
+import JoinGroupPage from "./Pages/JoinGroupPage";
 // Auth Protected Route Component
 const ProtectedRoute = () => {
   const { user } = useAuthStore();
@@ -106,6 +107,7 @@ function App() {
           <Route path="/verify/twoFactor" element={<VerifyPin />} />
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<DashboardLayout />} />
+             <Route path="/join-group" element={<JoinGroupPage />} />
             <Route path="/refearals" element={<Referrals />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/group" element={<GroupListTable />} />

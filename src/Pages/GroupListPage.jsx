@@ -37,12 +37,13 @@ const GroupListTable = ({ titleInside = undefined }) => {
 
   const AlertMessage = ({ message, type, onClose }) => (
     <div
-      className={`fixed top-4 right-4 bg-${type}-100 border border-${type}-400 text-${type}-700 px-4 py-3 rounded z-50 max-w-xs sm:max-w-md`}
+      className={`fixed top-4 right-4 bg-${type}-100 border border-${type}-400 text-${type}-700 px-4 py-3 rounded z-50 max-w-xs sm:max-w-md flex items-center`}
     >
       <span className="block sm:inline">{message}</span>
       <button
         onClick={onClose}
-        className="absolute top-0 bottom-0 right-0 px-4 py-3"
+        className="ml-4 p-1"
+        aria-label="Close"
       >
         <svg
           className={`fill-current h-6 w-6 text-${type}-500`}
@@ -59,7 +60,7 @@ const GroupListTable = ({ titleInside = undefined }) => {
     <div className="min-h-screen bg-gray-50 relative dark:bg-gray-900 px-2 sm:px-4 pb-24">
       <Link
         to="/groupCreation"
-        className="fixed bottom-20 right-6 sm:bottom-24 sm:right-8 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-blue-100 text-white hover:bg-blue-700 transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 z-20"
+        className="fixed bottom-20 right-6 sm:bottom-24 sm:right-8 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-[#3390d5] text-white hover:bg-[#3390d5] transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 z-20"
         aria-label="Create new group"
       >
         <FiPlus className="h-5 w-5 sm:h-6 sm:w-6" />
