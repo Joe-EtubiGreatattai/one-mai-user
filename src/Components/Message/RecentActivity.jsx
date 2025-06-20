@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
-import { FiMoreVertical, FiLink, FiUsers, FiBell, FiX, FiCheck, FiSettings, FiDollarSign } from 'react-icons/fi';
+import {
+  FiMoreVertical,
+  FiLink,
+  FiUsers,
+  FiBell,
+  FiX,
+  FiCheck,
+  FiSettings,
+  FiDollarSign,
+  FiRepeat,
+  FiArrowLeft
+} from 'react-icons/fi';
 import { FaCrown } from 'react-icons/fa';
 import useGroupStore from '../../Store/group';
 import MemberManagement from '../Message/MemberManagement';
+import PayoutSwapManagement from '../Message/PayoutSwapManagement';
 import { toast } from 'react-hot-toast';
 import useAuthStore from "../../Store/Auth";
 
@@ -13,7 +25,8 @@ const RecentActivity = () => {
     changeMemberRole,
     updateGroupSettings,
     removeGroupMember,
-    initiateAutomaticPayout
+    initiateAutomaticPayout,
+    requestPayoutSwap
   } = useGroupStore();
 
   const [showMembersList, setShowMembersList] = useState(false);
@@ -21,6 +34,7 @@ const RecentActivity = () => {
   const [showPaymentOrderModal, setShowPaymentOrderModal] = useState(false);
   const [paymentOrder, setPaymentOrder] = useState([]);
   const [showMemberManagement, setShowMemberManagement] = useState(false);
+  const [showPayoutSwapManagement, setShowPayoutSwapManagement] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [actionType, setActionType] = useState(null);
@@ -28,6 +42,9 @@ const RecentActivity = () => {
   const [selectedActionMember, setSelectedActionMember] = useState(null);
   const [showPayoutConfirmation, setShowPayoutConfirmation] = useState(false);
   const [isProcessingPayout, setIsProcessingPayout] = useState(false);
+  const [showSwapRequestModal, setShowSwapRequestModal] = useState(false);
+  const [swapTargetMember, setSwapTargetMember] = useState(null);
+  const [isRequestingSwap, setIsRequestingSwap] = useState(false);
 
   const [groupSettings, setGroupSettings] = useState({
     name: currentGroup?.name || '',
@@ -41,6 +58,16 @@ const RecentActivity = () => {
 
   const currentUserId = useAuthStore.getState().user?._id;
   const isAdmin = currentGroup?.admin?._id === currentUserId;
+
+  // Get next recipient details
+  const nextRecipient = currentGroup?.members?.find(
+    member => member.user._id === currentGroup?.nextRecipient
+  );
+
+  // Get current user's member data
+  const currentUserMember = currentGroup?.members?.find(
+    member => member.user._id === currentUserId
+  );
 
   const toggleMemberSelection = (memberId) => {
     setSelectedMembers(prev =>
@@ -154,14 +181,43 @@ const RecentActivity = () => {
     }
   };
 
-  // Get next recipient details
-  const nextRecipient = currentGroup?.members?.find(
-    member => member.user._id === currentGroup?.nextRecipient
-  );
+  const handleRequestSwap = (member) => {
+    // Don't allow swapping with yourself
+    if (member.user._id === currentUserId) {
+      toast.error("You cannot swap with yourself");
+      return;
+    }
+    
+    // Check if the member is already next in line
+    if (currentGroup?.nextRecipient === member.user._id) {
+      toast.error("This member is already next in line for payout");
+      return;
+    }
+    
+    setSwapTargetMember(member);
+    setShowSwapRequestModal(true);
+  };
+
+  const confirmSwapRequest = async () => {
+    if (!swapTargetMember) return;
+
+    setIsRequestingSwap(true);
+    try {
+      await requestPayoutSwap(currentGroup._id, swapTargetMember._id);
+      toast.success('Swap request sent successfully!');
+      setShowSwapRequestModal(false);
+    } catch (error) {
+      toast.error(error.message || 'Failed to send swap request');
+    } finally {
+      setIsRequestingSwap(false);
+    }
+  };
 
   return (
     <div className="p-3 sm:p-4 space-y-4">
-      {showMemberManagement ? (
+      {showPayoutSwapManagement ? (
+        <PayoutSwapManagement onBack={() => setShowPayoutSwapManagement(false)} />
+      ) : showMemberManagement ? (
         <MemberManagement onBack={() => setShowMemberManagement(false)} />
       ) : (
         <>
@@ -187,7 +243,7 @@ const RecentActivity = () => {
                       }}
                       className="flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-50 w-full text-left transition-colors"
                     >
-                      <FiLink className="mr-2 w-3 h-3 sm:w-4 sm:h-4" /> 
+                      <FiLink className="mr-2 w-3 h-3 sm:w-4 sm:h-4" />
                       <span>Copy Invite Code</span>
                     </button>
 
@@ -199,7 +255,7 @@ const RecentActivity = () => {
                         }}
                         className="flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-50 w-full text-left transition-colors"
                       >
-                        <FiSettings className="mr-2 w-3 h-3 sm:w-4 sm:h-4" /> 
+                        <FiSettings className="mr-2 w-3 h-3 sm:w-4 sm:h-4" />
                         <span>Group Settings</span>
                       </button>
                     )}
@@ -210,11 +266,11 @@ const RecentActivity = () => {
           </div>
 
           {/* Group Image */}
-          <img 
-              className="h-10 w-10 rounded-full" 
-              src={`https://api.joinonemai.com${currentGroup?.image}`} 
-              alt={currentGroup?.name ?? 'Group'} 
-            />
+          <img
+            className="h-10 w-10 rounded-full"
+            src={`https://api.joinonemai.com${currentGroup?.image}`}
+            alt={currentGroup?.name ?? 'Group'}
+          />
 
           {/* Group Name */}
           <h3 className="text-center font-semibold text-sm sm:text-base">
@@ -239,7 +295,7 @@ const RecentActivity = () => {
                 </button>
               )}
             </div>
-            
+
             {currentGroup?.nextRecipient && (
               <div className="mt-2 text-xs">
                 <p className="text-gray-500">Next payout to:</p>
@@ -254,6 +310,17 @@ const RecentActivity = () => {
               </div>
             )}
           </div>
+
+          {/* Swap Payout Position Button */}
+          {currentUserMember && !isAdmin && (
+            <button
+              onClick={() => setShowPayoutSwapManagement(true)}
+              className="w-full bg-yellow-100 text-yellow-800 font-medium py-2 rounded hover:bg-yellow-200 transition-colors text-xs sm:text-sm flex items-center justify-center gap-2"
+            >
+              <FiRepeat size={14} />
+              <span>Request Payout Position Swap</span>
+            </button>
+          )}
 
           {/* Action Buttons */}
           <div className="grid grid-cols-3 gap-2">
@@ -288,35 +355,22 @@ const RecentActivity = () => {
             <div>
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 sm:mb-4 gap-2">
                 <h4 className="font-medium text-sm sm:text-base">Group Members</h4>
-                {selectedMembers.length > 0 && (
-                  <div className="flex gap-2">
-                    <button
-                      onClick={handleSendRequest}
-                      className="bg-[#3390d5] text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm"
-                    >
-                      Send Request
-                    </button>
-                    {isAdmin && (
-                      <button
-                        onClick={handleAssignPaymentOrder}
-                        className="bg-green-500 text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm"
-                      >
-                        Assign Payment
-                      </button>
-                    )}
-                  </div>
-                )}
+                <button
+                  onClick={() => setShowMembersList(false)}
+                  className="text-xs sm:text-sm text-gray-500 hover:text-gray-700"
+                >
+                  Back to activity
+                </button>
               </div>
 
               <div className="space-y-3 sm:space-y-4">
                 {currentGroup?.members?.map((member) => (
                   <div
                     key={member._id}
-                    className={`flex items-center gap-2 sm:gap-3 p-2 rounded-lg transition ${
-                      selectedMembers.includes(member._id) 
-                        ? 'bg-blue-50 border border-blue-200' 
+                    className={`flex items-center gap-2 sm:gap-3 p-2 rounded-lg transition ${selectedMembers.includes(member._id)
+                        ? 'bg-blue-50 border border-blue-200'
                         : 'hover:bg-gray-50'
-                    }`}
+                      }`}
                   >
                     <div className="relative flex-shrink-0">
                       <img
@@ -336,23 +390,21 @@ const RecentActivity = () => {
                         {member.role}
                       </p>
                     </div>
-                    <span className={`text-2xs sm:text-xs px-2 py-0.5 sm:py-1 rounded-full ${
-                      member.status === 'active' 
-                        ? 'bg-green-100 text-green-800' 
+                    <span className={`text-2xs sm:text-xs px-2 py-0.5 sm:py-1 rounded-full ${member.status === 'active'
+                        ? 'bg-green-100 text-green-800'
                         : 'bg-gray-100 text-gray-800'
-                    }`}>
+                      }`}>
                       {member.status === 'active' ? 'Online' : 'Offline'}
                     </span>
-                    
+
                     {isAdmin && member.user._id !== currentUserId && (
                       <div className="flex gap-1 sm:gap-2">
                         <button
                           onClick={() => handleMemberAction(member, 'role')}
-                          className={`px-2 sm:px-3 py-0.5 sm:py-1 text-2xs sm:text-xs rounded-full ${
-                            member.role === 'admin' 
-                              ? 'bg-purple-100 text-purple-800 hover:bg-purple-200' 
+                          className={`px-2 sm:px-3 py-0.5 sm:py-1 text-2xs sm:text-xs rounded-full ${member.role === 'admin'
+                              ? 'bg-purple-100 text-purple-800 hover:bg-purple-200'
                               : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                          }`}
+                            }`}
                         >
                           {member.role === 'admin' ? 'Make Member' : 'Make Admin'}
                         </button>
@@ -364,13 +416,22 @@ const RecentActivity = () => {
                         </button>
                       </div>
                     )}
+
+                    {currentUserMember && member.user._id !== currentUserId && (
+                      <button
+                        onClick={() => handleRequestSwap(member)}
+                        className="px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-xs bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200 flex items-center gap-1"
+                      >
+                        <FiRepeat size={10} />
+                        <span>Request Swap</span>
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
           ) : (
             <div>
-              {/* <h4 className="font-medium text-sm sm:text-base mb-2">Recent Activity</h4> */}
               <div className="space-y-3 sm:space-y-4">
                 {currentGroup?.activities?.slice(0, 3).map((activity) => (
                   <div key={activity._id} className="flex items-start gap-2 sm:gap-3">
@@ -461,14 +522,85 @@ const RecentActivity = () => {
             </div>
           )}
 
+          {/* Swap Request Modal */}
+          {showSwapRequestModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md">
+                <div className="flex justify-between items-center mb-3 sm:mb-4">
+                  <h3 className="text-base sm:text-lg font-semibold">Request Payout Position Swap</h3>
+                  <button
+                    onClick={() => setShowSwapRequestModal(false)}
+                    className="text-gray-500 hover:text-gray-700 transition-colors"
+                    aria-label="Close modal"
+                  >
+                    <FiX size={20} className="sm:w-6 sm:h-6" />
+                  </button>
+                </div>
+
+                <div className="mb-4 text-sm sm:text-base">
+                  <p>You are requesting to swap payout positions with:</p>
+                  <div className="flex items-center gap-3 mt-3 bg-gray-50 p-3 rounded-lg">
+                    <img
+                      src={swapTargetMember?.user?.avatar || `https://ui-avatars.com/api/?name=${swapTargetMember?.user?.name}&background=random`}
+                      alt={swapTargetMember?.user?.name}
+                      className="w-10 h-10 rounded-full"
+                    />
+                    <div>
+                      <p className="font-medium">{swapTargetMember?.user?.name}</p>
+                      <p className="text-xs text-gray-500">
+                        Current position: {currentGroup?.payoutOrder?.indexOf(swapTargetMember?._id) + 1 || 'Unknown'}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Your position: {currentGroup?.payoutOrder?.indexOf(currentUserMember?._id) + 1 || 'Unknown'}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="mt-3 text-sm">
+                    This will send a request to {swapTargetMember?.user?.name}. They will need to approve the swap.
+                  </p>
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => setShowSwapRequestModal(false)}
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-xs sm:text-sm"
+                    disabled={isRequestingSwap}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmSwapRequest}
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-colors text-xs sm:text-sm flex items-center gap-1"
+                    disabled={isRequestingSwap}
+                  >
+                    {isRequestingSwap ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <FiRepeat className="w-3 h-3" />
+                        Request Swap
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Action Confirmation Modal */}
           {showActionModal && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
               <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md">
                 <div className="flex justify-between items-center mb-3 sm:mb-4">
                   <h3 className="text-base sm:text-lg font-semibold">
-                    {actionType === 'role' 
-                      ? 'Change Member Role' 
+                    {actionType === 'role'
+                      ? 'Change Member Role'
                       : 'Remove Member'}
                   </h3>
                   <button
@@ -482,7 +614,7 @@ const RecentActivity = () => {
 
                 <div className="mb-4 text-sm sm:text-base">
                   <p>
-                    {actionType === 'role' 
+                    {actionType === 'role'
                       ? `Are you sure you want to change ${selectedActionMember?.user?.name}'s role to ${selectedActionMember?.role === 'admin' ? 'member' : 'admin'}?`
                       : `Are you sure you want to remove ${selectedActionMember?.user?.name} from the group?`}
                   </p>
@@ -710,7 +842,7 @@ const RecentActivity = () => {
                       type="submit"
                       className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#3390d5] text-white rounded hover:bg-[#3390d5] transition-colors flex items-center text-xs sm:text-sm"
                     >
-                      <FiCheck className="mr-1 w-3 h-3 sm:w-4 sm:h-4" /> 
+                      <FiCheck className="mr-1 w-3 h-3 sm:w-4 sm:h-4" />
                       <span>Save Changes</span>
                     </button>
                   </div>

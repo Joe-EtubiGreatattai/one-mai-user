@@ -220,6 +220,25 @@ const useGroupStore = create(
         }
       },
 
+      // Add this method to the useGroupStore
+      requestPayoutSwap: async (groupId, recipientId) => {
+        set({ loading: true });
+        try {
+          const response = await axios.post(
+            `/api/group/${groupId}/request_payout_order_swap`,
+            { recipient: recipientId }
+          );
+
+          toast.success(response.data.message || "Swap request sent successfully");
+          return response.data;
+        } catch (error) {
+          const errorMessage = error.response?.data?.message || "Failed to send swap request";
+          toast.error(errorMessage);
+          throw new Error(errorMessage);
+        } finally {
+          set({ loading: false });
+        }
+      },
       // Delete message
       deleteMessage: async (messageId) => {
         const { socket } = get();
@@ -248,26 +267,26 @@ const useGroupStore = create(
         }
       },
 
-  joinGroupWithCode: async (inviteCode) => {
-  set({ loading: true });
-  try {
-    const response = await axios.post('/api/group/join', {
-      invite_code: inviteCode
-    });
+      joinGroupWithCode: async (inviteCode) => {
+        set({ loading: true });
+        try {
+          const response = await axios.post('/api/group/join', {
+            invite_code: inviteCode
+          });
 
-    if (response.data.message === "Group not found") {
-      throw new Error("Group not found");
-    }
+          if (response.data.message === "Group not found") {
+            throw new Error("Group not found");
+          }
 
-    return response.data;
-  } catch (error) {
-    const message = error.response?.data?.message || error.message || "Failed to join group";
-    set({ error: message });
-    throw new Error(message);
-  } finally {
-    set({ loading: false });
-  }
-},
+          return response.data;
+        } catch (error) {
+          const message = error.response?.data?.message || error.message || "Failed to join group";
+          set({ error: message });
+          throw new Error(message);
+        } finally {
+          set({ loading: false });
+        }
+      },
 
 
 
