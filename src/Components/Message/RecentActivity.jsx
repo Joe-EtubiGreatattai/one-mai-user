@@ -59,10 +59,21 @@ const RecentActivity = () => {
   const currentUserId = useAuthStore.getState().user?._id;
   const isAdmin = currentGroup?.admin?._id === currentUserId;
 
-  // Get next recipient details
-  const nextRecipient = currentGroup?.members?.find(
-    member => member.user._id === currentGroup?.nextRecipient
-  );
+  // Helper function to get members sorted by join date
+  const getSortedMembersByJoinDate = () => {
+    return [...(currentGroup?.members || [])].sort(
+      (a, b) => new Date(a.joinedAt) - new Date(b.joinedAt)
+    );
+  };
+
+  // Get next recipient details based on join date order
+  const getNextRecipient = () => {
+    const sortedMembers = getSortedMembersByJoinDate();
+    if (!currentGroup?.nextRecipient) return sortedMembers[0];
+    return sortedMembers.find(member => member.user._id === currentGroup.nextRecipient);
+  };
+
+  const nextRecipient = getNextRecipient();
 
   // Get current user's member data
   const currentUserMember = currentGroup?.members?.find(
@@ -150,6 +161,7 @@ const RecentActivity = () => {
   const handleSettingsSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log('Next payout user:', getNextRecipient());
       await updateGroupSettings(currentGroup._id, {
         name: groupSettings.name,
         description: groupSettings.description,
@@ -187,13 +199,13 @@ const RecentActivity = () => {
       toast.error("You cannot swap with yourself");
       return;
     }
-    
+
     // Check if the member is already next in line
     if (currentGroup?.nextRecipient === member.user._id) {
       toast.error("This member is already next in line for payout");
       return;
     }
-    
+
     setSwapTargetMember(member);
     setShowSwapRequestModal(true);
   };
@@ -296,19 +308,32 @@ const RecentActivity = () => {
               )}
             </div>
 
-            {currentGroup?.nextRecipient && (
-              <div className="mt-2 text-xs">
-                <p className="text-gray-500">Next payout to:</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <img
-                    src={nextRecipient?.user?.avatar || `https://ui-avatars.com/api/?name=${nextRecipient?.user?.name}&background=random`}
-                    alt={nextRecipient?.user?.name}
-                    className="w-6 h-6 rounded-full"
-                  />
-                  <span className="font-medium">{nextRecipient?.user?.name}</span>
+            {nextRecipient && (() => {
+              console.log('Next payout user object:', nextRecipient?.user);
+              return (
+                <div className="mt-2 text-xs">
+                  <p className="text-gray-500">Next payout to:</p>
+                  <div className="flex items-center gap-3 mt-1 bg-gray-50 p-2 rounded-lg border border-gray-200">
+                    <img
+                      src={nextRecipient?.user?.avatar || `https://ui-avatars.com/api/?name=${nextRecipient?.user?.email}&background=random`}
+                      alt={nextRecipient?.user?.email}
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <div>
+                      <p className="font-medium">{nextRecipient?.user?.email}</p>
+                      <p className="text-xs text-gray-500">
+                        {`Position #${getSortedMembersByJoinDate().findIndex(m => m.user._id === nextRecipient.user._id) + 1}`}
+                      </p>
+                      <span className="inline-block mt-1 px-2 py-0.5 text-green-800 bg-green-100 text-xs rounded-full">
+                        Next in line
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
+
+
           </div>
 
           {/* Swap Payout Position Button */}
@@ -368,8 +393,8 @@ const RecentActivity = () => {
                   <div
                     key={member._id}
                     className={`flex items-center gap-2 sm:gap-3 p-2 rounded-lg transition ${selectedMembers.includes(member._id)
-                        ? 'bg-blue-50 border border-blue-200'
-                        : 'hover:bg-gray-50'
+                      ? 'bg-blue-50 border border-blue-200'
+                      : 'hover:bg-gray-50'
                       }`}
                   >
                     <div className="relative flex-shrink-0">
@@ -391,8 +416,8 @@ const RecentActivity = () => {
                       </p>
                     </div>
                     <span className={`text-2xs sm:text-xs px-2 py-0.5 sm:py-1 rounded-full ${member.status === 'active'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-gray-100 text-gray-800'
                       }`}>
                       {member.status === 'active' ? 'Online' : 'Offline'}
                     </span>
@@ -402,8 +427,8 @@ const RecentActivity = () => {
                         <button
                           onClick={() => handleMemberAction(member, 'role')}
                           className={`px-2 sm:px-3 py-0.5 sm:py-1 text-2xs sm:text-xs rounded-full ${member.role === 'admin'
-                              ? 'bg-purple-100 text-purple-800 hover:bg-purple-200'
-                              : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                            ? 'bg-purple-100 text-purple-800 hover:bg-purple-200'
+                            : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                             }`}
                         >
                           {member.role === 'admin' ? 'Make Member' : 'Make Admin'}
@@ -548,10 +573,10 @@ const RecentActivity = () => {
                     <div>
                       <p className="font-medium">{swapTargetMember?.user?.name}</p>
                       <p className="text-xs text-gray-500">
-                        Current position: {currentGroup?.payoutOrder?.indexOf(swapTargetMember?._id) + 1 || 'Unknown'}
+                        Current position: {getSortedMembersByJoinDate().findIndex(m => m._id === swapTargetMember?._id) + 1 || 'Unknown'}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        Your position: {currentGroup?.payoutOrder?.indexOf(currentUserMember?._id) + 1 || 'Unknown'}
+                        Your position: {getSortedMembersByJoinDate().findIndex(m => m._id === currentUserMember?._id) + 1 || 'Unknown'}
                       </p>
                     </div>
                   </div>
