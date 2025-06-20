@@ -9,7 +9,7 @@ import RequestModal from "../Components/Message/RequestModal";
 import useAuthStore from "../Store/Auth";
 import useGroupStore from "../Store/group";
 import { FaCrown } from "react-icons/fa";
-import { FiShield, FiUserCheck, FiMenu, FiX } from "react-icons/fi";
+import { FiShield, FiUserCheck, FiMenu, FiX, FiUsers } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 
 const ChatPage = () => {
@@ -93,6 +93,29 @@ const ChatPage = () => {
 
     loadGroupData();
   }, [groupId, getGroupDetails, fetchGroupMessages]);
+
+  // Close mobile sidebar when clicking outside or on escape
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && mobileSidebarOpen) {
+        setMobileSidebarOpen(false);
+      }
+    };
+
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && mobileSidebarOpen) {
+        setMobileSidebarOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [mobileSidebarOpen]);
  
   const handleSendMessage = async () => {
     if (!message.trim() || !socketReady) {
@@ -207,6 +230,13 @@ const ChatPage = () => {
     });
   };
 
+  const handleMobileSidebarToggle = () => {
+    setMobileSidebarOpen(!mobileSidebarOpen);
+    // Close any open menus when opening/closing sidebar
+    setShowMoreOptions(false);
+    setShowRoleMenu(null);
+  };
+
   const getStatusBadge = (member) => (
     <span
       className={`${
@@ -258,27 +288,19 @@ const ChatPage = () => {
   const isAdmin = currentGroup?.isAdmin;
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Mobile sidebar toggle button */}
-      <button
-        className="md:hidden fixed bottom-6 right-6 z-50 bg-[#3390d5] text-white p-3 rounded-full shadow-lg hover:bg-[#3390d5] transition-colors"
-        onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-        aria-label="Toggle sidebar"
-      >
-        {mobileSidebarOpen ? <FiX size={20} /> : <FiMenu size={20} />}
-      </button>
-
+    <div className="flex h-[81vh] md:h-[90vh] bg-[#fff] relative overflow-hidden">
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col max-w-full overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 relative">
         <ChatHeader
           currentGroup={currentGroup}
           showMoreOptions={showMoreOptions}
           setShowMoreOptions={setShowMoreOptions}
           copyGroupLink={copyGroupLink}
-          onToggleMembersList={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+          onToggleMembersList={handleMobileSidebarToggle}
         />
 
-        <div className="flex-1 overflow-y-auto p-2 md:p-4">
+        {/* Messages Area */}
+        <div className="flex-1 overflow-y-auto px-2 py-2 md:px-4 md:py-4 bg-white md:bg-gray-50">
           <MessageList
             groupMessages={{ data: allMessages }}
             currentUser={currentUser}
@@ -286,7 +308,8 @@ const ChatPage = () => {
           />
         </div>
 
-        <div className="p-2 md:p-4">
+        {/* Message Input - Fixed at bottom */}
+        <div className="bg-white border-t border-gray-200 px-2 py-2 md:px-4 md:py-4 safe-area-inset-bottom">
           <MessageInput
             message={message}
             setMessage={setMessage}
@@ -295,10 +318,25 @@ const ChatPage = () => {
             isConnected={socketReady}
           />
         </div>
+
+        {/* Mobile Members Button - Floating */}
+        <button
+          className="md:hidden fixed bottom-20 left-4 z-30 bg-[#3390d5] text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-all duration-200 active:scale-95"
+          onClick={handleMobileSidebarToggle}
+          aria-label="Toggle group members"
+        >
+          <FiUsers size={20} />
+          {/* Member count badge */}
+          {currentGroup?.members?.length > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+              {currentGroup.members.length}
+            </span>
+          )}
+        </button>
       </div>
 
-      {/* Right Sidebar - Desktop */}
-      <div className={`hidden md:flex flex-col w-80 bg-white border-l border-gray-200 overflow-y-auto`}>
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:flex flex-col w-80 bg-white border-l border-gray-200 overflow-hidden">
         <div className="flex-1 overflow-y-auto">
           <MembersList
             currentGroup={currentGroup}
@@ -319,7 +357,7 @@ const ChatPage = () => {
           />
         </div>
 
-        <div className="border-t border-gray-200">
+        <div className="border-t border-gray-200 flex-shrink-0">
           <RecentActivity
             currentGroup={currentGroup}
             showMoreOptions={showMoreOptions}
@@ -328,60 +366,68 @@ const ChatPage = () => {
         </div>
       </div>
 
-      {/* Right Sidebar - Mobile (Drawer) */}
-      <div
-        className={`fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl transform ${
-          mobileSidebarOpen ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out z-40 md:hidden flex flex-col`}
-      >
-        <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-          <h3 className="text-lg font-semibold">Group Details</h3>
-          <button
-            className="text-gray-500 hover:text-gray-700"
-            onClick={() => setMobileSidebarOpen(false)}
-            aria-label="Close sidebar"
-          >
-            <FiX size={24} />
-          </button>
-        </div>
-        
-        <div className="flex-1 overflow-y-auto">
-          <MembersList
-            currentGroup={currentGroup}
-            showMembersList={showMembersList}
-            toggleMembersList={toggleMembersList}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            selectedUsers={selectedUsers}
-            toggleUserSelection={toggleUserSelection}
-            sendRequestToSelectedUsers={() => setShowRequestModal(true)}
-            showRoleMenu={showRoleMenu}
-            setShowRoleMenu={setShowRoleMenu}
-            changeUserRole={changeUserRole}
-            canChangeRoles={canChangeRoles}
-            isAdmin={isAdmin}
-            getStatusBadge={getStatusBadge}
-            getRoleBadge={getRoleBadge}
-          />
-        </div>
-
-        <div className="border-t border-gray-200 p-4">
-          <RecentActivity
-            currentGroup={currentGroup}
-            showMoreOptions={showMoreOptions}
-            setShowMoreOptions={setShowMoreOptions}
-          />
-        </div>
-      </div>
-
-      {/* Overlay for mobile sidebar */}
+      {/* Mobile Sidebar Overlay */}
       {mobileSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-300"
           onClick={() => setMobileSidebarOpen(false)}
+          aria-label="Close sidebar"
         />
       )}
 
+      {/* Mobile Sidebar */}
+      <div
+        className={`fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-2xl transform ${
+          mobileSidebarOpen ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-out z-50 lg:hidden flex flex-col overflow-hidden`}
+      >
+        {/* Sidebar Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-white flex-shrink-0">
+          <div className="flex items-center space-x-2">
+            <FiUsers className="text-gray-600" size={20} />
+            <h3 className="text-lg font-semibold text-gray-900">Group Members</h3>
+          </div>
+          <button
+            className="p-2 -mr-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
+            onClick={() => setMobileSidebarOpen(false)}
+            aria-label="Close sidebar"
+          >
+            <FiX size={20} />
+          </button>
+        </div>
+        
+        {/* Sidebar Content */}
+        <div className="flex-1 overflow-y-auto">
+          <MembersList
+            currentGroup={currentGroup}
+            showMembersList={showMembersList}
+            toggleMembersList={toggleMembersList}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedUsers={selectedUsers}
+            toggleUserSelection={toggleUserSelection}
+            sendRequestToSelectedUsers={() => setShowRequestModal(true)}
+            showRoleMenu={showRoleMenu}
+            setShowRoleMenu={setShowRoleMenu}
+            changeUserRole={changeUserRole}
+            canChangeRoles={canChangeRoles}
+            isAdmin={isAdmin}
+            getStatusBadge={getStatusBadge}
+            getRoleBadge={getRoleBadge}
+          />
+        </div>
+
+        {/* Sidebar Footer */}
+        <div className="border-t border-gray-200 flex-shrink-0 bg-gray-50">
+          <RecentActivity
+            currentGroup={currentGroup}
+            showMoreOptions={showMoreOptions}
+            setShowMoreOptions={setShowMoreOptions}
+          />
+        </div>
+      </div>
+
+      {/* Request Modal */}
       <RequestModal
         showRequestModal={showRequestModal}
         setShowRequestModal={setShowRequestModal}

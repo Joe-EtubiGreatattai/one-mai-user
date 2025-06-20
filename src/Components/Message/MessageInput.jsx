@@ -16,15 +16,16 @@ const MessageInput = ({
   };
 
   return (
-    <div className="bg-white border-t border-gray-200 p-3 sm:p-4">
-      <div className="flex items-center gap-1 sm:gap-2">
+    <div className="bg-white p-3 sm:p-4">
+      <div className="flex items-center justify-between gap-1 sm:gap-2">
         {/* Attachment Button */}
-        <button 
+        {/* <button 
           className="text-gray-500 hover:text-gray-700 p-1 sm:p-2 transition-colors"
           aria-label="Attach file"
         >
           <FiPaperclip size={18} className="sm:w-5 sm:h-5" />
-        </button>
+        </button> */}
+        <div className="w-[2rem]"></div>
         
         {/* Message Input */}
         <input
@@ -41,18 +42,18 @@ const MessageInput = ({
         />
         
         {/* Microphone Button */}
-        <button 
+        {/* <button 
           className="text-gray-500 hover:text-gray-700 p-1 sm:p-2 transition-colors"
           aria-label="Voice message"
         >
           <FiMic size={18} className="sm:w-5 sm:h-5" />
-        </button>
+        </button> */}
         
         {/* Send Button */}
         <button
           onClick={handleSendMessage}
           disabled={!message.trim() || !isConnected || isSending}
-          className={`rounded-full p-1 sm:p-2 transition-colors ${
+          className={`rounded-full p-2 sm:p-2 transition-colors ${
             !message.trim() || !isConnected || isSending
               ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
               : 'bg-[#3390d5] hover:bg-[#3390d5] text-white'
