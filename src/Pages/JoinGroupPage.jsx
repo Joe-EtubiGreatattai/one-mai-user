@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useGroupStore from '../Store/group';
 import useAuthStore from '../Store/Auth';
 import { useNavigate } from 'react-router-dom';
-import { FiSearch, FiUserPlus } from 'react-icons/fi';
+import { FiArrowLeft } from 'react-icons/fi';
 
 const JoinGroupPage = () => {
   const navigate = useNavigate();
@@ -43,53 +43,79 @@ const JoinGroupPage = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="bg-white p-6 rounded-xl shadow-md w-full max-w-md text-center">
-        <h2 className="text-xl font-bold text-gray-800 mb-2">Join a Group</h2>
-        <p className="text-sm text-gray-600 mb-4">Enter an invite code below</p>
+  const handleBack = () => {
+    navigate(-1);
+  };
 
-        <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            placeholder="e.g. GRP-ABC123"
-            value={code}
-            onChange={(e) => setCode(e.target.value.toUpperCase())}
-            className="flex-1 px-3 py-2 border rounded-md text-sm"
-          />
-          <button
-            onClick={handleJoin}
-            disabled={joining || loading}
-            className="bg-[#3390d5] hover:bg-blue-600 text-white px-3 rounded-md flex items-center"
-          >
-            <FiUserPlus className="mr-1" />
-            {joining ? 'Joining...' : 'Join'}
-          </button>
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Header with back button */}
+      <div className="flex items-center px-4 py-4 border-b border-gray-100">
+        <button
+          onClick={handleBack}
+          className="p-2 -ml-2 text-gray-600 hover:text-gray-800"
+        >
+          <FiArrowLeft size={20} />
+        </button>
+      </div>
+
+      {/* Main content */}
+      <div className="px-6 py-8">
+        <div className="text-center mb-8">
+          <h1 className="text-xl font-semibold text-gray-900 mb-2">
+            Join An Existing Group
+          </h1>
+          <p className="text-sm text-gray-500">
+            Please put in the code of the group you want to join
+          </p>
         </div>
 
-        {error && (
-          <p className="text-sm text-red-600 mt-2">{error}</p>
-        )}
-
-        {success && group && (
-          <div className="mt-4">
-            <img
-              src={`https://api.joinonemai.com${group.image}`}
-              alt={group.name}
-              className="w-20 h-20 rounded-full mx-auto object-cover mb-3 border"
+        {/* Code input section */}
+        <div className="mb-8">
+          <div className="bg-gray-50 rounded-lg p-4 mb-6">
+            <input
+              type="text"
+              placeholder="Enter group code"
+              value={code}
+              onChange={(e) => setCode(e.target.value.toUpperCase())}
+              className="w-full bg-transparent text-base text-gray-900 placeholder-gray-400 outline-none"
             />
-            <h3 className="text-lg font-bold text-gray-800">{group.name}</h3>
-            <p className="text-sm text-gray-600">
-              {group.description || 'No description provided'}
-            </p>
-            <p className="text-xs text-gray-500 mt-1">
-              {group.members.length}/{group.maxMembers} members
-            </p>
-            <p className="mt-2 text-green-600 text-sm font-medium">
-              Joined! Redirecting...
-            </p>
           </div>
-        )}
+
+          {error && (
+            <p className="text-sm text-red-600 text-center mb-4">{error}</p>
+          )}
+
+          {/* Success state */}
+          {success && group && (
+            <div className="text-center mb-6">
+              <img
+                src={`https://api.joinonemai.com${group.image}`}
+                alt={group.name}
+                className="w-20 h-20 rounded-full mx-auto object-cover mb-3 border"
+              />
+              <h3 className="text-lg font-semibold text-gray-900">{group.name}</h3>
+              <p className="text-sm text-gray-600 mb-1">
+                {group.description || 'No description provided'}
+              </p>
+              <p className="text-xs text-gray-500">
+                {group.members.length}/{group.maxMembers} members
+              </p>
+              <p className="mt-3 text-green-600 text-sm font-medium">
+                Joined! Redirecting...
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Confirm button */}
+        <button
+          onClick={handleJoin}
+          disabled={joining || loading || !code}
+          className="w-full bg-[#3390d5] hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium text-base transition-colors"
+        >
+          {joining ? 'Joining...' : 'Confirm Group'}
+        </button>
       </div>
     </div>
   );
