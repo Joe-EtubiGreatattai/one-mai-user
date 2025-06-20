@@ -31,10 +31,11 @@ const JoinGroupPage = () => {
       setError('');
       const res = await joinGroupWithCode(code);
       setSuccess(true);
+      setGroup(res.group);
 
+      // Navigate to the group page immediately upon success
       if (res.group?._id) {
-        setGroup(res.group);
-        setTimeout(() => navigate(`/group/${res.group._id}`), 1500);
+        navigate(`/groups/${res.group._id}`);
       }
     } catch (err) {
       setError(err.message || 'Failed to join group');
