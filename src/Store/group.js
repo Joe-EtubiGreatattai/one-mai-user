@@ -223,20 +223,24 @@ const useGroupStore = create(
       // Add this method to the useGroupStore
       requestPayoutSwap: async (groupId, recipientId) => {
         set({ loading: true });
+        console.log("[requestPayoutSwap] Initiating payout swap request", { groupId, recipientId });
         try {
           const response = await axios.post(
-            `/api/group/${groupId}/request_payout_order_swap`,
-            { recipient: recipientId }
+        `/api/group/${groupId}/request_payout_order_swap`,
+        { recipient: recipientId }
           );
+          console.log("[requestPayoutSwap] API response:", response.data);
 
           toast.success(response.data.message || "Swap request sent successfully");
           return response.data;
         } catch (error) {
           const errorMessage = error.response?.data?.message || "Failed to send swap request";
+          console.error("[requestPayoutSwap] Error:", error, "Message:", errorMessage);
           toast.error(errorMessage);
           throw new Error(errorMessage);
         } finally {
           set({ loading: false });
+          console.log("[requestPayoutSwap] Loading state set to false");
         }
       },
       // Delete message

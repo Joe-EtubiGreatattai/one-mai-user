@@ -35,18 +35,45 @@ const PayoutSwapManagement = ({ onBack }) => {
     setSelectedMember(member);
     setShowConfirmation(true);
   };
+const confirmSwapRequest = async () => {
+  if (!selectedMember) return;
 
-  const confirmSwapRequest = async () => {
-    if (!selectedMember) return;
-    try {
-      await requestPayoutSwap(currentGroup._id, selectedMember._id);
-      toast.success(`Swap request sent to ${selectedMember.user.name}`);
-      setShowConfirmation(false);
-      setSelectedMember(null);
-    } catch (error) {
-      toast.error(error.message || 'Failed to send swap request');
-    }
+  const userState = useAuthStore.getState().user;
+  const user =
+    userState?.mydata && typeof userState.mydata === 'object'
+      ? userState.mydata
+      : userState;
+
+  const payload = {
+    groupId: currentGroup._id,
+    targetMemberId: selectedMember.user?._id, // ✅ Use user._id inside selectedMember
+    currentUser: {
+      id: user?.id || user?._id,
+      name: user?.name,
+      email: user?.email,
+    },
+    selectedMember: {
+      id: selectedMember.user?._id, // ✅ Correct id here too
+      name: selectedMember.user?.name,
+      email: selectedMember.user?.email,
+    },
   };
+
+  console.log('Full raw currentGroup:', currentGroup);
+  console.log('Full raw selectedMember:', selectedMember);
+  console.log('Full raw user:', user);
+  console.log('Preparing to request payout swap with the following data:', payload);
+
+  try {
+    await requestPayoutSwap(currentGroup._id, selectedMember.user._id); // ✅ Also here
+    toast.success(`Swap request sent to ${selectedMember.user.name}`);
+    setShowConfirmation(false);
+    setSelectedMember(null);
+  } catch (error) {
+    toast.error(error.message || 'Failed to send swap request');
+  }
+};
+
 
   const getPositionBadge = (member) => {
     const sortedMembers = getSortedMembersByJoinDate();

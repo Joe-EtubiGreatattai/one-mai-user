@@ -309,7 +309,6 @@ const RecentActivity = () => {
             </div>
 
             {nextRecipient && (() => {
-              console.log('Next payout user object:', nextRecipient?.user);
               return (
                 <div className="mt-2 text-xs">
                   <p className="text-gray-500">Next payout to:</p>

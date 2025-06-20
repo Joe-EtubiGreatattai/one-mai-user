@@ -2,7 +2,6 @@ import React from 'react';
 import { FiMoreVertical, FiBell, FiLink, FiLogOut } from 'react-icons/fi';
 
 const ChatHeader = ({ currentGroup, showMoreOptions, setShowMoreOptions, copyGroupLink, leaveGroup }) => {
-  console.log("currentGroup chatheadr", currentGroup);
   return (
     <div className="bg-white border-b border-gray-100 px-3 sm:px-4 md:px-6 py-3 flex justify-between items-center">
       {/* Group Info Section */}
