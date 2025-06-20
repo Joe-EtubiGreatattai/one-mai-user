@@ -38,7 +38,7 @@ const NotificationPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedNotifications, setSelectedNotifications] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
-  
+
   const { accessToken, user } = useAuthStore();
   const { notifications, loading, fetchNotifications, markAsRead } =
     useNotificationStore();
@@ -91,14 +91,15 @@ const NotificationPage = () => {
           "settings_change",
           "payout_scheduled",
           "member_change",
+          "payout_order_swap",
         ].includes(n.type),
       other: (n) => n.type === "other",
     };
 
     let filtered = notifications.filter(tabFilters[activeTab] || tabFilters.all);
-    
+
     if (searchQuery) {
-      filtered = filtered.filter(n => 
+      filtered = filtered.filter(n =>
         n.message.toLowerCase().includes(searchQuery.toLowerCase()) ||
         n.group?.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
@@ -142,6 +143,54 @@ const NotificationPage = () => {
     }
   };
 
+  const handlePayoutOrderSwapAction = async (notificationId, action) => {
+    try {
+      const endpoint = `/notification/${action}_payout_order_swap`;
+
+      await axios.post(
+        endpoint,
+        { notificationId },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+
+      toast.success(
+        action === "accept"
+          ? "Payout order swap accepted successfully"
+          : "Payout order swap declined"
+      );
+
+      await fetchNotificationsWithRetry();
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        error.response?.data?.message || `Failed to ${action} payout order swap`
+      );
+    }
+  };
+
+  const acceptPayoutOrderSwap = async (notificationId) => {
+    try {
+      const response = await axios.post(
+        "/api/notification/accept_payout_order_swap",
+        { notificationId },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      toast.success("Payout swap accepted!");
+      await fetchNotificationsWithRetry();
+    } catch (error) {
+      console.error("[acceptPayoutOrderSwap] Error:", error);
+      toast.error(error.response?.data?.message || "Failed to accept payout swap");
+    }
+  };
+
+
   const formatDate = (dateString) => {
     try {
       return format(new Date(dateString), "MMM d, yyyy h:mm a");
@@ -165,6 +214,23 @@ const NotificationPage = () => {
             className="flex items-center px-4 py-2 bg-white text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-all duration-200 shadow-sm border border-gray-200 hover:shadow-md transform hover:-translate-y-0.5"
           >
             <FiXCircle className="mr-2" size={16} /> Decline
+          </button>
+        </div>
+      ),
+      payout_order_swap: (
+        <div className="flex flex-wrap gap-2 mt-4">
+          <button
+            onClick={() => acceptPayoutOrderSwap(notification._id)}
+            className="flex items-center px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg text-sm font-medium hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
+          >
+            <FiCheck className="mr-2" size={16} /> Accept Swap
+          </button>
+
+          <button
+            onClick={() => handlePayoutOrderSwapAction(notification._id, "decline")}
+            className="flex items-center px-4 py-2 bg-white text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-all duration-200 shadow-sm border border-gray-200 hover:shadow-md transform hover:-translate-y-0.5"
+          >
+            <FiXCircle className="mr-2" size={16} /> Decline Swap
           </button>
         </div>
       ),
@@ -211,10 +277,11 @@ const NotificationPage = () => {
           "settings_change",
           "payout_scheduled",
           "member_change",
+          "payout_order_swap",
         ].includes(n.type),
       other: (n) => n.type === "other",
     };
-    
+
     return notifications.filter(tabFilters[tabKey] || tabFilters.all).length;
   };
 
@@ -298,7 +365,7 @@ const NotificationPage = () => {
                 const Icon = tab.icon;
                 const count = getTabCount(tab.key);
                 const isActive = activeTab === tab.key;
-                
+
                 return (
                   <button
                     key={tab.key}
@@ -306,21 +373,19 @@ const NotificationPage = () => {
                       setActiveTab(tab.key);
                       setMobileMenuOpen(false);
                     }}
-                    className={`relative flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                      isActive
+                    className={`relative flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
                         ? "bg-gradient-to-r from-[#3390d5] to-[#2980b9] text-white shadow-md transform scale-105"
                         : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
-                    }`}
+                      }`}
                   >
                     <Icon size={16} />
                     <span className="hidden sm:inline">{tab.label}</span>
                     <span className="sm:hidden">{tab.key.split('_')[0]}</span>
                     {count > 0 && (
-                      <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-bold ${
-                        isActive 
-                          ? "bg-white/20 text-white" 
+                      <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-bold ${isActive
+                          ? "bg-white/20 text-white"
                           : "bg-gray-200 text-gray-600"
-                      }`}>
+                        }`}>
                         {count}
                       </span>
                     )}
@@ -340,11 +405,10 @@ const NotificationPage = () => {
               filteredNotifications().map((notification, index) => (
                 <div
                   key={notification._id}
-                  className={`group p-6 rounded-2xl transition-all duration-300 hover:transform hover:-translate-y-1 ${
-                    notification.isRead
+                  className={`group p-6 rounded-2xl transition-all duration-300 hover:transform hover:-translate-y-1 ${notification.isRead
                       ? "bg-white border border-gray-100 shadow-sm hover:shadow-lg"
                       : "bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-[#3390d5] shadow-md hover:shadow-xl"
-                  }`}
+                    }`}
                   style={{
                     animationDelay: `${index * 100}ms`,
                     animation: 'slideInUp 0.5s ease-out forwards'
@@ -353,11 +417,10 @@ const NotificationPage = () => {
                   <div className="flex gap-4 items-start">
                     <div className="relative">
                       <div
-                        className={`p-3 rounded-xl transition-all duration-200 ${
-                          notification.isRead
+                        className={`p-3 rounded-xl transition-all duration-200 ${notification.isRead
                             ? "bg-gray-100 text-gray-400"
                             : "bg-gradient-to-br from-blue-100 to-blue-200 text-[#3390d5] shadow-sm"
-                        }`}
+                          }`}
                       >
                         {getNotificationIcon(notification.type, {
                           className: "w-5 h-5",
@@ -371,11 +434,10 @@ const NotificationPage = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
                         <h3
-                          className={`text-base font-medium leading-relaxed ${
-                            notification.isRead
+                          className={`text-base font-medium leading-relaxed ${notification.isRead
                               ? "text-gray-700"
                               : "text-gray-900"
-                          }`}
+                            }`}
                         >
                           {notification.message}
                         </h3>
@@ -408,8 +470,8 @@ const NotificationPage = () => {
                   {activeTab === "all"
                     ? "You don't have any notifications at this time. We'll let you know when something important happens."
                     : `No ${tabOptions
-                        .find((t) => t.key === activeTab)
-                        ?.label.toLowerCase()} notifications found.`}
+                      .find((t) => t.key === activeTab)
+                      ?.label.toLowerCase()} notifications found.`}
                 </p>
               </div>
             )}
