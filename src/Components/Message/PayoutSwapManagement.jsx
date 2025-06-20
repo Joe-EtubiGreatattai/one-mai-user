@@ -112,32 +112,39 @@ const PayoutSwapManagement = ({ onBack }) => {
 
       <div className="space-y-3 sm:space-y-4">
         {filteredMembers?.map((member) => (
-          <div key={member._id} className="flex items-center gap-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition">
-            <div className="relative flex-shrink-0">
-              <img
-                src={member.user.avatar || `https://ui-avatars.com/api/?name=${member.user.name || member.user.email}&background=random`}
-                alt={member.user.name}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 shadow"
-              />
-              {member.role === 'admin' && (
-                <FaCrown className="absolute -bottom-1 -right-1 text-yellow-500 bg-white rounded-full p-0.5 sm:p-1 w-3 h-3 sm:w-4 sm:h-4" />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-medium truncate">{member.user.name}</p>
-              <p className="text-xs text-gray-500 truncate">{member.user.email}</p>
-              <div className="flex items-center gap-2 mt-1">
-                {getPositionBadge(member)}
+          <div key={member._id} className="p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition">
+            {/* Member info section */}
+            <div className="flex items-center gap-3 mb-3">
+              <div className="relative flex-shrink-0">
+                <img
+                  src={member.user.avatar || `https://ui-avatars.com/api/?name=${member.user.name || member.user.email}&background=random`}
+                  alt={member.user.name}
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 shadow"
+                />
+                {member.role === 'admin' && (
+                  <FaCrown className="absolute -bottom-1 -right-1 text-yellow-500 bg-white rounded-full p-0.5 sm:p-1 w-3 h-3 sm:w-4 sm:h-4" />
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium truncate">{member.user.name}</p>
+                <p className="text-xs text-gray-500 truncate">{member.user.email}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  {getPositionBadge(member)}
+                </div>
               </div>
             </div>
-            <button
-              onClick={() => handleRequestSwap(member)}
-              className="px-3 py-1 text-xs sm:text-sm bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200 transition-colors flex items-center gap-1"
-              disabled={loading}
-            >
-              <FiRepeat size={14} />
-              <span>Request Swap</span>
-            </button>
+            
+            {/* Swap button section - now below member info */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => handleRequestSwap(member)}
+                className="px-3 py-1 text-xs sm:text-sm bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200 transition-colors flex items-center gap-1"
+                disabled={loading}
+              >
+                <FiRepeat size={14} />
+                <span>Request Swap</span>
+              </button>
+            </div>
           </div>
         ))}
       </div>

@@ -279,7 +279,7 @@ const RecentActivity = () => {
 
           {/* Group Image */}
           <img
-            className="h-10 w-10 rounded-full"
+            className="h-15 w-15 rounded-full"
             src={`https://api.joinonemai.com${currentGroup?.image}`}
             alt={currentGroup?.name ?? 'Group'}
           />

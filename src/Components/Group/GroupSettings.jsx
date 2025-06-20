@@ -9,7 +9,6 @@ import {
 import { Tooltip } from "react-tooltip";
 
 const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [touchedFields, setTouchedFields] = useState({
     frequency: false,
     savingsAmount: false,
@@ -17,21 +16,18 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
     payoutDate: false,
   });
 
-  // Generate future months only once
-  const futureMonths = useMemo(() => {
-    const months = [];
-    const today = new Date();
-    for (let i = 1; i <= 12; i++) {
-      const date = new Date(today.getFullYear(), today.getMonth() + i, 1);
-      months.push({
-        label: date.toLocaleString("default", {
-          month: "long",
-          year: "numeric",
-        }),
-        value: date.toISOString().split("T")[0],
-      });
-    }
-    return months;
+  // Get minimum date (tomorrow)
+  const minDate = useMemo(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0];
+  }, []);
+
+  // Get maximum date (1 year from now)
+  const maxDate = useMemo(() => {
+    const nextYear = new Date();
+    nextYear.setFullYear(nextYear.getFullYear() + 1);
+    return nextYear.toISOString().split('T')[0];
   }, []);
 
   // Set default values on first render
@@ -61,10 +57,10 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
     }
   };
 
-  const handleDateSelect = (date) => {
-    setGroupData((prev) => ({ ...prev, payoutDate: date }));
+  const handleDateChange = (e) => {
+    const { value } = e.target;
+    setGroupData((prev) => ({ ...prev, payoutDate: value }));
     setTouchedFields((prev) => ({ ...prev, payoutDate: true }));
-    setShowDatePicker(false);
   };
 
   const handleBlur = (field) => {
@@ -92,12 +88,15 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
 
   const applyRecommendation = () => {
     const recommendedAmount = calculateRecommendedAmount();
-    const recommendedDate = futureMonths[5].value; // 6 months from now
+    // Set recommended date to 6 months from now
+    const recommendedDate = new Date();
+    recommendedDate.setMonth(recommendedDate.getMonth() + 6);
+    const dateString = recommendedDate.toISOString().split('T')[0];
 
     setGroupData((prev) => ({
       ...prev,
       savingsAmount: recommendedAmount,
-      payoutDate: recommendedDate,
+      payoutDate: dateString,
     }));
     setTouchedFields((prev) => ({
       ...prev,
@@ -107,7 +106,7 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
   };
 
   const getDurationFromFrequency = () => {
-    if (!groupData.frequency) return "";
+    if (!groupData.frequency || !groupData.payoutDate) return "";
 
     const today = new Date();
     const payoutDate = new Date(groupData.payoutDate);
@@ -143,10 +142,6 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
         <div className="space-y-4 mt-4 ">
           {/* Savings Plan */}
           <div className=" rounded-lg sm:rounded-xl  ">
-            {/* <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
-              <FiDollarSign className="mr-2 text-[#3390d5] w-4 h-4 sm:w-5 sm:h-5" />
-              Savings Plan
-            </label> */}
             <div className="grid grid-cols-1 gap-3 sm:gap-4">
               <div>
                 <div className="flex items-center mb-1">
@@ -165,7 +160,7 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
                   value={groupData.frequency || ""}
                   onChange={handleInputChange}
                   onBlur={() => handleBlur("frequency")}
-                  className="w-full px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent focus:outline-none transition-all"
+                  className="w-full px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-md sm:rounded-lg focus:ring-2 focus:ring-[#3390d5] focus:border-transparent focus:outline-none transition-all"
                 >
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
@@ -191,7 +186,7 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
                   onChange={handleNumberInput}
                   onBlur={() => handleBlur("maxMembers")}
                   placeholder="5"
-                  className="w-full px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent focus:outline-none transition-all"
+                  className="w-full px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-md sm:rounded-lg focus:ring-2 focus:ring-[#3390d5] focus:border-transparent focus:outline-none transition-all"
                 />
                 {touchedFields.maxMembers && (
                   <>
@@ -215,10 +210,6 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
 
           {/* Group Configuration */}
           <div className=" rounded-lg sm:rounded-xl ">
-            {/* <label className="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 flex items-center">
-              <FiUsers className="mr-2 text-[#3390d5] w-4 h-4 sm:w-5 sm:h-5" />
-              Group Configuration
-            </label> */}
             <div className="grid grid-cols-1 gap-3 sm:gap-4">
               <div>
                 <div className="flex items-center mb-1">
@@ -233,50 +224,25 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
                   <Tooltip id="payout-tooltip" />
                 </div>
                 <div className="relative">
-                  <button
-                    onClick={() => setShowDatePicker(!showDatePicker)}
-                    className={`w-full flex items-center justify-between px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base border ${
+                  <input
+                    type="date"
+                    name="payoutDate"
+                    value={groupData.payoutDate || ""}
+                    onChange={handleDateChange}
+                    onBlur={() => handleBlur("payoutDate")}
+                    min={minDate}
+                    max={maxDate}
+                    className={`w-full px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base border ${
                       touchedFields.payoutDate && !groupData.payoutDate
                         ? "border-red-300"
                         : "border-gray-300"
-                    } rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-300 focus:outline-none transition-all`}
-                    aria-label="Select payout date"
-                  >
-                    <span>
-                      {groupData.payoutDate
-                        ? new Date(groupData.payoutDate).toLocaleDateString(
-                            "en-US",
-                            {
-                              month: "short",
-                              year: "numeric",
-                              day: "numeric",
-                            }
-                          )
-                        : "Select date"}
-                    </span>
-                    <FiCalendar className="text-gray-400 w-4 h-4" />
-                  </button>
+                    } rounded-md sm:rounded-lg focus:ring-2 focus:ring-[#3390d5] focus:border-transparent focus:outline-none transition-all`}
+                  />
+                  <FiCalendar className="absolute right-3 top-1.5 sm:top-2 text-gray-400 w-4 h-4 pointer-events-none" />
                   {touchedFields.payoutDate && !groupData.payoutDate && (
                     <p className="text-red-500 text-xs mt-1">
                       Please select a payout date
                     </p>
-                  )}
-                  {showDatePicker && (
-                    <div className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md sm:rounded-lg p-2 border border-gray-200 max-h-60 overflow-y-auto">
-                      {futureMonths.map((month) => (
-                        <button
-                          key={month.value}
-                          onClick={() => handleDateSelect(month.value)}
-                          className={`w-full text-left px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded hover:bg-blue-50 transition-colors ${
-                            groupData.payoutDate === month.value
-                              ? "bg-[#3390d5] text-[#3390d5] font-medium"
-                              : ""
-                          }`}
-                        >
-                          {month.label}
-                        </button>
-                      ))}
-                    </div>
                   )}
                 </div>
               </div>
@@ -303,7 +269,7 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
                     onChange={handleNumberInput}
                     onBlur={() => handleBlur("savingsAmount")}
                     placeholder="50"
-                    className="w-full pl-7 sm:pl-8 pr-3 py-1.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-md sm:rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent focus:outline-none transition-all"
+                    className="w-full pl-7 sm:pl-8 pr-3 py-1.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-md sm:rounded-lg focus:ring-2 focus:ring-[#3390d5] focus:border-transparent focus:outline-none transition-all"
                   />
                   {touchedFields.savingsAmount && !groupData.savingsAmount && (
                     <p className="text-red-500 text-xs mt-1">
@@ -315,6 +281,33 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
             </div>
           </div>
         </div>
+
+        {/* Quick Setup Recommendation */}
+        <div className="mt-4 p-3 bg-[#e6f2fa] rounded-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-[#3390d5] font-medium">Quick Setup</p>
+              <p className="text-xs text-[#3390d5]">
+                Apply recommended settings based on frequency
+              </p>
+            </div>
+            <button
+              onClick={applyRecommendation}
+              className="px-3 py-1 text-xs bg-[#d1e7f7] text-[#3390d5] rounded-md hover:bg-[#b8d9f2] transition-colors"
+            >
+              Apply
+            </button>
+          </div>
+        </div>
+
+        {/* Duration Display */}
+        {groupData.payoutDate && (
+          <div className="mt-3 p-2 bg-gray-50 rounded-lg">
+            <p className="text-xs text-gray-600">
+              Duration: <span className="font-medium">{getDurationFromFrequency()}</span>
+            </p>
+          </div>
+        )}
 
         {/* Navigation Buttons */}
         <div className="flex flex-col-reverse sm:flex-row space-y-3 sm:space-y-0 space-x-0 sm:space-x-3 md:space-x-4 mt-6 sm:mt-8 md:mt-10">
@@ -329,7 +322,7 @@ const GroupSettings = ({ groupData, setGroupData, setCurrentStep }) => {
             disabled={!isFormValid()}
             className={`flex-1 py-2 sm:py-3 text-sm sm:text-base font-medium rounded-md sm:rounded-lg transition-all mb-3 sm:mb-0 ${
               isFormValid()
-                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md hover:shadow-lg hover:from-blue-600 hover:to-blue-700"
+                ? "bg-[#3390d5] text-white shadow-md hover:shadow-lg hover:bg-[#2a7cb9]"
                 : "bg-gray-200 text-gray-500 cursor-not-allowed"
             }`}
           >
