@@ -69,13 +69,6 @@ const useGroupStore = create(
         throw new Error("Failed to establish socket connection");
       },
 
-      // Join group room
-
-      // Leave group room
-
-      // Send message with proper acknowledgement
-
-      // Delete message
 
       // Initialize socket connection
       initSocket: () => {
@@ -292,9 +285,6 @@ const useGroupStore = create(
         }
       },
 
-
-
-
       // Disconnect socket
       disconnectSocket: () => {
         const { socket } = get();
@@ -422,8 +412,6 @@ const useGroupStore = create(
           set({ loading: false });
         }
       },
-
-
 
       // In your group store (e.g., useGroupStore.js
       // In your useGroupStore.js

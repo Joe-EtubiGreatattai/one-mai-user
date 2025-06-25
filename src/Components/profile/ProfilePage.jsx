@@ -30,17 +30,15 @@ const ProfilePage = () => {
 
   const [activeTab, setActiveTab] = useState("profile");
   const [darkMode, setDarkMode] = useState(
-    localStorage.getItem("darkMode") == "true" ? true : false
+    localStorage.getItem("darkMode") === "true"
   );
   const [localError, setLocalError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Add refs to track if data has been loaded
   const walletLoadedRef = useRef(false);
   const bankLoadedRef = useRef(false);
 
-  // Handle errors from all stores
   useEffect(() => {
     if (bankError) {
       setLocalError(bankError);
@@ -52,7 +50,6 @@ const ProfilePage = () => {
     }
   }, [bankError, walletError, clearBankError, clearWalletError]);
 
-  // Load saved settings from localStorage
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode");
     if (savedDarkMode !== null) {
@@ -60,7 +57,6 @@ const ProfilePage = () => {
     }
   }, []);
 
-  // Load referral data when user is available
   useEffect(() => {
     if (user) {
       const loadReferrals = async () => {
@@ -75,7 +71,6 @@ const ProfilePage = () => {
     }
   }, [user, fetchMyReferrals]);
 
-  // Throttled data loading function
   const loadTabData = useCallback(
     async (tab) => {
       if (!user || isLoading) return;
@@ -85,7 +80,6 @@ const ProfilePage = () => {
 
       try {
         if (tab === "bank" && !bankLoadedRef.current) {
-          // await Promise.all([getBankAccounts(), fetchBankDetails()]);
           bankLoadedRef.current = true;
         } else if (tab === "wallet" && !walletLoadedRef.current) {
           await Promise.all([
@@ -117,16 +111,13 @@ const ProfilePage = () => {
     ]
   );
 
-  // Load data when tab changes with debounce
   useEffect(() => {
     const timer = setTimeout(() => {
       loadTabData(activeTab);
     }, 300);
-
     return () => clearTimeout(timer);
   }, [activeTab, loadTabData]);
 
-  // Apply dark mode
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -137,7 +128,6 @@ const ProfilePage = () => {
     }
   }, [darkMode]);
 
-  // Clear messages after timeout
   useEffect(() => {
     const timer = setTimeout(() => {
       if (localError) setLocalError(null);
@@ -151,6 +141,19 @@ const ProfilePage = () => {
       setActiveTab(tab);
     }
   };
+
+  // ✅ Smooth scroll to content section on tab switch (mobile only)
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    if (!isMobile) return;
+
+    const contentEl = document.getElementById("profile-content-scroll");
+    if (contentEl) {
+      setTimeout(() => {
+        contentEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, [activeTab]);
 
   const handleProfileUpdate = async (formData) => {
     setIsLoading(true);
@@ -179,7 +182,6 @@ const ProfilePage = () => {
         darkMode ? "dark bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-800"
       }`}
     >
-      {/* Notification Toast */}
       {(localError || success) && (
         <div
           className={`fixed top-4 right-4 z-50 p-4 pr-10 rounded-lg shadow-lg max-w-xs md:max-w-md ${
@@ -197,7 +199,6 @@ const ProfilePage = () => {
         </div>
       )}
 
-      {/* Mobile Header (for small screens) */}
       <div className="md:hidden p-4 border-b dark:border-gray-700 flex justify-between items-center">
         <h1 className="text-xl font-bold">Profile Settings</h1>
         <button

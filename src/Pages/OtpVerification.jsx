@@ -219,7 +219,7 @@ const OtpVerification = () => {
         <div className="relative z-10 flex flex-col justify-end h-full p-6 sm:p-8">
           <div className="max-w-md mx-auto text-center text-white">
             <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">
-              Welcome to MAI Savings
+              OneMAI... Group Power. Personal Gains Savings
             </h2>
             <p className="text-base sm:text-lg mb-4 sm:mb-6">
               Join forces with friends and family to save for your dreams!

@@ -34,6 +34,8 @@ import ProfilePage from "./Components/profile/ProfilePage";
 import ChatPage from "./Components/ChatPage";
 import VerifyPin from "./Components/VerifyPin";
 import JoinGroupPage from "./Pages/JoinGroupPage";
+import TermAndCondition from "./Pages/TermAndCondition";
+import Privacy from "./Pages/Privacy";
 // Auth Protected Route Component
 const ProtectedRoute = () => {
   const { user } = useAuthStore();
@@ -98,6 +100,8 @@ function App() {
           <Route path="/signup" element={<CreateAccount />} />
           <Route path="/otp" element={<OtpVerification />} />
           <Route path="/create-pin" element={<CreatePin />} />
+          <Route path="/terms" element={<TermAndCondition />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/check-mail" element={<CheckYourMail />} />
           <Route path="/change-password" element={<CreateNewPassword />} />
           <Route path="/account-type" element={<AccountTypeSelection />} />

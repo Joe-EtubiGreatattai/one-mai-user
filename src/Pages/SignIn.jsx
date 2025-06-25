@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+
 import Family from "../assets/Family.jpeg";
+import Image2 from "../assets/Family.jpeg";
+import Image3 from "../assets/Family.jpeg";
 import useAuthStore from "../Store/Auth";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showPinModal, setShowPinModal] = useState(false);
@@ -57,33 +63,33 @@ const SignIn = () => {
 
     try {
       await verifyPin(pin.join(""));
-      // Navigation happens automatically via the useEffect watching user state
     } catch (error) {
       console.error("PIN verification error:", error);
       setError(error.message || "PIN verification failed");
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
 
-    try {
-      const response = await login({
-        email,
-        password,
-        rememberMe,
-        userType: "normal",
-      });
+  try {
+    const response = await login({
+      email,
+      password,
+      rememberMe,
+      userType: "normal",
+    });
 
-      if (response?.requiresPinVerification) {
-        setShowPinModal(true);
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      setError(error.message || "Login failed. Please check your credentials.");
+    if (response?.requiresPinVerification) {
+      setShowPinModal(true);
     }
-  };
+  } catch (error) {
+    console.error("Login error:", error);
+    setError(error.message || "Login failed. Please check your credentials.");
+  }
+};
+
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
@@ -126,11 +132,10 @@ const SignIn = () => {
               <button
                 type="submit"
                 disabled={loading || pin.some((digit) => !digit)}
-                className={`w-full py-3 px-4 text-white font-medium rounded-md ${
-                  loading
+                className={`w-full py-3 px-4 text-white font-medium rounded-md ${loading
                     ? "bg-[#3390d5]"
                     : "bg-[#3390d5] hover:bg-blue-700"
-                }`}
+                  }`}
               >
                 {loading ? "Verifying..." : "Verify PIN"}
               </button>
@@ -219,23 +224,7 @@ const SignIn = () => {
               </div>
 
               <div className="flex items-center justify-between flex-wrap gap-2 ">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-4 w-4 text-[#3390d5] focus:ring-blue-500 border-gray-300 rounded"
-                    disabled={loading}
-                  />
-                  <label
-                    htmlFor="remember-me"
-                    className="ml-2 text-sm text-gray-700"
-                  >
-                    Remember me
-                  </label>
-                </div>
+              
                 <Link
                   to="/reset-password"
                   className="text-sm font-medium text-[#3390d5] hover:text-[#3390d5] whitespace-nowrap"
@@ -244,14 +233,33 @@ const SignIn = () => {
                 </Link>
               </div>
 
+              {/* <div className="flex items-start gap-2">
+                <input
+                  name="agreed"
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  className="h-4 w-4 mt-1 text-blue border-[#EAEAEA] rounded"
+                />
+                <label className="text-xs sm:text-sm text-gray-700">
+                  I agree to the{" "}
+                  <Link to="/terms" className="text-blue underline">
+                    Terms and Conditions
+                  </Link>{" "}
+                  and{" "}
+                  <Link to="/privacy" className="text-blue underline">
+                    Privacy Policy
+                  </Link>
+                </label>
+              </div> */}
+
               <button
                 type="submit"
                 disabled={loading}
-                className={`max-sm:mt-4  w-full py-2 px-4 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${
-                  loading
+                className={`max-sm:mt-4  w-full py-2 px-4 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${loading
                     ? "bg-[#3390d5] cursor-not-allowed"
                     : "bg-[#3390d5] hover:bg-blue-700"
-                }`}
+                  }`}
               >
                 {loading ? (
                   <span className="flex items-center justify-center">
@@ -283,7 +291,7 @@ const SignIn = () => {
               </button>
             </form>
 
-            <div className="mt-4 sm:mt-6 text-center">
+            <div className="mt-4 sm:mt-6 text-center space-y-2">
               <p className="text-sm text-gray-600">
                 Don't have an account?{" "}
                 <Link
@@ -298,26 +306,42 @@ const SignIn = () => {
         </div>
       </div>
 
-      {/* Right Column - Image */}
+      {/* Right Column - Carousel */}
       <div className="hidden md:flex md:w-1/2 relative bg-gray-100">
-        <img
-          src={Family}
-          alt="Family enjoying financial freedom"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-[#00182b] opacity-40"></div>
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 lg:p-8 text-white">
-          <div className="max-w-md mx-auto text-center">
-            <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">
-              Welcome to MAI
-            </h2>
-            <p className="text-base sm:text-lg leading-relaxed">
-              Join forces with friends and family to save for your dreams! Our
-              fun and intuitive group savings app makes pooling funds easy,
-              exciting, and rewarding.
-            </p>
-          </div>
-        </div>
+        <Carousel
+          autoPlay
+          infiniteLoop
+          showThumbs={false}
+          showStatus={false}
+          interval={5000}
+          transitionTime={800}
+          swipeable
+          emulateTouch
+          className="absolute inset-0 w-full h-full"
+        >
+          {[Family, Image2, Image3].map((src, idx) => (
+            <div key={idx} className="relative h-full">
+              <img
+                src={src}
+                alt={`Slide ${idx + 1}`}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-[#00182b] opacity-40"></div>
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 lg:p-8 text-white">
+                <div className="max-w-md mx-auto text-center">
+                  <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">
+                    OneMAI... Group Power. Personal Gains
+                  </h2>
+                  <p className="text-base sm:text-lg leading-relaxed">
+                     Save for your dreams!
+                    Our fun and intuitive group savings app makes pooling funds
+                    easy, exciting, and rewarding.
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </Carousel>
       </div>
     </div>
   );
