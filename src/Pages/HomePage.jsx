@@ -75,7 +75,7 @@ function HomePage() {
       {/* Desktop Content */}
       <div className="relative z-10 w-full max-w-[985px] mx-auto hidden md:flex gap-8 items-center justify-center flex-col">
         <h1 className="text-4xl md:text-[62px] font-normal text-white mb-3 sm:mb-4 md:mb-2 text-center">
-          A community Approach to Saving for all Pocket Sizes
+          A Community Approach to Saving for all Pocket Sizes
         </h1>
         <div className="flex items-center justify-center flex-col gap-8">
           <button
