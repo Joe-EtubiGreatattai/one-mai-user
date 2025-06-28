@@ -5,9 +5,10 @@ import "react-phone-number-input/style.css";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-import Family from "../assets/Family.jpeg";
-import Image2 from "../assets/Family.jpeg";
-import Image3 from "../assets/Family.jpeg";
+import Image1 from "../assets/0.jpg";
+import Image2 from "../assets/1.jpg";
+import Image3 from "../assets/2.jpg";
+import Image4 from "../assets/3.jpg";
 import useAuthStore from "../Store/Auth";
 
 const CreateAccount = () => {
@@ -320,38 +321,49 @@ const CreateAccount = () => {
       </div>
 
       {/* Right side - Carousel */}
-      <div className="hidden lg:block lg:w-1/2 relative">
-        <Carousel
-          autoPlay
-          infiniteLoop
-          showThumbs={false}
-          showStatus={false}
-          interval={5000}
-          transitionTime={800}
-          swipeable
-          emulateTouch
-          className="absolute inset-0 w-full h-full"
-        >
-          {[Family, Image2, Image3].map((src, i) => (
-            <div key={i} className="relative h-full">
-              <img src={src} alt={`Slide ${i + 1}`} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-[#00182b] opacity-40"></div>
-               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 lg:p-8 text-white">
-                <div className="max-w-md mx-auto text-center">
-                  <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">
-                    OneMAI... Group Power. Personal Gains
-                  </h2>
-                  <p className="text-base sm:text-lg leading-relaxed">
-                    Save for your dreams!
-                    Our fun and intuitive group savings app makes pooling funds
-                    easy, exciting, and rewarding.
-                  </p>
-                </div>
-              </div>
+      <div className="hidden md:block md:w-1/2 relative">
+            <div className="h-screen w-full">
+              <Carousel
+                autoPlay
+                infiniteLoop
+                showThumbs={false}
+                showStatus={false}
+                showIndicators={false}
+                showArrows={false}
+                interval={5000}
+                transitionTime={800}
+                swipeable
+                emulateTouch
+                className="h-full"
+              >
+                {[Image1, Image2, Image3, Image4].map((src, idx) => (
+                  <div key={idx} className="h-screen relative">
+                    <img
+                      src={src}
+                      alt={`Slide ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-[#00182b] opacity-40"></div>
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 lg:p-8 text-white">
+                      <div className="max-w-md mx-auto text-center">
+                        <h2 className="text-2xl sm:text-3xl font-bold mb-1">
+                          OneMAI
+                        </h2>
+                        <div className="text-base sm:text-lg font-medium mb-2">
+                          Group Power. Personal Gains
+                        </div>
+                        <p className="text-base sm:text-lg leading-relaxed">
+                          Save for your dreams!
+                          Our fun and intuitive group savings app makes pooling funds
+                          easy, exciting, and rewarding.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </Carousel>
             </div>
-          ))}
-        </Carousel>
-      </div>
+          </div>
     </div>
   );
 };
