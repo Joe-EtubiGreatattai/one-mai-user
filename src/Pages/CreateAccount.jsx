@@ -350,11 +350,11 @@ const CreateAccount = () => {
                     <div className="text-base sm:text-lg font-medium mb-2">
                       Group Power. Personal Gains
                     </div>
-                    <p className="text-base sm:text-lg leading-relaxed">
+                    {/* <p className="text-base sm:text-lg leading-relaxed">
                       Save for your dreams!
                       Our fun and intuitive group savings app makes pooling funds
                       easy, exciting, and rewarding.
-                    </p>
+                    </p> */}
                   </div>
                 </div>
               </div>
