@@ -4,6 +4,8 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
+import GoogleAuthButton from "../Components/GoogleAuthButton";
+
 import Image1 from "../assets/0.jpg";
 import Image2 from "../assets/1.jpg";
 import Image3 from "../assets/2.jpg";
@@ -289,6 +291,8 @@ const SignIn = () => {
                   "Sign in"
                 )}
               </button>
+              {/* 🔵 Google Sign-in */}
+              <GoogleAuthButton buttonText="Sign in with Google" />
             </form>
 
             <div className="mt-4 sm:mt-6 text-center space-y-2">

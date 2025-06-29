@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AffiliateIllustration from "../../assets/MAI.png";
 import useAuthStore from '../../Store/Auth';
+import GoogleAuthButton from "../Components/GoogleAuthButton";
 
 const countries = [
   { code: 'US', name: 'United States', flag: '🇺🇸', dialCode: '+1' },
@@ -378,6 +379,7 @@ function AffiliateRegistration() {
                   'Join Affiliate Program'
                 )}
               </button>
+              
             </form>
 
             <div className="mt-4 text-center">

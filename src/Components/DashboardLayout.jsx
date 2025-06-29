@@ -21,16 +21,16 @@ const DashboardLayout = () => {
         {/* ✅ Language and Support section near the top */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <DashBoard />
-          <ContactSupport />
+        
         </div>
 
         {/* Dashboard main content */}
         <div className="flex flex-col xl:flex-row flex-wrap gap-4">
           <div className="flex-3/6">
-            <div className="w-full">
+            {/* <div className="w-full">
             
                 <LanguageOptions />
-            </div>
+            </div> */}
             <div className="w-full">
               <GroupListPage titleInside={true} />
             </div>

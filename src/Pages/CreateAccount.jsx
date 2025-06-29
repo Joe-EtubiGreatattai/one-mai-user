@@ -4,6 +4,7 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import GoogleAuthButton from "../Components/GoogleAuthButton";
 
 import Image1 from "../assets/0.jpg";
 import Image2 from "../assets/1.jpg";
@@ -152,11 +153,10 @@ const CreateAccount = () => {
                   value={formData.firstName}
                   onChange={handleChange}
                   placeholder="Enter first name"
-                  className={`w-full px-3 py-2 border rounded-md text-sm font-light text-[#2E2E2E] ${
-                    formErrors.firstName
+                  className={`w-full px-3 py-2 border rounded-md text-sm font-light text-[#2E2E2E] ${formErrors.firstName
                       ? "border-red-500"
                       : "border-[#EAEAEA]"
-                  }`}
+                    }`}
                 />
                 {formErrors.firstName && (
                   <p className="mt-1 text-xs text-red-600">
@@ -174,11 +174,10 @@ const CreateAccount = () => {
                   type="text"
                   value={formData.lastName}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-md text-sm ${
-                    formErrors.lastName
+                  className={`w-full px-3 py-2 border rounded-md text-sm ${formErrors.lastName
                       ? "border-red-500"
                       : "border-[#EAEAEA]"
-                  }`}
+                    }`}
                 />
                 {formErrors.lastName && (
                   <p className="mt-1 text-xs text-red-600">
@@ -197,9 +196,8 @@ const CreateAccount = () => {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md text-sm ${
-                  formErrors.email ? "border-red-500" : "border-[#EAEAEA]"
-                }`}
+                className={`w-full px-3 py-2 border rounded-md text-sm ${formErrors.email ? "border-red-500" : "border-[#EAEAEA]"
+                  }`}
               />
               {formErrors.email && (
                 <p className="mt-1 text-xs text-red-600">{formErrors.email}</p>
@@ -211,9 +209,8 @@ const CreateAccount = () => {
                 Phone Number*
               </label>
               <div
-                className={`py-2 px-3 border rounded-md ${
-                  formErrors.phone ? "border-red-500" : "border-[#EAEAEA]"
-                }`}
+                className={`py-2 px-3 border rounded-md ${formErrors.phone ? "border-red-500" : "border-[#EAEAEA]"
+                  }`}
               >
                 <PhoneInput
                   international
@@ -240,11 +237,10 @@ const CreateAccount = () => {
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-md text-sm ${
-                    formErrors.password
+                  className={`w-full px-3 py-2 border rounded-md text-sm ${formErrors.password
                       ? "border-red-500"
                       : "border-[#EAEAEA]"
-                  }`}
+                    }`}
                 />
                 <button
                   type="button"
@@ -303,67 +299,69 @@ const CreateAccount = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-2 px-4 text-white text-sm rounded-md shadow-sm font-medium ${
-                loading ? "bg-[#3390d5]" : "bg-[#3390d5] hover:bg-blue-700"
-              }`}
+              className={`w-full py-2 px-4 text-white text-sm rounded-md shadow-sm font-medium ${loading ? "bg-[#3390d5]" : "bg-[#3390d5] hover:bg-blue-700"
+                }`}
             >
               {loading ? "Signing you up..." : "Sign Up"}
             </button>
 
+            {/* 🔵 Google Sign-in */}
+            <GoogleAuthButton buttonText="Sign in with Google" />
             <div className="text-center text-sm text-gray-600">
               Already have an account?{" "}
               <Link to="/signin" className="font-medium text-blue">
                 Sign in
               </Link>
             </div>
+
           </form>
         </div>
       </div>
 
       {/* Right side - Carousel */}
       <div className="hidden md:block md:w-1/2 relative">
-            <div className="h-screen w-full">
-              <Carousel
-                autoPlay
-                infiniteLoop
-                showThumbs={false}
-                showStatus={false}
-                showIndicators={false}
-                showArrows={false}
-                interval={5000}
-                transitionTime={800}
-                swipeable
-                emulateTouch
-                className="h-full"
-              >
-                {[Image1, Image2, Image3, Image4].map((src, idx) => (
-                  <div key={idx} className="h-screen relative">
-                    <img
-                      src={src}
-                      alt={`Slide ${idx + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-[#00182b] opacity-40"></div>
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 lg:p-8 text-white">
-                      <div className="max-w-md mx-auto text-center">
-                        <h2 className="text-2xl sm:text-3xl font-bold mb-1">
-                          OneMAI
-                        </h2>
-                        <div className="text-base sm:text-lg font-medium mb-2">
-                          Group Power. Personal Gains
-                        </div>
-                        <p className="text-base sm:text-lg leading-relaxed">
-                          Save for your dreams!
-                          Our fun and intuitive group savings app makes pooling funds
-                          easy, exciting, and rewarding.
-                        </p>
-                      </div>
+        <div className="h-screen w-full">
+          <Carousel
+            autoPlay
+            infiniteLoop
+            showThumbs={false}
+            showStatus={false}
+            showIndicators={false}
+            showArrows={false}
+            interval={5000}
+            transitionTime={800}
+            swipeable
+            emulateTouch
+            className="h-full"
+          >
+            {[Image1, Image2, Image3, Image4].map((src, idx) => (
+              <div key={idx} className="h-screen relative">
+                <img
+                  src={src}
+                  alt={`Slide ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-[#00182b] opacity-40"></div>
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 lg:p-8 text-white">
+                  <div className="max-w-md mx-auto text-center">
+                    <h2 className="text-2xl sm:text-3xl font-bold mb-1">
+                      OneMAI
+                    </h2>
+                    <div className="text-base sm:text-lg font-medium mb-2">
+                      Group Power. Personal Gains
                     </div>
+                    <p className="text-base sm:text-lg leading-relaxed">
+                      Save for your dreams!
+                      Our fun and intuitive group savings app makes pooling funds
+                      easy, exciting, and rewarding.
+                    </p>
                   </div>
-                ))}
-              </Carousel>
-            </div>
-          </div>
+                </div>
+              </div>
+            ))}
+          </Carousel>
+        </div>
+      </div>
     </div>
   );
 };
