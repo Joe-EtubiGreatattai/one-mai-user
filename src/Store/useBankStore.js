@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import axios from '../Api/axios';
 
-const useBankStore = create((set) => ({
+const useBankStore = create((set, get) => ({
   // Initial state
   accounts: [],
   withdrawals: [],
@@ -13,89 +13,73 @@ const useBankStore = create((set) => ({
   bankDetails: [],
   message: null,
 
-  // Helper function for consistent error handling
-  handleError: (error, defaultMessage) => {
-    let errorMessage = defaultMessage;
-    
-    if (error.response) {
-      errorMessage = error.response.data?.message || 
-                    error.response.data?.error || 
-                    defaultMessage;
-      
-      // Special handling for specific status codes
-      if (error.response.status === 400) {
-        errorMessage = error.response.data.message || 'Invalid request';
-      } else if (error.response.status === 402) {
-        errorMessage = `Transfer failed: ${error.response.data.message}`;
-      }
+  // Helper to extract error messages
+  handleError: (error, defaultMessage = 'Something went wrong') => {
+    if (error?.response?.data?.message) {
+      return error.response.data.message;
     }
-    
-    return errorMessage;
+    if (error?.message) return error.message;
+    return defaultMessage;
   },
 
-  // Add bank account with loading state
+  // Add a bank account
   addBankAccount: async (accountDetails) => {
     set({ loading: true, error: null });
-    
+
     try {
-      const response = await axios.post('/api/bank/bank-accounts', accountDetails, {
+      const res = await axios.post('/api/bank/bank-accounts', accountDetails, {
         withCredentials: true,
       });
 
-      const newAccount = response.data.data;
+      const newAccount = res.data?.data;
+
       set((state) => ({
         accounts: [...state.accounts, newAccount],
         loading: false,
       }));
 
       return newAccount;
-    } catch (error) {
-      const errorMessage = get().handleError(
-        error, 
-        'Failed to add bank account. Please verify your details.'
-      );
-      set({ error: errorMessage, loading: false });
-      throw new Error(errorMessage);
+    } catch (err) {
+      const message = get().handleError(err, 'Failed to add bank account.');
+      set({ error: message, loading: false });
+      throw new Error(message);
     }
   },
 
-  // Get bank accounts with loading state
+  // Fetch all bank accounts
   getBankAccounts: async () => {
     set({ loading: true, error: null });
-    
+
     try {
-      const response = await axios.get('/api/bank/bank-accounts', { 
-        withCredentials: true 
+      const res = await axios.get('/api/bank/bank-accounts', {
+        withCredentials: true,
       });
 
-      set({
-        accounts: response.data.data || [],
-        loading: false,
-      });
-    } catch (error) {
-      const errorMessage = get().handleError(error, 'Failed to fetch bank accounts');
-      set({ error: errorMessage, loading: false });
-      throw error;
+      set({ accounts: res.data?.data || [], loading: false });
+    } catch (err) {
+      const message = get().handleError(err, 'Failed to fetch bank accounts');
+      set({ error: message, loading: false });
+      throw new Error(message);
     }
   },
 
-  // Withdraw to bank with detailed feedback
+  // Withdraw to bank
   withdrawToBank: async (withdrawalDetails) => {
     set({ loading: true, error: null });
-    
+
     try {
-      const response = await axios.post('/api/wallet/withdraw/bank', withdrawalDetails, {
+      const res = await axios.post('/api/wallet/withdraw/bank', withdrawalDetails, {
         withCredentials: true,
       });
 
-      const { newBalance, transactionId, estimatedArrival } = response.data.data;
+      const { newBalance, transactionId, estimatedArrival } = res.data?.data;
 
-      // Get full transaction details
-      const transactionResponse = await axios.get(`/api/transactions/${transactionId}`, {
+      // Fetch full transaction details
+      const txRes = await axios.get(`/api/transactions/${transactionId}`, {
         withCredentials: true,
       });
 
-      const transaction = transactionResponse.data.data;
+      const transaction = txRes.data?.data;
 
       set((state) => ({
         withdrawals: [transaction, ...state.withdrawals],
@@ -108,63 +92,60 @@ const useBankStore = create((set) => ({
         transaction,
         estimatedArrival: new Date(estimatedArrival),
       };
-    } catch (error) {
-      const errorMessage = get().handleError(error, 'Withdrawal failed');
-      set({ error: errorMessage, loading: false });
-      throw new Error(errorMessage);
+    } catch (err) {
+      const message = get().handleError(err, 'Withdrawal failed');
+      set({ error: message, loading: false });
+      throw new Error(message);
     }
   },
 
-  // Get wallet balance with loading state
+  // Get wallet balance
   getWalletBalance: async () => {
     set({ loading: true, error: null });
-    
+
     try {
-      const response = await axios.get('/api/wallet', { 
-        withCredentials: true 
+      const res = await axios.get('/api/wallet', {
+        withCredentials: true,
       });
 
       set({
-        walletBalance: response.data.balance,
-        walletCurrency: response.data.currency,
+        walletBalance: res.data?.balance,
+        walletCurrency: res.data?.currency,
         loading: false,
       });
-    } catch (error) {
-      const errorMessage = get().handleError(error, 'Failed to fetch wallet balance');
-      set({ error: errorMessage, loading: false });
-      throw error;
+    } catch (err) {
+      const message = get().handleError(err, 'Failed to fetch wallet balance');
+      set({ error: message, loading: false });
+      throw new Error(message);
     }
   },
 
-  // Fetch bank details with proper empty state handling
+  // Get linked bank details (for payouts)
   fetchBankDetails: async () => {
     set({ loading: true, error: null });
-    
+
     try {
-      const response = await axios.get('/api/wallet/bankDetails', { 
-        withCredentials: true 
+      const res = await axios.get('/api/wallet/bankDetails', {
+        withCredentials: true,
       });
-      
-      if (response.data.success && response.data.data.length === 0) {
-        set({ 
-          bankDetails: [], 
-          message: response.data.message, 
-          loading: false 
+
+      if (res.data?.success && Array.isArray(res.data?.data)) {
+        set({
+          bankDetails: res.data.data,
+          message: res.data.message || null,
+          loading: false,
         });
       } else {
-        set({ 
-          bankDetails: response.data.data, 
-          loading: false 
-        });
+        set({ bankDetails: [], message: null, loading: false });
       }
-    } catch (error) {
-      const errorMessage = get().handleError(error, 'Failed to fetch bank details');
-      set({ error: errorMessage, loading: false });
-      throw error;
+    } catch (err) {
+      const message = get().handleError(err, 'Failed to fetch bank details');
+      set({ error: message, loading: false });
+      throw new Error(message);
     }
   },
 
-  // State management helpers
+  // UI helpers
   setSelectedAccount: (account) => set({ selectedAccount: account }),
   clearError: () => set({ error: null }),
   resetBankState: () => set({
