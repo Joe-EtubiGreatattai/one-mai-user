@@ -13,9 +13,9 @@ import useGroupStore from "../../Store/group";
 import WalletOverview from "../profile/Wallet/WalletOverview";
 import DepositWithdraw from "../profile/Wallet/DepositWithdraw";
 import GroupTransfer from "../profile/Wallet/GroupTransfer";
-import FullScreenLoader from "../profile/FullScreenLoader"; // make sure this exists
+import FullScreenLoader from "../profile/FullScreenLoader";
 
-const stripePromise = loadStripe("pk_test_51R87iGPfjXlwgFldEuvXuheBeZSAsYvbFofgYtzi4U1lHweQoaBT7HyQjvPpwBmHjpptcLXf9BI48bG1NDknydyG00SdIOrc60");
+const stripePromise = loadStripe("pk_test_51RUUUSP8EVNH0Oikg8cTjV51i1Iy1p3WL9HOUyCejRoumJYpRMpJJvmhTqV9anMgzpwzeKwwVr7lPg7kqQZ7cIat005cGwt8P1");
 
 const Wallet = ({ darkMode }) => {
   const location = useLocation();
@@ -97,6 +97,20 @@ const Wallet = ({ darkMode }) => {
     if (groupsError) toast.error(groupsError);
   }, [walletError, bankError, groupsError]);
 
+  // Check for payment completion in URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const paymentStatus = urlParams.get('payment');
+    
+    if (paymentStatus === 'completed') {
+      // Refresh wallet data after successful payment
+      initializeWallet();
+      getTransactions();
+      // Clean up URL
+      window.history.replaceState({}, document.title, location.pathname);
+    }
+  }, [location.search]);
+
   const getReturnUrl = () =>
     `${window.location.origin}${location.pathname}?payment=completed`;
 
@@ -110,6 +124,7 @@ const Wallet = ({ darkMode }) => {
       selectedAccount: "",
       groupTransferId: "",
     });
+    setAmountError("");
   };
 
   const handleInputChange = (e) => {
@@ -142,29 +157,8 @@ const Wallet = ({ darkMode }) => {
       setAmountError("Valid amount (minimum 1) is required");
       return false;
     }
+    setAmountError("");
     return true;
-  };
-
-  const handleDeposit = async () => {
-    try {
-      if (!validateAmount()) return;
-
-      const payload = {
-        amount: Number(formData.amount),
-        currency: "eur",
-      };
-
-      const res = await axios.post("/api/wallet/create_intent", payload);
-
-      if (res?.data?.success) {
-        toast.success(`Deposit of ${formData.amount} EUR successful!`);
-        resetForms();
-      } else {
-        throw new Error(res.data.message || "Deposit failed");
-      }
-    } catch (err) {
-      toast.error(err?.response?.data?.message || err.message || "Deposit failed");
-    }
   };
 
   const handleGroupTransfer = async (e) => {
@@ -189,6 +183,9 @@ const Wallet = ({ darkMode }) => {
       if (res?.data?.success) {
         toast.success(`Transferred ${formData.amount} ${currency} to group!`);
         resetForms();
+        // Refresh wallet data
+        initializeWallet();
+        getTransactions();
       } else {
         throw new Error(res.data.message || "Transfer failed");
       }
@@ -289,7 +286,6 @@ const Wallet = ({ darkMode }) => {
               validateAmount={validateAmount}
               amountError={amountError}
               stripePromise={stripePromise}
-              handleDeposit={handleDeposit}
               walletLoading={walletLoading}
               getReturnUrl={getReturnUrl}
               accounts={accounts}
