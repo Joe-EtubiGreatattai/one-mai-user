@@ -142,7 +142,7 @@ const ProfilePage = () => {
     }
   };
 
-  // ✅ Smooth scroll to content section on tab switch (mobile only)
+  // Mobile scroll to content
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
     if (!isMobile) return;
@@ -178,15 +178,15 @@ const ProfilePage = () => {
 
   return (
     <div
-      className={`flex flex-col md:flex-row min-h-screen transition-colors duration-300 ${
-        darkMode ? "dark bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-800"
+      className={`flex flex-col md:flex-row min-h-screen w-full transition-colors duration-300 ${
+        darkMode ? "dark bg-gray-900 text-gray-100" : "bg-white text-gray-800"
       }`}
     >
       {(localError || success) && (
         <div
-          className={`fixed top-4 right-4 z-50 p-4 pr-10 rounded-lg shadow-lg max-w-xs md:max-w-md ${
+          className={`fixed top-4 right-4 z-50 px-4 py-3 pr-10 rounded-lg shadow-none md:shadow-lg w-[90vw] max-w-xs md:max-w-md ${
             localError ? "bg-red-500" : "bg-green-500"
-          } text-white animate-fade-in`}
+          } text-white`}
         >
           {localError || success}
           <button
@@ -199,8 +199,8 @@ const ProfilePage = () => {
         </div>
       )}
 
-      <div className="md:hidden p-4 border-b dark:border-gray-700 flex justify-between items-center">
-        <h1 className="text-xl font-bold">Profile Settings</h1>
+      <div className="md:hidden p-3 border-b dark:border-gray-700 flex justify-between items-center">
+        <h1 className="text-lg font-bold">Profile Settings</h1>
         <button
           onClick={() => setDarkMode(!darkMode)}
           className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -220,7 +220,7 @@ const ProfilePage = () => {
         isLoading={isLoading}
       />
 
-      <main className="flex-1 p-4 md:p-6 lg:p-8 transition-all duration-300">
+      <main className="flex-1 p-3 md:p-6 lg:p-8 w-full transition-all duration-300">
         <ProfileContent
           activeTab={activeTab}
           user={user}

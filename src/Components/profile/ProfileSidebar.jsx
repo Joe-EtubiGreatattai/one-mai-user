@@ -44,7 +44,6 @@ const ProfileSidebar = ({
       title: "Others",
       items: [
         { type: "darkMode", label: "Dark Mode" },
-        { type: "faq", label: "FAQ" },
         { type: "logout", label: "Logout" },
       ],
     },
@@ -58,7 +57,7 @@ const ProfileSidebar = ({
           className="flex justify-between items-center cursor-pointer"
           onClick={(e) => {
             e.stopPropagation();
-            toggleDarkMode;
+            toggleDarkMode();
           }}
         >
           <span
@@ -138,17 +137,19 @@ const ProfileSidebar = ({
         }`}
         onClick={() => !isLoading && setActiveTab(item.tab)}
       >
-        <div className="flex-center gap-2">
+        <div className="flex items-center gap-2">
           <span>{item.icon}</span>
           <span>{item.label}</span>
         </div>
       </li>
     );
   };
+
   const profileImg = user?.image;
+
   return (
     <aside
-      className={`w-full md:w-64 lg:w-72 xl:w-80 p-4 md:p-6 rounded-lg shadow-md transition-colors duration-300 ${
+      className={`w-full md:w-64 lg:w-72 xl:w-80 p-3 md:p-6 rounded-none md:rounded-lg shadow-none md:shadow-md transition-colors duration-300 ${
         darkMode ? "bg-gray-800" : "bg-white"
       }`}
     >
@@ -211,9 +212,7 @@ const ProfileSidebar = ({
             >
               {section.title}
             </h3>
-            <ul className="space-y-3 pl-1">
-              {section.items.map(renderMenuItem)}
-            </ul>
+            <ul className="space-y-3 pl-1">{section.items.map(renderMenuItem)}</ul>
           </div>
         ))}
       </nav>

@@ -76,11 +76,11 @@ const ProfileContent = ({
   return (
     <div
       id="profile-content-scroll"
-      className={`flex-1 p-4 md:p-6 lg:p-8 rounded-lg shadow-md transition-all ${
+      className={`flex-1 w-full p-3 md:p-6 lg:p-8 rounded-none md:rounded-lg shadow-none md:shadow-md transition-all ${
         darkMode ? 'bg-gray-800' : 'bg-white'
       }`}
     >
-      <div className="min-h-[60vh]">
+      <div className="min-h-[60vh] w-full">
         {renderContent()}
       </div>
     </div>
