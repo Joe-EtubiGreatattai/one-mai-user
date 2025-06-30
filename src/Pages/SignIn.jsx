@@ -146,96 +146,96 @@ const SignIn = () => {
         </div>
       )}
 
-    
-        <div className="w-full md:w-1/2 sm:bg-gray-50 flex flex-col items-center justify-center px-4 py-14 sm:p-6 lg:p-8">
-          <div className="w-full max-w-md space-y-6 sm:space-y-8">
-            <div className="text-left sm:text-center">
-          <h2 className="text-2xl max-sm:text-start sm:text-3xl font-semibold sm:font-bold text-gray-900 mb-1 sm:mb-2">
-            Sign In
-          </h2>
-          <p className="text-base sm:text-lg max-sm:text-start max-sm:text-sm text-gray-500">
-            Welcome Back We've Missed You!
-          </p>
-            </div>
 
-            {error && (
-          <div className="p-3 bg-red-50  text-red-700 rounded-lg text-sm border border-red-200">
-            {error}
+      <div className="w-full md:w-1/2 sm:bg-gray-50 flex flex-col items-center justify-center px-4 py-14 sm:p-6 lg:p-8">
+        <div className="w-full max-w-md space-y-6 sm:space-y-8">
+          <div className="text-left sm:text-center">
+            <h2 className="text-2xl max-sm:text-start sm:text-3xl font-semibold sm:font-bold text-gray-900 mb-1 sm:mb-2">
+              Sign In
+            </h2>
+            <p className="text-base sm:text-lg max-sm:text-start max-sm:text-sm text-gray-500">
+              Welcome Back We've Missed You!
+            </p>
           </div>
-            )}
 
-            <div className="sm:bg-white sm:p-8 rounded-lg sm:shadow-md">
-          <form className="space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-700 mb-1"
-              >
-            Email address
-              </label>
-              <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter Email"
-            disabled={loading}
-              />
+          {error && (
+            <div className="p-3 bg-red-50  text-red-700 rounded-lg text-sm border border-red-200">
+              {error}
             </div>
+          )}
 
-            <div>
-              <label
-            htmlFor="password"
-            className="block text-sm font-medium text-gray-700 mb-1"
-              >
-            Password
-              </label>
-              <div className="relative">
-            <input
-              id="password"
-              name="password"
-              type={showPassword ? "text" : "password"}
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
-              placeholder="••••••••"
-              disabled={loading}
-            />
-            <button
-              type="button"
-              className="absolute inset-y-0 right-0 pr-3 flex items-center"
-              onClick={() => setShowPassword(!showPassword)}
-              aria-label={
-                showPassword ? "Hide password" : "Show password"
-              }
-              disabled={loading}
-            >
-              {showPassword ? (
-                <EyeSlashIcon className="h-5 w-5 text-gray-500" />
-              ) : (
-                <EyeIcon className="h-5 w-5 text-gray-500" />
-              )}
-            </button>
+          <div className="sm:bg-white sm:p-8 rounded-lg sm:shadow-md">
+            <form className="space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Email address
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter Email"
+                  disabled={loading}
+                />
               </div>
-            </div>
 
-            <div className="flex items-center justify-between flex-wrap gap-2 ">
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
+                    placeholder="••••••••"
+                    disabled={loading}
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                    disabled={loading}
+                  >
+                    {showPassword ? (
+                      <EyeSlashIcon className="h-5 w-5 text-gray-500" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5 text-gray-500" />
+                    )}
+                  </button>
+                </div>
+              </div>
 
-              <Link
-            to="/reset-password"
-            className="text-sm font-medium text-[#3390d5] hover:text-[#3390d5] whitespace-nowrap"
-              >
-            Forgot password?
-              </Link>
-            </div>
+              <div className="flex items-center justify-between flex-wrap gap-2 ">
 
-            {/* <div className="flex items-start gap-2">
+                <Link
+                  to="/reset-password"
+                  className="text-sm font-medium text-[#3390d5] hover:text-[#3390d5] whitespace-nowrap"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              {/* <div className="flex items-start gap-2">
               <input
             name="agreed"
             type="checkbox"
