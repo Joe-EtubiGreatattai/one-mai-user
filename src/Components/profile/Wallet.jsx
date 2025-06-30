@@ -156,23 +156,29 @@ const Wallet = ({ darkMode }) => {
     return true;
   };
 
-  const handleDeposit = async (paymentMethodId) => {
-    try {
-      if (!validateAmount()) return;
+const handleDeposit = async () => {
+  try {
+    if (!validateAmount()) return;
 
-      await deposit({
-        amount: formData.amount,
-        paymentMethod: "card",
-        token: { id: paymentMethodId },
-        returnUrl: getReturnUrl(),
-      });
+    const payload = {
+      amount: Number(formData.amount),
+      currency: "eur"
+    };
 
-      toast.success(`Deposit of ${formData.amount} ${currency} successful!`);
+    const res = await axios.post("/api/wallet/create_intent", payload);
+
+    if (res?.data?.success) {
+      toast.success(`Deposit of ${formData.amount} EUR successful!`);
       resetForms();
-    } catch (err) {
-      toast.error(err.message || "Deposit failed");
+    } else {
+      throw new Error(res.data.message || "Deposit failed");
     }
-  };
+  } catch (err) {
+    const message = err?.response?.data?.message || err.message;
+    toast.error(message || "Deposit failed");
+  }
+};
+
 
   const handleGroupTransfer = async (e) => {
     e.preventDefault();
