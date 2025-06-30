@@ -13,7 +13,6 @@ import useGroupStore from "../../Store/group";
 import WalletOverview from "../profile/Wallet/WalletOverview";
 import DepositWithdraw from "../profile/Wallet/DepositWithdraw";
 import GroupTransfer from "../profile/Wallet/GroupTransfer";
-import FullScreenLoader from "../profile/FullScreenLoader";
 
 const stripePromise = loadStripe("pk_test_51RUUUSP8EVNH0Oikg8cTjV51i1Iy1p3WL9HOUyCejRoumJYpRMpJJvmhTqV9anMgzpwzeKwwVr7lPg7kqQZ7cIat005cGwt8P1");
 
@@ -103,10 +102,8 @@ const Wallet = ({ darkMode }) => {
     const paymentStatus = urlParams.get('payment');
     
     if (paymentStatus === 'completed') {
-      // Refresh wallet data after successful payment
       initializeWallet();
       getTransactions();
-      // Clean up URL
       window.history.replaceState({}, document.title, location.pathname);
     }
   }, [location.search]);
@@ -183,7 +180,6 @@ const Wallet = ({ darkMode }) => {
       if (res?.data?.success) {
         toast.success(`Transferred ${formData.amount} ${currency} to group!`);
         resetForms();
-        // Refresh wallet data
         initializeWallet();
         getTransactions();
       } else {
@@ -217,8 +213,6 @@ const Wallet = ({ darkMode }) => {
 
   return (
     <>
-      {walletLoading && <FullScreenLoader />}
-
       <div className={`p-2 md:p-6 space-y-4 w-full ${darkMode ? "bg-gray-900" : "bg-white"} md:rounded-lg md:shadow-sm rounded-none shadow-none`}>
         <h2 className={`text-2xl md:text-3xl font-bold ${darkMode ? "text-white" : "text-gray-800"}`}>
           Wallet
