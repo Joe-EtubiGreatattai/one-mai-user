@@ -248,7 +248,6 @@ const Wallet = ({ darkMode }) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "EUR",
-      // currency: currency
     }).format(amount);
   };
 
@@ -258,9 +257,9 @@ const Wallet = ({ darkMode }) => {
 
   return (
     <div
-      className={`p-4 md:p-6 space-y-6 ${
+      className={`p-2 md:p-6 space-y-4 w-full ${
         darkMode ? "bg-gray-900" : "bg-white"
-      } rounded-lg shadow-sm`}
+      } md:rounded-lg md:shadow-sm rounded-none shadow-none`}
     >
       <h2
         className={`text-2xl md:text-3xl font-bold ${
@@ -270,7 +269,6 @@ const Wallet = ({ darkMode }) => {
         Wallet
       </h2>
 
-      {/* Responsive tab navigation */}
       <div className='flex overflow-x-auto pb-1 scrollbar-hide'>
         <div className='flex space-x-1 md:space-x-0 border-b w-full'>
           {["overview", "deposit", "withdraw", "transfer"].map((tab) => (
@@ -293,7 +291,6 @@ const Wallet = ({ darkMode }) => {
         </div>
       </div>
 
-      {/* Mobile balance toggle */}
       <div className='md:hidden flex justify-between items-center'>
         <span
           className={`font-medium ${
@@ -324,7 +321,6 @@ const Wallet = ({ darkMode }) => {
         </button>
       </div>
 
-      {/* Main content area */}
       <div className='mt-4'>
         {activeTab === "overview" ? (
           <WalletOverview
@@ -373,8 +369,6 @@ const Wallet = ({ darkMode }) => {
           />
         )}
       </div>
-
-      {/* Loading state */}
     </div>
   );
 };

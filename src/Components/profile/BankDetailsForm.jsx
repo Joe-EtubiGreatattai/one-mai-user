@@ -73,7 +73,7 @@ const BankDetailsForm = ({ darkMode = false, accounts = [], setError = () => {},
   // Don't show the form if account already exists
   if (accounts && accounts.length > 0) {
     return (
-      <div className={`p-4 rounded-lg text-center ${darkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
+      <div className={`p-2 md:p-4 rounded-lg text-center ${darkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
         <p className={darkMode ? 'text-gray-300' : 'text-gray-700'}>
           Bank account already exists. Contact support for changes.
         </p>
@@ -82,14 +82,14 @@ const BankDetailsForm = ({ darkMode = false, accounts = [], setError = () => {},
   }
 
   return (
-    <form onSubmit={handleSubmit} className={`p-4 md:p-6 rounded-lg shadow-md ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-      <h3 className={`text-lg md:text-xl font-medium mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+    <form onSubmit={handleSubmit} className={`w-full p-2 md:p-6 md:rounded-lg md:shadow-md ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+      <h3 className={`text-lg md:text-xl font-medium mb-3 md:mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
         Add Bank Account
       </h3>
       
-      <div className="space-y-4">
+      <div className="space-y-3 md:space-y-4">
         <div>
-          <label className={`block mb-2 text-sm md:text-base font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <label className={`block mb-1 md:mb-2 text-sm md:text-base font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Bank Name*
           </label>
           <input
@@ -106,7 +106,7 @@ const BankDetailsForm = ({ darkMode = false, accounts = [], setError = () => {},
         </div>
 
         <div>
-          <label className={`block mb-2 text-sm md:text-base font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <label className={`block mb-1 md:mb-2 text-sm md:text-base font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             IBAN Number*
           </label>
           <input
@@ -135,7 +135,7 @@ const BankDetailsForm = ({ darkMode = false, accounts = [], setError = () => {},
         </div>
 
         <div>
-          <label className={`block mb-2 text-sm md:text-base font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <label className={`block mb-1 md:mb-2 text-sm md:text-base font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Account Holder Name*
           </label>
           <input
@@ -152,7 +152,7 @@ const BankDetailsForm = ({ darkMode = false, accounts = [], setError = () => {},
         </div>
 
         <div>
-          <label className={`block mb-2 text-sm md:text-base font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <label className={`block mb-1 md:mb-2 text-sm md:text-base font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             SWIFT/BIC Code
           </label>
           <input
@@ -176,7 +176,7 @@ const BankDetailsForm = ({ darkMode = false, accounts = [], setError = () => {},
 
       <button
         type="submit"
-        className={`w-full mt-6 py-2 md:py-3 px-4 rounded-md ${
+        className={`w-full mt-4 md:mt-6 py-2 md:py-3 px-4 rounded-md ${
           darkMode ? 'bg-[#3390d5] hover:bg-blue-700' : 'bg-[#3390d5] hover:bg-blue-700'
         } text-white font-medium flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
           darkMode ? 'focus:ring-offset-gray-800' : 'focus:ring-offset-white'

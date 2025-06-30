@@ -87,20 +87,20 @@ const PasswordSecurity = ({ updateProfile, darkMode, setError, setSuccess }) => 
   };
 console.log("user from profile form",user)
   return (
-    <div className="px-4 py-6 md:px-6 md:py-8">
-      <h2 className={`text-xl md:text-2xl font-bold mb-6 text-center ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+    <div className="px-0 py-1 md:px-6 md:py-8">
+      <h2 className={`text-xl md:text-2xl font-bold mb-4 md:mb-6 text-center ${darkMode ? 'text-white' : 'text-gray-800'}`}>
         Password & Security
       </h2>
       
-      <div className="max-w-lg mx-auto space-y-6 md:space-y-8">
+      <div className="max-w-lg mx-auto space-y-4 md:space-y-8">
         {/* Change Password Card */}
-        <div className={`p-6 md:p-8 rounded-lg shadow-md ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <h3 className={`font-semibold mb-4 text-lg ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+        <div className={`p-4 md:p-8 rounded-lg md:shadow-md ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <h3 className={`font-semibold mb-3 md:mb-4 text-lg ${darkMode ? 'text-white' : 'text-gray-800'}`}>
             Change Password
           </h3>
           
           <form onSubmit={updatePassword}>
-            <div className="space-y-4 md:space-y-6">
+            <div className="space-y-3 md:space-y-6">
               {/* Current Password */}
               <div>
                 <label className={`block mb-2 font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -112,7 +112,7 @@ console.log("user from profile form",user)
                     name="currentPassword"
                     value={passwordData.currentPassword}
                     onChange={handlePasswordChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
+                    className={`w-full px-3 py-2 md:px-4 md:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
                       darkMode 
                         ? 'bg-gray-700 border-gray-600 text-white' 
                         : 'bg-white border-gray-300 text-gray-800'
@@ -148,7 +148,7 @@ console.log("user from profile form",user)
                     name="newPassword"
                     value={passwordData.newPassword}
                     onChange={handlePasswordChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
+                    className={`w-full px-3 py-2 md:px-4 md:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
                       darkMode 
                         ? 'bg-gray-700 border-gray-600 text-white' 
                         : 'bg-white border-gray-300 text-gray-800'
@@ -188,7 +188,7 @@ console.log("user from profile form",user)
                     name="confirmPassword"
                     value={passwordData.confirmPassword}
                     onChange={handlePasswordChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
+                    className={`w-full px-3 py-2 md:px-4 md:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${
                       darkMode 
                         ? 'bg-gray-700 border-gray-600 text-white' 
                         : 'bg-white border-gray-300 text-gray-800'
@@ -216,7 +216,7 @@ console.log("user from profile form",user)
               {/* Submit Button */}
               <button 
                 type="submit"
-                className={`w-full py-3 px-4 rounded-lg font-medium shadow transition flex items-center justify-center ${
+                className={`w-full py-2 md:py-3 px-4 rounded-lg font-medium md:shadow transition flex items-center justify-center ${
                   darkMode 
                     ? 'bg-[#3390d5] hover:bg-blue-700 text-white' 
                     : 'bg-[#3390d5] hover:bg-blue-700 text-white'
@@ -242,8 +242,8 @@ console.log("user from profile form",user)
         </div>
 
         {/* Two-Factor Authentication Card */}
-        <div className={`p-6 md:p-8 rounded-lg shadow-md ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <h3 className={`font-semibold mb-4 text-lg ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+        <div className={`p-4 md:p-8 rounded-lg md:shadow-md ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <h3 className={`font-semibold mb-3 md:mb-4 text-lg ${darkMode ? 'text-white' : 'text-gray-800'}`}>
             Two-Factor Authentication
           </h3>
           
@@ -261,7 +261,7 @@ console.log("user from profile form",user)
             <button 
               onClick={handleToggleTwoFactor}
               disabled={twoFactorLoading}
-              className={`px-4 py-2 rounded-lg text-sm shadow transition flex items-center justify-center ${
+              className={`px-4 py-2 rounded-lg text-sm md:shadow transition flex items-center justify-center ${
                 darkMode 
                   ? user?.twoFactor 
                     ? 'bg-red-600 hover:bg-red-700 text-white' 

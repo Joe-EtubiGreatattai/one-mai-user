@@ -2,19 +2,19 @@ import React from "react";
 
 const NotificationSettings = ({ darkMode }) => {
   return (
-    <div className="px-4 py-6 md:px-6 md:py-8">
-      <h2 className={`text-xl md:text-2xl font-bold mb-6 md:mb-8 text-center ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+    <div className="px-2 py-4 md:px-6 md:py-8">
+      <h2 className={`text-xl md:text-2xl font-bold mb-4 md:mb-8 text-center ${darkMode ? 'text-white' : 'text-gray-800'}`}>
         Notification Settings
       </h2>
       
-      <div className="max-w-lg mx-auto space-y-6 md:space-y-8">
+      <div className="w-full md:max-w-lg md:mx-auto space-y-4 md:space-y-8">
         {/* Push Notifications Card */}
-        <div className={`p-6 md:p-8 rounded-lg shadow-md ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <h3 className={`font-semibold mb-4 md:mb-6 text-lg ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+        <div className={`p-4 md:p-8 rounded-lg md:shadow-md ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <h3 className={`font-semibold mb-3 md:mb-6 text-lg ${darkMode ? 'text-white' : 'text-gray-800'}`}>
             Push Notifications
           </h3>
           
-          <div className="space-y-4 md:space-y-6">
+          <div className="space-y-3 md:space-y-6">
             {/* App Announcements */}
             <div className="flex justify-between items-center">
               <div className="mr-4">
@@ -93,12 +93,12 @@ const NotificationSettings = ({ darkMode }) => {
         </div>
 
         {/* Notification Preferences Card */}
-        <div className={`p-6 md:p-8 rounded-lg shadow-md ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <h3 className={`font-semibold mb-4 md:mb-6 text-lg ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+        <div className={`p-4 md:p-8 rounded-lg md:shadow-md ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <h3 className={`font-semibold mb-3 md:mb-6 text-lg ${darkMode ? 'text-white' : 'text-gray-800'}`}>
             Notification Preferences
           </h3>
           
-          <div className="space-y-4 md:space-y-6">
+          <div className="space-y-3 md:space-y-6">
             {/* Sound Alerts */}
             <div className="flex justify-between items-center">
               <div className="mr-4">
