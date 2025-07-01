@@ -260,7 +260,7 @@ const SignIn = () => {
                 disabled={loading}
                 className={`max-sm:mt-4  w-full py-2 px-4 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${loading
                   ? "bg-[#3390d5] cursor-not-allowed"
-                  : "bg-[#3390d5] hover:bg-blue-700"
+                  : "bg-[#3390d5] bg-[#3390d5]"
                   }`}
               >
                 {loading ? (
