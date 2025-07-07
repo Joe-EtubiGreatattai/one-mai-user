@@ -6,8 +6,8 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 import GoogleAuthButton from "../Components/GoogleAuthButton";
 
-import Image1 from "../assets/0.jpg";
-import Image2 from "../assets/1.jpg";
+import Image1 from "../assets/0.jpeg";
+import Image2 from "../assets/1.jpeg";
 import Image3 from "../assets/2.jpg";
 import Image4 from "../assets/3.jpg";
 import useAuthStore from "../Store/Auth";
@@ -334,21 +334,7 @@ const SignIn = () => {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-[#00182b] opacity-40"></div>
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 lg:p-8 text-white">
-                  <div className="max-w-md mx-auto text-center">
-                    <h2 className="text-2xl sm:text-3xl font-bold mb-1">
-                      OneMAI
-                    </h2>
-                    <div className="text-base sm:text-lg font-medium mb-2">
-                      Group Power. Personal Gains
-                    </div>
-                    {/* <p className="text-base sm:text-lg leading-relaxed">
-                      Save for your dreams!
-                      Our fun and intuitive group savings app makes pooling funds
-                      easy, exciting, and rewarding.
-                    </p> */}
-                  </div>
-                </div>
+              
               </div>
             ))}
           </Carousel>
