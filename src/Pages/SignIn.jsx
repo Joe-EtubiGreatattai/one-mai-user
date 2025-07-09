@@ -6,10 +6,10 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 import GoogleAuthButton from "../Components/GoogleAuthButton";
 
-import Image1 from "../assets/0.jpeg";
-import Image2 from "../assets/1.jpeg";
-import Image3 from "../assets/2.jpg";
-import Image4 from "../assets/3.jpg";
+import Image1 from "../assets/0.png";
+import Image2 from "../assets/1.png";
+import Image3 from "../assets/2.png";
+import Image4 from "../assets/3.png";
 import useAuthStore from "../Store/Auth";
 
 const SignIn = () => {
