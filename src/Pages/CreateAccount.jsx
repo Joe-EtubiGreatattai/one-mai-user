@@ -350,7 +350,7 @@ const CreateAccount = () => {
           </Carousel>
         </div>
       </div>
-    </div>
+    </div> 
   );
 };
 
