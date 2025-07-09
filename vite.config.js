@@ -18,6 +18,7 @@ export default defineConfig({
         swDest: "dist/sw.js",
         globDirectory: "dist",
         globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2}"],
+        maximumFileSizeToCacheInBytes: 10 * 1024 * 1024, // 10MB limit
       },
       manifest: {
         name: "My PWA App",
@@ -33,13 +34,13 @@ export default defineConfig({
             src: "/icons/icon-192x192.png",
             sizes: "192x192",
             type: "image/png",
-            purpose: "any maskable", // Add this line
+            purpose: "any maskable",
           },
           {
             src: "/icons/icon-512x512.png",
             sizes: "512x512",
             type: "image/png",
-            purpose: "any maskable", // Add this line
+            purpose: "any maskable",
           },
         ],
         screenshots: [
