@@ -10,8 +10,10 @@ import {
   FiSettings,
   FiMenu,
   FiX,
+  FiPlus,
   FiSearch,
   FiLogOut,
+  FiCreditCard, // Transaction icon
 } from "react-icons/fi";
 import { FaUserCircle } from "react-icons/fa";
 import useAuthStore from "../Store/Auth";
@@ -83,20 +85,19 @@ const Layout = () => {
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Desktop Sidebar */}
+     
       <div className="hidden lg:block fixed inset-y-0 left-0 z-30 w-64 shadow-lg border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
         <div className="flex justify-between items-center h-20 p-4 border-b border-gray-200 dark:border-gray-700">
           <img src={Logo} alt="MAI Logo" className="h-12" />
         </div>
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           <NavItem to="/dashboard" icon={<FiHome size={20} />} text="Home" />
-          <NavItem to="/notification" icon={<FiBell size={20} />} text="Notifications" />
           <NavItem to="/group" icon={<FiUsers size={20} />} text="Groups" />
+          <NavItem to="/transaction" icon={<FiCreditCard size={20} />} text="Transaction" />
           <NavItem to="/profile" icon={<FiUser size={20} />} text="Profile" />
         </nav>
       </div>
 
-      {/* Tablet Sidebar */}
       <div
         ref={tabletSidebarRef}
         className={`hidden md:block lg:hidden fixed inset-y-0 left-0 z-30 w-64 shadow-lg border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 transform ${
@@ -161,7 +162,7 @@ const Layout = () => {
       {/* Mobile Bottom Tab Navigation */}
       <div className="fixed bottom-0 left-0 right-0 z-30 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 flex justify-around items-center h-16 sm:hidden">
         <MobileTab to="/dashboard" icon={<FiHome size={20} />} label="Home" />
-        <MobileTab to="/notification" icon={<FiBell size={20} />} label="Alerts" />
+        <MobileTab to="/transaction" icon={<FiCreditCard size={20} />} label="Transactions" />
         <MobileTab to="/group" icon={<FiUsers size={20} />} label="Groups" />
         <MobileTab to="/profile" icon={<FiUser size={20} />} label="Profile" />
       </div>

@@ -37,6 +37,7 @@ import JoinGroupPage from "./Pages/JoinGroupPage";
 import TermAndCondition from "./Pages/TermAndCondition";
 import Privacy from "./Pages/Privacy";
 import Support from "./Pages/Support";
+import Transactions from "./Components/RecentTransactions";
 
 // Auth Protected Route Component
 const ProtectedRoute = () => {
@@ -122,6 +123,7 @@ function App() {
             <Route path="/groupCreation" element={<GroupCreationFlow />} />
             <Route path="/group/:groupId" element={<ChatPage />} />
             <Route path="/notification" element={<NotificationPage />} />
+            <Route path="/transaction" element={<Transactions />} />
           </Route>
         </Route>
 

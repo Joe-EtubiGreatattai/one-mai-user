@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiCopy, FiCheck } from "react-icons/fi";
 import useBankStore from "../../Store/useBankStore";
 
 const BankDetailsForm = ({
@@ -9,7 +9,7 @@ const BankDetailsForm = ({
   setSuccess = () => {},
 }) => {
   const { addBankAccount, getBankAccounts, error, clearError } = useBankStore();
-
+  const [copied, setCopied] = useState(null);
   const [bankDetails, setBankDetails] = useState({
     bankName: "",
     ibanNumber: "",
@@ -17,7 +17,6 @@ const BankDetailsForm = ({
     swiftCode: "",
   });
 
-  // Reset form when accounts are cleared
   useEffect(() => {
     if (Array.isArray(accounts) && accounts.length === 0) {
       setBankDetails({
@@ -63,7 +62,7 @@ const BankDetailsForm = ({
 
     try {
       await addBankAccount(payload);
-      await getBankAccounts(); // refresh list
+      await getBankAccounts();
       setSuccess("Bank account added successfully!");
       setBankDetails({
         bankName: "",
@@ -71,150 +70,166 @@ const BankDetailsForm = ({
         beneficiaryName: "",
         swiftCode: "",
       });
-    } catch (err) {
-      // handled in store
-    }
+    } catch (err) {}
   };
 
-  // If accounts exist, show them instead of the form
+  const handleCopy = (text, field) => {
+    navigator.clipboard.writeText(text);
+    setCopied(field);
+    setTimeout(() => setCopied(null), 1500);
+  };
+
+  // Display bank cards
   if (accounts && accounts.length > 0) {
     return (
-      <div className={`p-2 md:p-4 rounded-lg space-y-4 ${darkMode ? "bg-white-800" : "bg-white"}`}>
-        <h3 className={`text-lg font-semibold ${darkMode ? "text-white" : "text-gray-800"}`}>
-          Your Bank Accounts
-        </h3>
+      <div className="w-full flex flex-col gap-6">
         {accounts.map((account) => (
           <div
             key={account._id}
-            className={`p-3 rounded-md border text-sm ${
-              darkMode
-                ? "border-gray-600 bg-gray-700 text-white"
-                : "border-gray-300 bg-white text-gray-800"
-            }`}
+            className="w-full max-w-md mx-auto rounded-xl p-6 shadow-lg bg-gradient-to-br from-[#0f1e41] to-[#1b3265] text-white font-mono relative overflow-hidden"
           >
-            <p><strong>Bank:</strong> {account.bankName}</p>
-            <p><strong>Account Holder:</strong> {account.accountHolderName}</p>
-            <p><strong>IBAN:</strong> {account.iban}</p>
-            <p><strong>BIC:</strong> {account.bic}</p>
-            <p><strong>Country:</strong> {account.country}</p>
-            <p><strong>Currency:</strong> {account.currency}</p>
+            {/* Top */}
+            <div className="flex items-center mb-8">
+              {/* Chip */}
+              <div className="w-10 h-8 bg-gradient-to-br from-gray-300 to-gray-500 rounded-sm mr-2"></div>
+              {/* Contactless icon */}
+              <div className="flex space-x-0.5">
+                <div className="w-1 h-2 rounded-sm bg-white opacity-50"></div>
+                <div className="w-1 h-3 rounded-sm bg-white opacity-50"></div>
+                <div className="w-1 h-4 rounded-sm bg-white opacity-50"></div>
+              </div>
+            </div>
+
+            {/* IBAN - copyable */}
+            <div className="text-2xl tracking-widest font-semibold mb-3 flex items-center gap-2">
+              <span>{account.iban.match(/.{1,4}/g)?.join(" ")}</span>
+              <button onClick={() => handleCopy(account.iban, account._id)} className="text-white">
+                {copied === account._id ? <FiCheck size={18} /> : <FiCopy size={18} />}
+              </button>
+            </div>
+
+            {/* Account Holder */}
+            <div className="uppercase text-xs text-slate-300">Cardholder</div>
+            <div className="text-sm mb-3">{account.accountHolderName}</div>
+
+            {/* SWIFT & Country */}
+            <div className="grid grid-cols-2 gap-2 text-sm text-slate-300">
+              <div>
+                <div className="uppercase text-xs">SWIFT</div>
+                <div className="text-sm">{account.bic || "N/A"}</div>
+              </div>
+              <div>
+                <div className="uppercase text-xs">Country</div>
+                <div className="text-sm">{account.country}</div>
+              </div>
+            </div>
+
+            {/* Currency and status */}
+            <div className="flex justify-between items-center mt-6 text-xs">
+              <span className="uppercase">{account.currency}</span>
+              <span
+                className={`text-[11px] px-2 py-0.5 rounded-full ${
+                  account.isVerified
+                    ? "bg-green-600 text-white"
+                    : "bg-yellow-500 text-white"
+                }`}
+              >
+                {account.isVerified ? "Verified" : "Not Verified"}
+              </span>
+            </div>
           </div>
         ))}
       </div>
     );
   }
 
+  // Add bank form
   return (
     <form
       onSubmit={handleSubmit}
-      className={`w-full p-2 md:p-6 md:rounded-lg md:shadow-md ${
-        darkMode ? "bg-gray-800" : "bg-white"
+      className={`w-full p-4 md:p-6 rounded-lg shadow-md ${
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"
       }`}
     >
-      <h3
-        className={`text-lg md:text-xl font-medium mb-3 md:mb-4 ${
-          darkMode ? "text-white" : "text-gray-800"
-        }`}
-      >
-        Add Bank Account
-      </h3>
+      <h3 className="text-xl font-semibold mb-5">Add Bank Account</h3>
 
-      <div className="space-y-3 md:space-y-4">
-        <div>
-          <label className={`block mb-1 font-medium ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-            Bank Name*
-          </label>
-          <input
-            type="text"
-            name="bankName"
-            value={bankDetails.bankName}
-            onChange={handleInputChange}
-            className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-              darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
-            }`}
-            required
-            placeholder="e.g. Deutsche Bank"
-          />
-        </div>
-
-        <div>
-          <label className={`block mb-1 font-medium ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-            IBAN Number*
-          </label>
-          <input
-            type="text"
-            name="ibanNumber"
-            value={bankDetails.ibanNumber}
-            onChange={(e) => {
-              const value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
-              let formatted = "";
-              for (let i = 0; i < value.length; i++) {
-                if (i > 0 && i % 4 === 0) formatted += " ";
-                formatted += value[i];
-              }
-              e.target.value = formatted;
-              handleInputChange(e);
-            }}
-            className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-              darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
-            }`}
-            required
-            placeholder="DE00 0000 0000 0000 0000 00"
-            maxLength="34"
-          />
-        </div>
-
-        <div>
-          <label className={`block mb-1 font-medium ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-            Account Holder Name*
-          </label>
-          <input
-            type="text"
-            name="beneficiaryName"
-            value={bankDetails.beneficiaryName}
-            onChange={handleInputChange}
-            className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-              darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
-            }`}
-            required
-            placeholder="As shown on your bank account"
-          />
-        </div>
-
-        <div>
-          <label className={`block mb-1 font-medium ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-            SWIFT/BIC Code
-          </label>
-          <input
-            type="text"
-            name="swiftCode"
-            value={bankDetails.swiftCode}
-            onChange={(e) => {
-              e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
-              handleInputChange(e);
-            }}
-            className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-              darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-800"
-            }`}
-            placeholder="Optional (e.g. DEUTDEBB)"
-            maxLength="11"
-          />
-        </div>
+      <div className="grid gap-4">
+        <Input
+          label="Bank Name*"
+          name="bankName"
+          value={bankDetails.bankName}
+          onChange={handleInputChange}
+          placeholder="e.g. Deutsche Bank"
+          darkMode={darkMode}
+        />
+        <Input
+          label="IBAN Number*"
+          name="ibanNumber"
+          value={bankDetails.ibanNumber}
+          onChange={(e) => {
+            const value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+            let formatted = "";
+            for (let i = 0; i < value.length; i++) {
+              if (i > 0 && i % 4 === 0) formatted += " ";
+              formatted += value[i];
+            }
+            e.target.value = formatted;
+            handleInputChange(e);
+          }}
+          placeholder="DE00 0000 0000 0000 0000 00"
+          maxLength={34}
+          darkMode={darkMode}
+        />
+        <Input
+          label="Account Holder Name*"
+          name="beneficiaryName"
+          value={bankDetails.beneficiaryName}
+          onChange={handleInputChange}
+          placeholder="As shown on your bank account"
+          darkMode={darkMode}
+        />
+        <Input
+          label="SWIFT/BIC Code"
+          name="swiftCode"
+          value={bankDetails.swiftCode}
+          onChange={(e) => {
+            e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+            handleInputChange(e);
+          }}
+          placeholder="Optional (e.g. DEUTDEBB)"
+          maxLength={11}
+          darkMode={darkMode}
+        />
       </div>
 
       <button
         type="submit"
-        className={`w-full mt-4 py-2 px-4 rounded-md ${
-          darkMode ? "bg-[#3390d5] hover:bg-blue-700" : "bg-[#3390d5] hover:bg-blue-700"
-        } text-white font-medium flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-          darkMode ? "focus:ring-offset-gray-800" : "focus:ring-offset-white"
-        } transition`}
+        className="w-full mt-6 py-2 px-4 rounded-md bg-[#3390d5] hover:bg-blue-700 text-white font-medium flex items-center justify-center transition"
       >
         <FiPlus className="mr-2 h-4 w-4" />
-        <span>Add Bank Account</span>
+        Add Bank Account
       </button>
     </form>
   );
 };
+
+const Input = ({ label, name, value, onChange, placeholder, maxLength, darkMode }) => (
+  <div>
+    <label className="block mb-1 font-medium">{label}</label>
+    <input
+      type="text"
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      maxLength={maxLength}
+      className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:outline-none ${
+        darkMode
+          ? "bg-gray-700 border-gray-600 text-white focus:ring-blue-500"
+          : "bg-white border-gray-300 text-gray-800 focus:ring-blue-500"
+      }`}
+    />
+  </div>
+);
 
 export default BankDetailsForm;

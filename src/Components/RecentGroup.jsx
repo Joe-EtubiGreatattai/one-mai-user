@@ -96,14 +96,6 @@ const RecentGroup = () => {
     );
   }
 
-  // if (!currentGroup) {
-  //   return (
-  //     <div className="w-full sm:w-[240px] p-4 bg-gray-50 text-gray-500 rounded-lg text-center">
-  //       No group available
-  //     </div>
-  //   );
-  // }
-
   const renderStatusButton = () => {
     const isPendingMember = userMembership?.status === "pending";
     const isActiveMember =
@@ -152,27 +144,27 @@ const RecentGroup = () => {
       <h3 className="text-base md:text-lg font-semibold text-[#2E2E2E] dark:text-[#e2e2e2] mt-5 mb-5">
         Recent Groups
       </h3>
-      <div className="flex gap-2 items-center flex-wrap">
+      <div className="flex gap-4 items-stretch flex-wrap">
         {groups?.map((group) => (
           <div
             key={group.id}
-            className="w-full sm:w-[240px] rounded-2xl overflow-hidden shadow-lg relative bg-gradient-to-br from-white via-blue-50 to-white border border-gray-200 hover:shadow-md transition-all duration-200"
+            className="w-full sm:w-[240px] rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-white via-blue-50 to-white border border-gray-200 hover:shadow-md transition-all duration-200 flex flex-col"
           >
-            <div className="h-32 sm:h-40 w-full bg-gray-100">
+            <div className="flex-grow-0">
               <img
                 src={`https://api.joinonemai.com${group?.image}` || Money}
                 alt="Savings Group"
-                className="w-full h-full object-cover"
+                className="w-full h-auto max-h-40 object-cover"
                 loading="lazy"
               />
             </div>
 
-            <div className="p-3 sm:p-4">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 truncate">
+            <div className="p-4 flex flex-col flex-grow">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 truncate">
                 {group?.name || "Family and Friends Savings"}
               </h3>
 
-              <div className="mb-3 sm:mb-4">
+              <div className="mb-4">
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-xs font-medium text-gray-600">
                     Progress
@@ -189,7 +181,7 @@ const RecentGroup = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center text-xs font-medium">
+              <div className="mt-auto flex justify-between items-center text-xs font-medium">
                 <div className="flex items-center text-gray-500">
                   <FiUsers className="w-3 h-3 mr-1" />
                   <span>{group.members.length} members</span>
@@ -202,51 +194,6 @@ const RecentGroup = () => {
             </div>
           </div>
         ))}
-
-        {/* <div className="w-full sm:w-[240px] rounded-2xl overflow-hidden shadow-lg relative bg-gradient-to-br from-white via-blue-50 to-white border border-gray-200 hover:shadow-md transition-all duration-200">
-          <div className="h-32 sm:h-40 w-full bg-gray-100">
-            <img
-              src={currentGroup?.image || Money}
-              alt="Savings Group"
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-
-          <div className="p-3 sm:p-4">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3 truncate">
-              {currentGroup?.name || "Family and Friends Savings"}
-            </h3>
-
-            <div className="mb-3 sm:mb-4">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-xs font-medium text-gray-600">
-                  Progress
-                </span>
-                <span className="text-xs font-semibold text-[#3390d5]">
-                  {currentGroup?.progress || 0}%
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-1.5">
-                <div
-                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-1.5 rounded-full"
-                  style={{ width: `${currentGroup?.progress || 0}%` }}
-                ></div>
-              </div>
-            </div>
-
-            <div className="flex justify-between items-center text-xs font-medium">
-              <div className="flex items-center text-gray-500">
-                <FiUsers className="w-3 h-3 mr-1" />
-                <span>{activeMembersCount} members</span>
-              </div>
-              <div className="flex items-center text-gray-500">
-                <FiCalendar className="w-3 h-3 mr-1" />
-                <span>{currentGroup?.daysLeft || 0} days left</span>
-              </div>
-            </div>
-          </div>
-        </div> */}
       </div>
     </>
   );

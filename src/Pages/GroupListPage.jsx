@@ -57,7 +57,7 @@ const GroupListTable = ({ titleInside = undefined }) => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 relative dark:bg-gray-900 px-2 sm:px-4 pb-24">
+    <div className="bg-gray-50 relative dark:bg-gray-900 px-2 sm:px-4 md:pb-24">
       <Link
         to="/groupCreation"
         className="fixed bottom-20 right-6 sm:bottom-24 sm:right-8 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-[#3390d5] text-white hover:bg-[#3390d5] transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 z-20"
@@ -84,7 +84,7 @@ const GroupListTable = ({ titleInside = undefined }) => {
 
       <div className="mt-4 bg-white rounded-lg shadow-sm overflow-hidden">
         {titleInside && (
-          <div className="px-4 pt-4 -mb-6">
+          <div className="px-4 pt-4">
             <h1 className="text-lg font-semibold text-gray-800 dark:text-white">
               Recent Groups
             </h1>
@@ -98,10 +98,10 @@ const GroupListTable = ({ titleInside = undefined }) => {
         ) : groups.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="overflow-x-auto pt-12 px-2 sm:px-6 pb-6">
+          <div className="overflow-x-auto px-2 sm:px-6 pb-6">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
-                <tr className="rounded-xl">
+                <tr>
                   <TableHeader>Group Name</TableHeader>
                   <TableHeader>Members</TableHeader>
                   <TableHeader className="hidden sm:table-cell">Time Left</TableHeader>
@@ -132,7 +132,7 @@ const GroupListTable = ({ titleInside = undefined }) => {
 const TableHeader = ({ children, align = "left", className = "" }) => (
   <th
     scope="col"
-    className={`px-4 py-2 sm:px-6 sm:py-3 text-${align} text-xs font-medium text-gray-500 uppercase tracking-wider ${className}`}
+    className={`px-4 py-3 text-${align} text-xs font-medium text-gray-500 uppercase tracking-wider ${className}`}
   >
     {children}
   </th>
@@ -156,7 +156,7 @@ const TableRow = ({
 
   return (
     <tr className="hover:bg-gray-50 transition">
-      <td className="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap">
+      <td className="px-4 py-4 whitespace-nowrap">
         <div className="flex items-center">
           <div className="flex-shrink-0 h-10 w-10">
             <img
@@ -180,19 +180,19 @@ const TableRow = ({
           </div>
         </div>
       </td>
-      <td className="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap text-sm text-gray-900">
+      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
         {totalMembers}/{group.maxMembers || 15}
       </td>
-      <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+      <td className="hidden sm:table-cell px-4 py-4 whitespace-nowrap">
         <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
           {calculateTimeLeft(group.nextPayoutDate)}
         </span>
       </td>
-      <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+      <td className="hidden sm:table-cell px-4 py-4 whitespace-nowrap">
         <ProgressBar progress={progress} />
       </td>
       {!titleInside && (
-        <td className="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap text-right text-sm font-medium">
+        <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
           <GroupActions
             group={group}
             onJoinRequest={onJoinRequest}
