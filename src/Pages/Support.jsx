@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import axios from "../Api/axios";
+import toast from "react-hot-toast";
 
 const Support = () => {
     const [form, setForm] = useState({
-        name: '',
+        full_name: '',
         email: '',
         message: ''
     });
@@ -18,13 +20,20 @@ const Support = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsSubmitting(true);
+        try {
+            setIsSubmitting(true);
         
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
+            // Simulate API call
+            const response = await axios.post("/api/support", form);
+            const responseData = response.data?.data || response.data;
+            
+            setSubmitted(true);
+            setIsSubmitting(false);
+        } catch (error) {
+            
+            toast.error(error.message);
+        }
         
-        setSubmitted(true);
-        setIsSubmitting(false);
     };
 
     const resetForm = () => {
@@ -86,8 +95,8 @@ const Support = () => {
                                     </label>
                                     <input
                                         type="text"
-                                        name="name"
-                                        value={form.name}
+                                        name="full_name"
+                                        value={form.full_name}
                                         onChange={handleChange}
                                         required
                                         placeholder="Enter your full name"

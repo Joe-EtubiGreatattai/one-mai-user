@@ -339,7 +339,7 @@ const CreateAccount = () => {
                 <img
                   src={src}
                   alt={`Slide ${idx + 1}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full"
                 />
                 <div className="absolute inset-0 bg-[#00182b] opacity-40"></div>
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 lg:p-8 text-white">

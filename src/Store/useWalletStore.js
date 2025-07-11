@@ -72,54 +72,54 @@ const useWalletStore = create((set, get) => ({
   },
 
   // Deposit funds with Stripe integration
-// Updated deposit function in your wallet store
-// In your useWalletStore.js
-// In your useWalletStore.js
-deposit: async ({ amount, paymentMethod, token, returnUrl }) => {
-  set({ loading: true, error: null });
-  
-  try {
-    const { user } = useAuthStore.getState();
-    if (!user) throw new Error('User not authenticated');
+  // Updated deposit function in your wallet store
+  // In your useWalletStore.js
+  // In your useWalletStore.js
+  deposit: async ({ amount, paymentMethod, token, returnUrl }) => {
+    set({ loading: true, error: null });
+    
+    try {
+      const { user } = useAuthStore.getState();
+      if (!user) throw new Error('User not authenticated');
 
-    // Validate amount on server side as well
-    if (!amount || isNaN(amount) || amount < 1) {
-      throw new Error('Valid amount (minimum 1) is required');
-    }
-
-    const response = await axios.post('/api/wallet/deposit', { 
-      amount, 
-      paymentMethod: paymentMethod || 'card',
-      token,
-      returnUrl,
-      userId: user._id
-    }, {
-      headers: {
-        Authorization: `Bearer ${useAuthStore.getState().accessToken}`
+      // Validate amount on server side as well
+      if (!amount || isNaN(amount) || amount < 1) {
+        throw new Error('Valid amount (minimum 1) is required');
       }
-    });
 
-    set(state => ({
-      balance: response.data.data.newBalance,
-      transactions: Array.isArray(state.transactions) 
-        ? [response.data.data.transaction, ...state.transactions]
-        : [response.data.data.transaction],
-      loading: false
-    }));
+      const response = await axios.post('/api/wallet/deposit', { 
+        amount, 
+        paymentMethod: paymentMethod || 'card',
+        token,
+        returnUrl,
+        userId: user._id
+      }, {
+        headers: {
+          Authorization: `Bearer ${useAuthStore.getState().accessToken}`
+        }
+      });
 
-    return response.data;
-  } catch (error) {
-    let errorMessage = 'Deposit failed';
-    if (error.response?.data?.error?.includes('amount')) {
-      errorMessage = 'Valid amount (minimum 1) is required';
-    } else if (error.response?.data?.message) {
-      errorMessage = error.response.data.message;
+      set(state => ({
+        balance: response.data.data.newBalance,
+        transactions: Array.isArray(state.transactions) 
+          ? [response.data.data.transaction, ...state.transactions]
+          : [response.data.data.transaction],
+        loading: false
+      }));
+
+      return response.data;
+    } catch (error) {
+      let errorMessage = 'Deposit failed';
+      if (error.response?.data?.error?.includes('amount')) {
+        errorMessage = 'Valid amount (minimum 1) is required';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      set({ error: errorMessage, loading: false });
+      throw error;
     }
-
-    set({ error: errorMessage, loading: false });
-    throw error;
-  }
-},
+  },
   // Withdraw funds with bank integration
   withdraw: async (amountOrData, bankAccountId) => {
     set({ loading: true, error: null });

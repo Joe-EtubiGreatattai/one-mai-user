@@ -59,6 +59,7 @@ const useAuthStore = create(
           throw error;
         }
       },
+      
       // twoFactorAuthentication: async (pin) => {
       //   try {
       //     const response = await axios.post('/api/auth/verify/twoFactor', {
