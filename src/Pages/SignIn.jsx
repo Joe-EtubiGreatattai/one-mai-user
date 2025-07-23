@@ -333,8 +333,7 @@ const SignIn = () => {
                   alt={`Slide ${idx + 1}`}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-[#00182b] opacity-40"></div>
-              
+
               </div>
             ))}
           </Carousel>
