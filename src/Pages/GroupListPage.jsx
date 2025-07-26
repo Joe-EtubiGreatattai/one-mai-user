@@ -1,6 +1,7 @@
 // GroupListPage.jsx
 import React, { useEffect } from "react";
-import { FiEye, FiPlus } from "react-icons/fi";
+import { FiEye, FiPlus, FiUsers, FiDollarSign, FiClock, FiCalendar, FiTrendingUp, FiShield } from "react-icons/fi";
+import { FaCrown } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import useGroupStore from "../Store/group";
 import useAuthStore from "../Store/Auth";
@@ -60,7 +61,7 @@ const GroupListTable = ({ titleInside = undefined }) => {
     <div className="bg-gray-50 relative dark:bg-gray-900 px-2 sm:px-4 md:pb-24">
       <Link
         to="/groupCreation"
-        className="fixed bottom-20 right-6 sm:bottom-24 sm:right-8 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-[#3390d5] text-white hover:bg-[#3390d5] transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 z-20"
+        className="fixed bottom-20 right-6 sm:bottom-24 sm:right-8 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-[#3390d5] text-white hover:bg-[#2980c9] transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-[#3390d5] focus:ring-offset-2 z-20"
         aria-label="Create new group"
       >
         <FiPlus className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -82,46 +83,34 @@ const GroupListTable = ({ titleInside = undefined }) => {
         </div>
       ) : null}
 
-      <div className="mt-4 bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="mt-4">
         {titleInside && (
-          <div className="px-4 pt-4">
+          <div className="mb-4">
             <h1 className="text-lg font-semibold text-gray-800 dark:text-white">
               Recent Groups
             </h1>
           </div>
         )}
+        
         {loading ? (
-          <div className="text-center py-8 sm:py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
+          <div className="text-center py-8 sm:py-12 bg-white rounded-lg shadow-sm">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-[#3390d5] border-t-transparent"></div>
             <p className="mt-2 text-sm text-gray-500">Loading groups...</p>
           </div>
         ) : groups.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="overflow-x-auto px-2 sm:px-6 pb-6">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <TableHeader>Group Name</TableHeader>
-                  <TableHeader>Members</TableHeader>
-                  <TableHeader className="hidden sm:table-cell">Time Left</TableHeader>
-                  <TableHeader className="hidden sm:table-cell">Progress</TableHeader>
-                  {!titleInside && <TableHeader align="right">Action</TableHeader>}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {groups.map((group) => (
-                  <TableRow
-                    key={group._id}
-                    group={group}
-                    onJoinRequest={requestToJoinGroup}
-                    currentUser={currentUser}
-                    getGroupDetails={getGroupDetails}
-                    titleInside={titleInside}
-                  />
-                ))}
-              </tbody>
-            </table>
+          <div className="space-y-4 sm:space-y-6">
+            {groups.map((group) => (
+              <GroupCard
+                key={group._id}
+                group={group}
+                onJoinRequest={requestToJoinGroup}
+                currentUser={currentUser}
+                getGroupDetails={getGroupDetails}
+                titleInside={titleInside}
+              />
+            ))}
           </div>
         )}
       </div>
@@ -129,116 +118,303 @@ const GroupListTable = ({ titleInside = undefined }) => {
   );
 };
 
-const TableHeader = ({ children, align = "left", className = "" }) => (
-  <th
-    scope="col"
-    className={`px-4 py-3 text-${align} text-xs font-medium text-gray-500 uppercase tracking-wider ${className}`}
-  >
-    {children}
-  </th>
-);
-
-const TableRow = ({
-  group,
-  onJoinRequest,
-  currentUser,
-  getGroupDetails,
-  titleInside,
-}) => {
-  const activeMembers =
-    group.members?.filter(
-      (member) => member.status === "active" && member.isActive
-    ) || [];
+const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleInside }) => {
+  const activeMembers = group.members?.filter(
+    (member) => member.status === "active" && member.isActive
+  ) || [];
+  
+  const pendingMembers = group.members?.filter(
+    (member) => member.status === "pending"
+  ) || [];
+  
   const totalMembers = activeMembers.length;
-  const progress = Math.round(
-    ((group.currentPayoutIndex || 0) / (totalMembers || 1)) * 100
-  );
-
-  return (
-    <tr className="hover:bg-gray-50 transition">
-      <td className="px-4 py-4 whitespace-nowrap">
-        <div className="flex items-center">
-          <div className="flex-shrink-0 h-10 w-10">
-            <img
-              className="h-10 w-10 rounded-full object-cover"
-              src={`https://api.joinonemai.com${group.image}`}
-              alt={group.name}
-            />
-          </div>
-          <div className="ml-3">
-            <div className="text-sm font-medium text-gray-900 truncate max-w-[120px] sm:max-w-none">
-              {group.name}
-            </div>
-            <div className="text-xs sm:text-sm text-gray-500">
-              ${group.savingsAmount * totalMembers}
-            </div>
-            {group.admin?._id === currentUser?._id && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mt-1">
-                Admin
-              </span>
-            )}
-          </div>
-        </div>
-      </td>
-      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
-        {totalMembers}/{group.maxMembers || 15}
-      </td>
-      <td className="hidden sm:table-cell px-4 py-4 whitespace-nowrap">
-        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-          {calculateTimeLeft(group.nextPayoutDate)}
-        </span>
-      </td>
-      <td className="hidden sm:table-cell px-4 py-4 whitespace-nowrap">
-        <ProgressBar progress={progress} />
-      </td>
-      {!titleInside && (
-        <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
-          <GroupActions
-            group={group}
-            onJoinRequest={onJoinRequest}
-            currentUser={currentUser}
-            getGroupDetails={getGroupDetails}
-          />
-        </td>
-      )}
-    </tr>
-  );
-};
-
-const ProgressBar = ({ progress }) => (
-  <div className="flex items-center">
-    <div className="w-24 sm:w-32 mr-2">
-      <div className="w-full bg-gray-200 rounded-full h-2">
-        <div
-          className="bg-blue-100 h-2 rounded-full transition-all duration-300"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-    </div>
-    <span className="text-xs sm:text-sm font-medium text-gray-700">{progress}%</span>
-  </div>
-);
-
-const GroupActions = ({ group, onJoinRequest, currentUser }) => {
+  const totalPotential = group.savingsAmount * totalMembers;
+  const isUserAdmin = group.admin?._id === currentUser?._id;
   const userMembership = group.members?.find(
     (member) => member.user?._id === currentUser?._id
   );
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  const getNextRecipient = () => {
+    const nextRecipient = group.members?.find(
+      member => member.user?._id === group.nextRecipient
+    );
+    return nextRecipient?.user?.email?.split('@')[0] || 'Unknown';
+  };
+
+  const getGroupStats = () => {
+    const inactiveMembers = group.members?.filter(
+      (member) => !member.isActive || member.status === "pending"
+    ) || [];
+    
+    return {
+      activeMembers: activeMembers.length,
+      inactiveMembers: inactiveMembers.length,
+      totalMembers: group.members?.length || 0,
+      maxMembers: group.maxMembers,
+      payoutOrderLength: group.payoutOrder?.length || 0
+    };
+  };
+
+  const getPaymentProgress = () => {
+    if (!group.contributions || group.contributions.length === 0) return 0;
+    const currentCycleContributions = group.contributions.filter(
+      contrib => contrib.cycle === group.currentCycle
+    );
+    return Math.round((currentCycleContributions.length / totalMembers) * 100);
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+      {/* Header Section */}
+      <div className="p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 sm:mb-6 gap-4">
+          <div className="flex items-start space-x-3 sm:space-x-4 flex-1 min-w-0">
+            <div className="flex-shrink-0">
+              <img
+                className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full object-cover border-2 border-gray-100"
+                src={`https://api.joinonemai.com${group.image}`}
+                alt={group.name}
+                onError={(e) => {
+                  e.target.src = `https://ui-avatars.com/api/?name=${group.name}&background=random`;
+                }}
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 break-words leading-tight mb-2 sm:mb-3">
+                {group.name}
+              </h3>
+              <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
+                <span className={`inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium ${
+                  group.status === 'active' 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-yellow-100 text-yellow-800'
+                }`}>
+                  {group.status}
+                </span>
+                {isUserAdmin && (
+                  <span className="inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium bg-purple-100 text-purple-800">
+                    <FaCrown className="mr-1 w-3 h-3" />
+                    Admin
+                  </span>
+                )}
+              </div>
+              
+              {/* Financial Summary - Now in header */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+                <div className="bg-[#3390d5]/10 p-2 sm:p-3 rounded-lg">
+                  <div className="flex items-center space-x-1 sm:space-x-2">
+                    <FiDollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-[#3390d5]" />
+                    <span className="text-xs sm:text-sm font-medium text-[#3390d5]">Per Member</span>
+                  </div>
+                  <p className="text-base sm:text-xl font-bold text-[#2980c9]">${group.savingsAmount}</p>
+                </div>
+                <div className="bg-green-50 p-2 sm:p-3 rounded-lg">
+                  <div className="flex items-center space-x-1 sm:space-x-2">
+                    <FiTrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                    <span className="text-xs sm:text-sm font-medium text-green-600">Total Pool</span>
+                  </div>
+                  <p className="text-base sm:text-xl font-bold text-green-800">${totalPotential}</p>
+                </div>
+                <div className="bg-purple-50 p-2 sm:p-3 rounded-lg">
+                  <div className="flex items-center space-x-1 sm:space-x-2">
+                    <FiShield className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600" />
+                    <span className="text-xs sm:text-sm font-medium text-purple-600">Invite Code</span>
+                  </div>
+                  <p className="text-xs sm:text-sm font-bold text-purple-800 break-all">{group.inviteCode}</p>
+                </div>
+                <div className="bg-orange-50 p-2 sm:p-3 rounded-lg">
+                  <div className="flex items-center space-x-1 sm:space-x-2">
+                    <FiUsers className="w-3 h-3 sm:w-4 sm:h-4 text-orange-600" />
+                    <span className="text-xs sm:text-sm font-medium text-orange-600">Payout Queue</span>
+                  </div>
+                  <p className="text-base sm:text-xl font-bold text-orange-800">{group.payoutOrder?.length || 0}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Action Button */}
+          <div className="flex-shrink-0 sm:ml-6 self-center sm:self-start">
+            <GroupActions
+              group={group}
+              onJoinRequest={onJoinRequest}
+              currentUser={currentUser}
+              getGroupDetails={getGroupDetails}
+              titleInside={titleInside}
+            />
+          </div>
+        </div>
+
+        {/* Members & Progress Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          <div className="space-y-3 sm:space-y-4">
+            {/* Members Info */}
+            <div className="flex items-center justify-between text-xs sm:text-sm">
+              <div className="flex items-center space-x-1 sm:space-x-2">
+                <FiUsers className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
+                <span className="text-gray-600">Members</span>
+              </div>
+              <span className="font-medium text-gray-900">
+                {totalMembers}/{group.maxMembers || 15}
+                {pendingMembers.length > 0 && (
+                  <span className="text-yellow-600 ml-1">({pendingMembers.length} pending)</span>
+                )}
+              </span>
+            </div>
+
+            {/* Late Payment Rules */}
+            {group.rules && (
+              <div className="flex items-center justify-between text-xs sm:text-sm">
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <FiShield className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
+                  <span className="text-gray-600">Late Payments</span>
+                </div>
+                <span className={`font-medium ${group.rules.allowLatePayments ? 'text-yellow-600' : 'text-red-600'}`}>
+                  {group.rules.allowLatePayments ? 'Allowed' : 'Not Allowed'}
+                  {group.rules.allowLatePayments && group.rules.latePaymentFee > 0 && (
+                    <span className="text-xs ml-1">(${group.rules.latePaymentFee} fee)</span>
+                  )}
+                </span>
+              </div>
+            )}
+
+            {/* Next Payout & Recipient */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
+              <div>
+                <div className="flex items-center space-x-1 text-gray-500 mb-1">
+                  <FiClock className="w-3 h-3" />
+                  <span>Next Payout</span>
+                </div>
+                <p className="font-medium text-gray-800">
+                  {calculateTimeLeft(group.nextPayoutDate)}
+                </p>
+              </div>
+              <div>
+                <div className="flex items-center space-x-1 text-gray-500 mb-1">
+                  <FiUsers className="w-3 h-3" />
+                  <span>Next Recipient</span>
+                </div>
+                <p className="font-medium text-gray-800 truncate">
+                  {getNextRecipient()}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3 sm:space-y-4">
+            {/* Cycle Progress */}
+            <div>
+              <div className="flex items-center justify-between text-xs sm:text-sm mb-1 sm:mb-2">
+                <span className="text-gray-600">Cycle Progress</span>
+                <span className="font-medium text-gray-900">{group.progress || 0}%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
+                <div
+                  className="bg-gradient-to-r from-[#3390d5] to-[#2980c9] h-2 sm:h-3 rounded-full transition-all duration-300"
+                  style={{ width: `${group.progress || 0}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Payment Progress */}
+            <div>
+              <div className="flex items-center justify-between text-xs sm:text-sm mb-1 sm:mb-2">
+                <span className="text-gray-600">Payment Progress</span>
+                <span className="font-medium text-gray-900">{getPaymentProgress()}%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
+                <div
+                  className="bg-gradient-to-r from-green-500 to-green-600 h-2 sm:h-3 rounded-full transition-all duration-300"
+                  style={{ width: `${getPaymentProgress()}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Group Stats */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-1 text-gray-500">
+                  <FiCalendar className="w-3 h-3" />
+                  <span>Frequency:</span>
+                </div>
+                <span className="font-medium text-gray-700 capitalize">{group.frequency}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-500">Cycle:</span>
+                <span className="font-medium text-gray-700">{group.currentCycle}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Section */}
+      <div className="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t border-gray-100">
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-4 text-xs sm:text-sm">
+          <div className="text-center">
+            <p className="text-gray-500 mb-1">Wallet</p>
+            <p className="font-medium text-gray-800">${group.walletBalance || 0}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-gray-500 mb-1">Total Cont.</p>
+            <p className="font-medium text-gray-800">${group.totalContributions || 0}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-gray-500 mb-1">Payouts</p>
+            <p className="font-medium text-gray-800">{group.payouts?.length || 0}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-gray-500 mb-1">Payout Index</p>
+            <p className="font-medium text-gray-800">{group.currentPayoutIndex + 1}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-gray-500 mb-1">Created</p>
+            <p className="font-medium text-gray-800">
+              {new Date(group.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            </p>
+          </div>
+          <div className="text-center">
+            <p className="text-gray-500 mb-1">Queue</p>
+            <p className="font-medium text-gray-800">{group.payoutOrder?.length || 0}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const GroupActions = ({ group, onJoinRequest, currentUser, titleInside }) => {
+  const userMembership = group.members?.find(
+    (member) => member.user?._id === currentUser?._id
+  );
+
+  if (titleInside) {
+    return null; // No actions in title inside mode
+  }
 
   if (userMembership?.status === "active" && userMembership?.isActive) {
     return (
       <Link
         to={`/group/${group._id}`}
-        className="inline-flex items-center text-[#3390d5] hover:text-blue-900 text-xs sm:text-sm"
+        className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-white bg-[#3390d5] hover:bg-[#2980c9] rounded-lg transition-colors whitespace-nowrap"
       >
-        <FiEye className="mr-1" /> View
+        <FiEye className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" /> View
       </Link>
     );
   }
 
   if (userMembership?.status === "pending") {
     return (
-      <span className="inline-flex items-center text-gray-500 cursor-not-allowed text-xs sm:text-sm">
-        <FiPlus className="mr-1" /> Pending
+      <span className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-yellow-700 bg-yellow-100 rounded-lg cursor-not-allowed whitespace-nowrap">
+        <FiClock className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" /> Pending
       </span>
     );
   }
@@ -246,16 +422,16 @@ const GroupActions = ({ group, onJoinRequest, currentUser }) => {
   return (
     <button
       onClick={() => onJoinRequest(group._id)}
-      className="inline-flex items-center text-[#3390d5] hover:text-blue-900 text-xs sm:text-sm"
+      className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-[#3390d5] hover:text-white hover:bg-[#3390d5] border border-[#3390d5] rounded-lg transition-colors whitespace-nowrap"
     >
-      <FiPlus className="mr-1" /> Join
+      <FiPlus className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" /> Join
     </button>
   );
 };
 
 const EmptyState = () => (
-  <div className="text-center py-8 sm:py-12">
-    <div className="mx-auto h-20 w-20 sm:h-24 sm:w-24 text-gray-400">
+  <div className="text-center py-8 sm:py-16 bg-white rounded-lg shadow-sm">
+    <div className="mx-auto h-16 w-16 sm:h-24 sm:w-24 text-gray-400 mb-3 sm:mb-4">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -266,14 +442,21 @@ const EmptyState = () => (
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={1}
-          d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2"
+          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
         />
       </svg>
     </div>
-    <h3 className="mt-2 text-sm font-semibold text-gray-900">No groups found</h3>
-    <p className="mt-1 text-xs sm:text-sm text-gray-500">
-      Create or join a group to get started.
+    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">No groups found</h3>
+    <p className="text-sm text-gray-500 mb-4 sm:mb-6 max-w-md mx-auto">
+      Get started by creating your first savings group or joining an existing one.
     </p>
+    <Link
+      to="/groupCreation"
+      className="inline-flex items-center px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm font-medium text-white bg-[#3390d5] hover:bg-[#2980c9] rounded-lg transition-colors"
+    >
+      <FiPlus className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
+      Create Your First Group
+    </Link>
   </div>
 );
 
@@ -282,11 +465,17 @@ const calculateTimeLeft = (payoutDate) => {
   const now = new Date();
   const payout = new Date(payoutDate);
   const diff = payout - now;
-  if (diff < 0) return "Completed";
+  
+  if (diff < 0) return "Overdue";
+  
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  if (days > 0) return `${days} day${days !== 1 ? "s" : ""}`;
+  if (days > 0) return `${days}d`;
+  
   const hours = Math.floor(diff / (1000 * 60 * 60));
-  return `${hours} hour${hours !== 1 ? "s" : ""}`;
+  if (hours > 0) return `${hours}h`;
+  
+  const minutes = Math.floor(diff / (1000 * 60));
+  return `${minutes}m`;
 };
 
 export default GroupListTable;
