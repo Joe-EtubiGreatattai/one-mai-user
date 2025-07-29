@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import {
-  FiMoreVertical,
   FiLink,
   FiUsers,
   FiBell,
   FiX,
   FiCheck,
-  FiSettings,
-  FiDollarSign,
   FiRepeat,
   FiArrowLeft,
   FiCalendar,
   FiInfo
 } from 'react-icons/fi';
-import { FaCrown } from 'react-icons/fa';
+import { FaCrown, FaEuroSign } from 'react-icons/fa';
 import useGroupStore from '../../Store/group';
 import MemberManagement from '../Message/MemberManagement';
 import PayoutSwapManagement from '../Message/PayoutSwapManagement';
@@ -312,13 +309,13 @@ const RecentActivity = () => {
             </div>
 
             {/* Next Payout */}
-            <div className="bg-green-50 p-3 rounded-lg border border-green-100">
+            <div className="bg-[#00C9A7] p-3 rounded-lg border border-green-100">
               <div className="text-center">
-                <p className="text-xs text-green-600 font-medium">Next Payout</p>
-                <p className="font-bold text-lg text-green-800">
+                <p className="text-xs text-white font-medium">Next Payout</p>
+                <p className="font-bold text-lg text-white">
                   ${currentGroup?.nextPayoutAmount?.toFixed(2) || '0.00'}
                 </p>
-                <p className="text-xs text-green-500 mt-1">
+                <p className="text-xs text-white mt-1">
                   {formatNextPayoutDate(currentGroup?.nextPayoutDate)}
                 </p>
               </div>
@@ -336,7 +333,7 @@ const RecentActivity = () => {
                 <span className="text-gray-600">Status:</span>
                 <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-medium ${
                   currentGroup?.status === 'active' 
-                    ? 'bg-green-100 text-green-800' 
+                    ? 'bg-[#00C9A7] text-white' 
                     : 'bg-gray-100 text-gray-800'
                 }`}>
                   {currentGroup?.status || 'Unknown'}
@@ -358,7 +355,7 @@ const RecentActivity = () => {
                 <div className="flex-1">
                   <p className="font-medium text-sm">{nextRecipient?.user?.email}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="inline-block px-2 py-0.5 text-green-800 bg-green-100 text-xs rounded-full">
+                    <span className="inline-block px-2 py-0.5 text-white bg-[#00C9A7] text-xs rounded-full">
                       Next in line
                     </span>
                     {getMemberPayoutPosition(nextRecipient.user._id) && (
@@ -371,10 +368,10 @@ const RecentActivity = () => {
                 {isAdmin && currentGroup?.nextPayoutAmount > 0 && (
                   <button
                     onClick={() => setShowPayoutConfirmation(true)}
-                    className="bg-green-500 text-white px-3 py-1 rounded text-xs flex items-center gap-1 hover:bg-green-600 transition-colors"
+                    className="bg-[#00C9A7]0 text-white px-3 py-1 rounded text-xs flex items-center gap-1 hover:bg-green-600 transition-colors"
                     disabled={isProcessingPayout}
                   >
-                    <FiDollarSign className="w-3 h-3" />
+                    <FaEuroSign className="w-3 h-3" />
                     <span>Pay Out</span>
                   </button>
                 )}
@@ -461,7 +458,7 @@ const RecentActivity = () => {
                         </p>
                         <div className="flex flex-wrap items-center gap-2 mt-1">
                           <span className={`text-xs px-2 py-0.5 rounded-full ${member.status === 'active'
-                            ? 'bg-green-100 text-green-800'
+                            ? 'bg-[#00C9A7] text-white'
                             : 'bg-gray-100 text-gray-800'
                             }`}>
                             {member.status === 'active' ? 'Active' : 'Inactive'}
@@ -499,7 +496,7 @@ const RecentActivity = () => {
                       {currentUserMember && member.user._id !== currentUserId && (
                         <button
                           onClick={() => handleRequestSwap(member)}
-                          className="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200 transition-colors flex items-center gap-1 whitespace-nowrap"
+                          className="px-2 py-1 text-xs bg-[#F4E8D0] text-yellow-800 rounded-full hover:bg-yellow-200 transition-colors flex items-center gap-1 whitespace-nowrap"
                         >
                           <FiRepeat size={12} />
                           <span>Swap</span>
@@ -590,7 +587,7 @@ const RecentActivity = () => {
                   </button>
                   <button
                     onClick={handleInitiatePayout}
-                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors text-xs sm:text-sm flex items-center gap-1"
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#00C9A7]0 text-white rounded-md hover:bg-green-600 transition-colors text-xs sm:text-sm flex items-center gap-1"
                     disabled={isProcessingPayout}
                   >
                     {isProcessingPayout ? (
@@ -603,7 +600,7 @@ const RecentActivity = () => {
                       </>
                     ) : (
                       <>
-                        <FiDollarSign className="w-3 h-3" />
+                        <FaEuroSign className="w-3 h-3" />
                         Confirm Payout
                       </>
                     )}

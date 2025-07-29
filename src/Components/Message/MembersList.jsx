@@ -1,6 +1,6 @@
 import React from 'react';
-import { FiUser, FiUserPlus, FiCheck, FiSettings, FiCopy, FiDollarSign, FiClock, FiShield, FiUserCheck, FiX } from 'react-icons/fi';
-import { FaCrown } from 'react-icons/fa';
+import { FiUser, FiUserPlus, FiCheck, FiSettings, FiCopy, FiClock, FiShield, FiUserCheck, FiX } from 'react-icons/fi';
+import { FaCrown, FaEuroSign } from 'react-icons/fa';
 
 const MembersList = ({
   currentGroup,
@@ -263,7 +263,7 @@ const MembersList = ({
                       <div className="flex items-center space-x-3">
                         {/* Payment Status */}
                         <div className="flex items-center space-x-1">
-                          <FiDollarSign className={`w-3 h-3 ${paymentStatus.paid ? 'text-green-500' : 'text-red-500'}`} />
+                          <FaEuroSign className={`w-3 h-3 ${paymentStatus.paid ? 'text-green-500' : 'text-red-500'}`} />
                           <span className={`font-medium ${paymentStatus.paid ? 'text-green-700' : 'text-red-700'}`}>
                             {paymentStatus.paid ? 'Paid' : 'Unpaid'}
                           </span>

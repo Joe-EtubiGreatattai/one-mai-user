@@ -1,11 +1,11 @@
 import React from "react";
 import {
   FiClock,
-  FiDollarSign,
   FiUsers,
   FiDownload,
   FiBell,
 } from "react-icons/fi";
+import { FaCrown, FaEuroSign } from 'react-icons/fa';
 
 export const getNotificationIcon = (type) => {
   const iconSize = 18;
@@ -19,7 +19,7 @@ export const getNotificationIcon = (type) => {
       ariaLabel: "Payment reminder"
     },
     "payment-confirmation": {
-      icon: <FiDollarSign size={iconSize} aria-hidden="true" />,
+      icon: <FaEuroSign size={iconSize} aria-hidden="true" />,
       bg: "bg-green-100",
       text: "text-green-600",
       ariaLabel: "Payment confirmation"
@@ -89,7 +89,7 @@ export const NotificationIcon = ({ type, size = "md" }) => {
       text: "text-yellow-600",
     },
     "payment-confirmation": {
-      icon: FiDollarSign,
+      icon: FaEuroSign,
       bg: "bg-green-100",
       text: "text-green-600",
     },

@@ -3,7 +3,6 @@ import {
   FiBell,
   FiCheckCircle,
   FiClock,
-  FiDollarSign,
   FiUsers,
   FiDownload,
   FiFilter,
@@ -20,6 +19,7 @@ import {
   FiSearch,
   FiMoreVertical,
 } from "react-icons/fi";
+import { FaCrown, FaEuroSign } from 'react-icons/fa';
 import useAuthStore from "../Store/Auth";
 import useNotificationStore from "../Store/getUserNotifications";
 import useGroupStore from "../Store/group";
@@ -47,7 +47,7 @@ const NotificationPage = () => {
   const tabOptions = [
     { key: "all", label: "All", icon: FiBell },
     { key: "payment_reminder", label: "Payment Reminders", icon: FiClock },
-    { key: "payment_confirmation", label: "Payments", icon: FiDollarSign },
+    { key: "payment_confirmation", label: "Payments", icon: FaEuroSign },
     { key: "group_update", label: "Groups", icon: FiUsers },
     { key: "other", label: "Other", icon: FiMoreVertical },
   ];

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { FiX, FiCheck, FiArrowLeft, FiUser, FiShield, FiUserCheck, FiDollarSign, FiClock, FiCalendar } from 'react-icons/fi';
-import { FaCrown } from 'react-icons/fa';
+import { FiX, FiCheck, FiArrowLeft, FiUser, FiShield, FiUserCheck, FiClock, FiCalendar } from 'react-icons/fi';
+import { FaCrown, FaEuroSign } from 'react-icons/fa';
 import useGroupStore from '../../Store/group';
 import useAuthStore from '../../Store/Auth';
 import { toast } from 'react-hot-toast';
@@ -212,7 +212,7 @@ const MemberManagement = ({ onBack }) => {
                     </div>
                   )}
                   {member.status === 'active' && (
-                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
+                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#00C9A7] rounded-full border-2 border-white"></span>
                   )}
                 </div>
                 
@@ -302,7 +302,7 @@ const MemberManagement = ({ onBack }) => {
                         title="Process Payout"
                         aria-label="Process payout"
                       >
-                        <FiDollarSign size={16} className="sm:w-5 sm:h-5" />
+                        <FaEuroSign size={16} className="sm:w-5 sm:h-5" />
                       </button>
                     </>
                   )}
@@ -314,7 +314,7 @@ const MemberManagement = ({ onBack }) => {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
                   {/* Payment Status */}
                   <div className="flex items-center gap-2">
-                    <FiDollarSign className={`w-4 h-4 ${paymentStatus.paid ? 'text-green-500' : 'text-red-500'}`} />
+                    <FaEuroSign className={`w-4 h-4 ${paymentStatus.paid ? 'text-[#00C9A7]' : 'text-red-500'}`} />
                     <div>
                       <p className={`font-medium ${paymentStatus.paid ? 'text-green-700' : 'text-red-700'}`}>
                         {paymentStatus.paid ? 'Paid' : 'Unpaid'}
@@ -397,7 +397,7 @@ const MemberManagement = ({ onBack }) => {
                   handleRoleChange(memberId, 'admin');
                 });
               }}
-              className="flex items-center px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm"
+              className="flex items-center px-4 py-2 bg-[#66B2FF] text-white rounded-lg hover:bg-purple-600 transition-colors text-sm"
               disabled={loading}
             >
               <FaCrown className="mr-2 w-4 h-4" /> Make Admin
@@ -426,10 +426,10 @@ const MemberManagement = ({ onBack }) => {
             </button>
             <button
               onClick={handleBulkPayout}
-              className="flex items-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm"
+              className="flex items-center px-4 py-2 bg-[#00C9A7] text-white rounded-lg hover:bg-green-600 transition-colors text-sm"
               disabled={loading}
             >
-              <FiDollarSign className="mr-2 w-4 h-4" /> Payout Selected
+              <FaEuroSign className="mr-2 w-4 h-4" /> Payout Selected
             </button>
           </div>
         </div>

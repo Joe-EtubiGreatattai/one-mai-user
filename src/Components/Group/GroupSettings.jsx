@@ -2,8 +2,6 @@ import React, { useState, useEffect, useMemo } from "react";
 import {
   FiArrowLeft,
   FiCalendar,
-  FiDollarSign,
-  FiUsers,
   FiInfo,
 } from "react-icons/fi";
 import { Tooltip } from "react-tooltip";

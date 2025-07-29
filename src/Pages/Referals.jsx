@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FiSearch, FiCalendar, FiMail, FiUser, FiDollarSign } from 'react-icons/fi';
+import { FiSearch, FiCalendar, FiMail, FiUser } from 'react-icons/fi';
+import { FaCrown, FaEuroSign } from 'react-icons/fa';
 import useReferralStore from "../Store/useReferralStore";
 
 function Referrals() {
@@ -113,7 +114,7 @@ function Referrals() {
           <div className="bg-white p-3 sm:p-4 rounded-lg shadow">
             <h3 className="text-xs sm:text-sm text-gray-500">Total Earnings</h3>
             <p className="text-xl sm:text-2xl font-bold flex items-center">
-              <FiDollarSign className="mr-1" />
+              <FaEuroSign className="mr-1" />
               {referralData.affiliateStats.totalBonusEarned || 0}
             </p>
           </div>

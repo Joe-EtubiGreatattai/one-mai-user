@@ -6,14 +6,12 @@ import {
   FiUsers,
   FiUser,
   FiBell,
-  FiDollarSign,
-  FiPieChart,
   FiSettings,
-  FiCalendar,
-  FiFileText,
   FiMenu,
   FiX
 } from 'react-icons/fi';
+
+import { FaCrown, FaEuroSign } from 'react-icons/fa';
 import { IoMdPerson } from 'react-icons/io';
 import useAuthStore from '../Store/Auth';
 

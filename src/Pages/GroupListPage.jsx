@@ -1,6 +1,7 @@
 // GroupListPage.jsx
 import React, { useEffect } from "react";
-import { FiEye, FiPlus, FiUsers, FiDollarSign, FiClock, FiCalendar, FiTrendingUp, FiShield } from "react-icons/fi";
+import { FiEye, FiPlus, FiUsers, FiClock, FiCalendar, FiTrendingUp, FiShield } from "react-icons/fi";
+import { FaEuroSign } from "react-icons/fa";
 import { FaCrown } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import useGroupStore from "../Store/group";
@@ -38,7 +39,11 @@ const GroupListTable = ({ titleInside = undefined }) => {
 
   const AlertMessage = ({ message, type, onClose }) => (
     <div
-      className={`fixed top-4 right-4 bg-${type}-100 border border-${type}-400 text-${type}-700 px-4 py-3 rounded z-50 max-w-xs sm:max-w-md flex items-center`}
+      className={`fixed top-4 right-4 ${
+        type === 'red' 
+          ? 'bg-[#D8B7DD] border-[#D8B7DD] text-[#003E7B]' 
+          : 'bg-[#00C9A7] border-[#00C9A7] text-white'
+      } px-4 py-3 rounded z-50 max-w-xs sm:max-w-md flex items-center`}
     >
       <span className="block sm:inline">{message}</span>
       <button
@@ -47,7 +52,7 @@ const GroupListTable = ({ titleInside = undefined }) => {
         aria-label="Close"
       >
         <svg
-          className={`fill-current h-6 w-6 text-${type}-500`}
+          className={`fill-current h-6 w-6 ${type === 'red' ? 'text-[#003E7B]' : 'text-white'}`}
           role="button"
           viewBox="0 0 20 20"
         >
@@ -58,10 +63,10 @@ const GroupListTable = ({ titleInside = undefined }) => {
   );
 
   return (
-    <div className="bg-gray-50 relative dark:bg-gray-900 px-2 sm:px-4 md:pb-24">
+    <div className="bg-[#fff] relative px-2 sm:px-4 md:pb-24">
       <Link
         to="/groupCreation"
-        className="fixed bottom-20 right-6 sm:bottom-24 sm:right-8 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-[#3390d5] text-white hover:bg-[#2980c9] transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-[#3390d5] focus:ring-offset-2 z-20"
+        className="fixed bottom-20 right-6 sm:bottom-24 sm:right-8 flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-[#007BFF] text-white hover:bg-[#003E7B] transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-[#007BFF] focus:ring-offset-2 z-20"
         aria-label="Create new group"
       >
         <FiPlus className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -74,10 +79,10 @@ const GroupListTable = ({ titleInside = undefined }) => {
 
       {!titleInside ? (
         <div className="pt-4">
-          <h1 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white">
+          <h1 className="text-lg sm:text-xl font-semibold text-[#003E7B]">
             Groups
           </h1>
-          <p className="text-xs sm:text-sm text-gray-500 mt-1">
+          <p className="text-xs sm:text-sm text-[#003E7B] opacity-70 mt-1">
             {groups.length} group{groups.length !== 1 ? "s" : ""} found
           </p>
         </div>
@@ -86,7 +91,7 @@ const GroupListTable = ({ titleInside = undefined }) => {
       <div className="mt-4">
         {titleInside && (
           <div className="mb-4">
-            <h1 className="text-lg font-semibold text-gray-800 dark:text-white">
+            <h1 className="text-lg font-semibold text-[#003E7B]">
               Recent Groups
             </h1>
           </div>
@@ -94,8 +99,8 @@ const GroupListTable = ({ titleInside = undefined }) => {
         
         {loading ? (
           <div className="text-center py-8 sm:py-12 bg-white rounded-lg shadow-sm">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-[#3390d5] border-t-transparent"></div>
-            <p className="mt-2 text-sm text-gray-500">Loading groups...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-[#007BFF] border-t-transparent"></div>
+            <p className="mt-2 text-sm text-[#003E7B] opacity-70">Loading groups...</p>
           </div>
         ) : groups.length === 0 ? (
           <EmptyState />
@@ -172,14 +177,14 @@ const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleIn
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-lg shadow-sm border border-[#66B2FF] border-opacity-30 overflow-hidden hover:shadow-md transition-shadow">
       {/* Header Section */}
       <div className="p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 sm:mb-6 gap-4">
           <div className="flex items-start space-x-3 sm:space-x-4 flex-1 min-w-0">
             <div className="flex-shrink-0">
               <img
-                className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full object-cover border-2 border-gray-100"
+                className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-full object-cover border-2 border-[#66B2FF]"
                 src={`https://api.joinonemai.com${group.image}`}
                 alt={group.name}
                 onError={(e) => {
@@ -188,19 +193,19 @@ const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleIn
               />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 break-words leading-tight mb-2 sm:mb-3">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#003E7B] break-words leading-tight mb-2 sm:mb-3">
                 {group.name}
               </h3>
               <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
                 <span className={`inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium ${
                   group.status === 'active' 
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-yellow-100 text-yellow-800'
+                    ? 'bg-[#00C9A7] text-white' 
+                    : 'bg-[#F4E8D0] text-[#003E7B]'
                 }`}>
                   {group.status}
                 </span>
                 {isUserAdmin && (
-                  <span className="inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium bg-purple-100 text-purple-800">
+                  <span className="inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium bg-[#D8B7DD] text-[#003E7B]">
                     <FaCrown className="mr-1 w-3 h-3" />
                     Admin
                   </span>
@@ -209,33 +214,33 @@ const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleIn
               
               {/* Financial Summary - Now in header */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
-                <div className="bg-[#3390d5]/10 p-2 sm:p-3 rounded-lg">
+                <div className="bg-[#66B2FF] bg-opacity-20 p-2 sm:p-3 rounded-lg">
                   <div className="flex items-center space-x-1 sm:space-x-2">
-                    <FiDollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-[#3390d5]" />
-                    <span className="text-xs sm:text-sm font-medium text-[#3390d5]">Per Member</span>
+                    <FaEuroSign className="w-3 h-3 sm:w-4 sm:h-4 text-[#fff]" />
+                    <span className="text-xs sm:text-sm font-medium text-[#fff]">Per Member</span>
                   </div>
-                  <p className="text-base sm:text-xl font-bold text-[#2980c9]">${group.savingsAmount}</p>
+                  <p className="text-base sm:text-xl font-bold text-[#003E7B]">${group.savingsAmount}</p>
                 </div>
-                <div className="bg-green-50 p-2 sm:p-3 rounded-lg">
+                <div className="bg-[#00C9A7] bg-opacity-20 p-2 sm:p-3 rounded-lg">
                   <div className="flex items-center space-x-1 sm:space-x-2">
-                    <FiTrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                    <span className="text-xs sm:text-sm font-medium text-green-600">Total Pool</span>
+                    <FiTrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-[#00C9A7]" />
+                    <span className="text-xs sm:text-sm font-medium text-[#fff]">Total Pool</span>
                   </div>
-                  <p className="text-base sm:text-xl font-bold text-green-800">${totalPotential}</p>
+                  <p className="text-base sm:text-xl font-bold text-[#003E7B]">${totalPotential}</p>
                 </div>
-                <div className="bg-purple-50 p-2 sm:p-3 rounded-lg">
+                <div className="bg-[#D8B7DD] bg-opacity-30 p-2 sm:p-3 rounded-lg">
                   <div className="flex items-center space-x-1 sm:space-x-2">
-                    <FiShield className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600" />
-                    <span className="text-xs sm:text-sm font-medium text-purple-600">Invite Code</span>
+                    <FiShield className="w-3 h-3 sm:w-4 sm:h-4 text-[#D8B7DD]" />
+                    <span className="text-xs sm:text-sm font-medium text-[#fff]">Invite Code</span>
                   </div>
-                  <p className="text-xs sm:text-sm font-bold text-purple-800 break-all">{group.inviteCode}</p>
+                  <p className="text-xs sm:text-sm font-bold text-[#003E7B] break-all">{group.inviteCode}</p>
                 </div>
-                <div className="bg-orange-50 p-2 sm:p-3 rounded-lg">
+                <div className="bg-[#F4E8D0] p-2 sm:p-3 rounded-lg">
                   <div className="flex items-center space-x-1 sm:space-x-2">
-                    <FiUsers className="w-3 h-3 sm:w-4 sm:h-4 text-orange-600" />
-                    <span className="text-xs sm:text-sm font-medium text-orange-600">Payout Queue</span>
+                    <FiUsers className="w-3 h-3 sm:w-4 sm:h-4 text-[#003E7B]" />
+                    <span className="text-xs sm:text-sm font-medium text-[#003E7B]">Payout Queue</span>
                   </div>
-                  <p className="text-base sm:text-xl font-bold text-orange-800">{group.payoutOrder?.length || 0}</p>
+                  <p className="text-base sm:text-xl font-bold text-[#003E7B]">{group.payoutOrder?.length || 0}</p>
                 </div>
               </div>
             </div>
@@ -259,13 +264,13 @@ const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleIn
             {/* Members Info */}
             <div className="flex items-center justify-between text-xs sm:text-sm">
               <div className="flex items-center space-x-1 sm:space-x-2">
-                <FiUsers className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
-                <span className="text-gray-600">Members</span>
+                <FiUsers className="w-3 h-3 sm:w-4 sm:h-4 text-[#003E7B] opacity-70" />
+                <span className="text-[#003E7B] opacity-70">Members</span>
               </div>
-              <span className="font-medium text-gray-900">
+              <span className="font-medium text-[#003E7B]">
                 {totalMembers}/{group.maxMembers || 15}
                 {pendingMembers.length > 0 && (
-                  <span className="text-yellow-600 ml-1">({pendingMembers.length} pending)</span>
+                  <span className="text-[#003E7B] bg-[#fff] px-1 rounded ml-1">({pendingMembers.length} pending)</span>
                 )}
               </span>
             </div>
@@ -274,10 +279,10 @@ const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleIn
             {group.rules && (
               <div className="flex items-center justify-between text-xs sm:text-sm">
                 <div className="flex items-center space-x-1 sm:space-x-2">
-                  <FiShield className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
-                  <span className="text-gray-600">Late Payments</span>
+                  <FiShield className="w-3 h-3 sm:w-4 sm:h-4 text-[#003E7B] opacity-70" />
+                  <span className="text-[#003E7B] opacity-70">Late Payments</span>
                 </div>
-                <span className={`font-medium ${group.rules.allowLatePayments ? 'text-yellow-600' : 'text-red-600'}`}>
+                <span className={`font-medium ${group.rules.allowLatePayments ? 'text-[#F4E8D0] bg-[#003E7B] px-1 rounded' : 'text-[#D8B7DD]'}`}>
                   {group.rules.allowLatePayments ? 'Allowed' : 'Not Allowed'}
                   {group.rules.allowLatePayments && group.rules.latePaymentFee > 0 && (
                     <span className="text-xs ml-1">(${group.rules.latePaymentFee} fee)</span>
@@ -289,20 +294,20 @@ const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleIn
             {/* Next Payout & Recipient */}
             <div className="grid grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
               <div>
-                <div className="flex items-center space-x-1 text-gray-500 mb-1">
+                <div className="flex items-center space-x-1 text-[#003E7B] opacity-70 mb-1">
                   <FiClock className="w-3 h-3" />
                   <span>Next Payout</span>
                 </div>
-                <p className="font-medium text-gray-800">
+                <p className="font-medium text-[#003E7B]">
                   {calculateTimeLeft(group.nextPayoutDate)}
                 </p>
               </div>
               <div>
-                <div className="flex items-center space-x-1 text-gray-500 mb-1">
+                <div className="flex items-center space-x-1 text-[#003E7B] opacity-70 mb-1">
                   <FiUsers className="w-3 h-3" />
                   <span>Next Recipient</span>
                 </div>
-                <p className="font-medium text-gray-800 truncate">
+                <p className="font-medium text-[#003E7B] truncate">
                   {getNextRecipient()}
                 </p>
               </div>
@@ -313,12 +318,12 @@ const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleIn
             {/* Cycle Progress */}
             <div>
               <div className="flex items-center justify-between text-xs sm:text-sm mb-1 sm:mb-2">
-                <span className="text-gray-600">Cycle Progress</span>
-                <span className="font-medium text-gray-900">{group.progress || 0}%</span>
+                <span className="text-[#003E7B] opacity-70">Cycle Progress</span>
+                <span className="font-medium text-[#003E7B]">{group.progress || 0}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
+              <div className="w-full bg-[#F4E8D0] rounded-full h-2 sm:h-3">
                 <div
-                  className="bg-gradient-to-r from-[#3390d5] to-[#2980c9] h-2 sm:h-3 rounded-full transition-all duration-300"
+                  className="bg-gradient-to-r from-[#007BFF] to-[#003E7B] h-2 sm:h-3 rounded-full transition-all duration-300"
                   style={{ width: `${group.progress || 0}%` }}
                 />
               </div>
@@ -327,12 +332,12 @@ const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleIn
             {/* Payment Progress */}
             <div>
               <div className="flex items-center justify-between text-xs sm:text-sm mb-1 sm:mb-2">
-                <span className="text-gray-600">Payment Progress</span>
-                <span className="font-medium text-gray-900">{getPaymentProgress()}%</span>
+                <span className="text-[#003E7B] opacity-70">Payment Progress</span>
+                <span className="font-medium text-[#003E7B]">{getPaymentProgress()}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
+              <div className="w-full bg-[#F4E8D0] rounded-full h-2 sm:h-3">
                 <div
-                  className="bg-gradient-to-r from-green-500 to-green-600 h-2 sm:h-3 rounded-full transition-all duration-300"
+                  className="bg-[#00C9A7] h-2 sm:h-3 rounded-full transition-all duration-300"
                   style={{ width: `${getPaymentProgress()}%` }}
                 />
               </div>
@@ -341,15 +346,15 @@ const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleIn
             {/* Group Stats */}
             <div className="grid grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-1 text-gray-500">
+                <div className="flex items-center space-x-1 text-[#003E7B] opacity-70">
                   <FiCalendar className="w-3 h-3" />
                   <span>Frequency:</span>
                 </div>
-                <span className="font-medium text-gray-700 capitalize">{group.frequency}</span>
+                <span className="font-medium text-[#003E7B] capitalize">{group.frequency}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-gray-500">Cycle:</span>
-                <span className="font-medium text-gray-700">{group.currentCycle}</span>
+                <span className="text-[#003E7B] opacity-70">Cycle:</span>
+                <span className="font-medium text-[#003E7B]">{group.currentCycle}</span>
               </div>
             </div>
           </div>
@@ -357,33 +362,33 @@ const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleIn
       </div>
 
       {/* Footer Section */}
-      <div className="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t border-gray-100">
+      <div className="px-4 sm:px-6 py-3 sm:py-4 bg-[#F4E8D0] border-t border-[#66B2FF] border-opacity-30">
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-4 text-xs sm:text-sm">
           <div className="text-center">
-            <p className="text-gray-500 mb-1">Wallet</p>
-            <p className="font-medium text-gray-800">${group.walletBalance || 0}</p>
+            <p className="text-[#003E7B] opacity-70 mb-1">Wallet</p>
+            <p className="font-medium text-[#003E7B]">${group.walletBalance || 0}</p>
           </div>
           <div className="text-center">
-            <p className="text-gray-500 mb-1">Total Cont.</p>
-            <p className="font-medium text-gray-800">${group.totalContributions || 0}</p>
+            <p className="text-[#003E7B] opacity-70 mb-1">Total Cont.</p>
+            <p className="font-medium text-[#003E7B]">${group.totalContributions || 0}</p>
           </div>
           <div className="text-center">
-            <p className="text-gray-500 mb-1">Payouts</p>
-            <p className="font-medium text-gray-800">{group.payouts?.length || 0}</p>
+            <p className="text-[#003E7B] opacity-70 mb-1">Payouts</p>
+            <p className="font-medium text-[#003E7B]">{group.payouts?.length || 0}</p>
           </div>
           <div className="text-center">
-            <p className="text-gray-500 mb-1">Payout Index</p>
-            <p className="font-medium text-gray-800">{group.currentPayoutIndex + 1}</p>
+            <p className="text-[#003E7B] opacity-70 mb-1">Payout Index</p>
+            <p className="font-medium text-[#003E7B]">{group.currentPayoutIndex + 1}</p>
           </div>
           <div className="text-center">
-            <p className="text-gray-500 mb-1">Created</p>
-            <p className="font-medium text-gray-800">
+            <p className="text-[#003E7B] opacity-70 mb-1">Created</p>
+            <p className="font-medium text-[#003E7B]">
               {new Date(group.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-gray-500 mb-1">Queue</p>
-            <p className="font-medium text-gray-800">{group.payoutOrder?.length || 0}</p>
+            <p className="text-[#003E7B] opacity-70 mb-1">Queue</p>
+            <p className="font-medium text-[#003E7B]">{group.payoutOrder?.length || 0}</p>
           </div>
         </div>
       </div>
@@ -404,7 +409,7 @@ const GroupActions = ({ group, onJoinRequest, currentUser, titleInside }) => {
     return (
       <Link
         to={`/group/${group._id}`}
-        className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-white bg-[#3390d5] hover:bg-[#2980c9] rounded-lg transition-colors whitespace-nowrap"
+        className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-white bg-[#007BFF] hover:bg-[#003E7B] rounded-lg transition-colors whitespace-nowrap"
       >
         <FiEye className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" /> View
       </Link>
@@ -413,7 +418,7 @@ const GroupActions = ({ group, onJoinRequest, currentUser, titleInside }) => {
 
   if (userMembership?.status === "pending") {
     return (
-      <span className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-yellow-700 bg-yellow-100 rounded-lg cursor-not-allowed whitespace-nowrap">
+      <span className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-[#003E7B] bg-[#F4E8D0] rounded-lg cursor-not-allowed whitespace-nowrap">
         <FiClock className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" /> Pending
       </span>
     );
@@ -422,7 +427,7 @@ const GroupActions = ({ group, onJoinRequest, currentUser, titleInside }) => {
   return (
     <button
       onClick={() => onJoinRequest(group._id)}
-      className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-[#3390d5] hover:text-white hover:bg-[#3390d5] border border-[#3390d5] rounded-lg transition-colors whitespace-nowrap"
+      className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-[#007BFF] hover:text-white hover:bg-[#007BFF] border border-[#007BFF] rounded-lg transition-colors whitespace-nowrap"
     >
       <FiPlus className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" /> Join
     </button>
@@ -431,7 +436,7 @@ const GroupActions = ({ group, onJoinRequest, currentUser, titleInside }) => {
 
 const EmptyState = () => (
   <div className="text-center py-8 sm:py-16 bg-white rounded-lg shadow-sm">
-    <div className="mx-auto h-16 w-16 sm:h-24 sm:w-24 text-gray-400 mb-3 sm:mb-4">
+    <div className="mx-auto h-16 w-16 sm:h-24 sm:w-24 text-[#66B2FF] mb-3 sm:mb-4">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -441,18 +446,18 @@ const EmptyState = () => (
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
-          strokeWidth={1}
+          strokeWidth={1}  
           d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
         />
       </svg>
     </div>
-    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">No groups found</h3>
-    <p className="text-sm text-gray-500 mb-4 sm:mb-6 max-w-md mx-auto">
+    <h3 className="text-lg sm:text-xl font-semibold text-[#003E7B] mb-2">No groups found</h3>
+    <p className="text-sm text-[#003E7B] opacity-70 mb-4 sm:mb-6 max-w-md mx-auto">
       Get started by creating your first savings group or joining an existing one.
     </p>
     <Link
       to="/groupCreation"
-      className="inline-flex items-center px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm font-medium text-white bg-[#3390d5] hover:bg-[#2980c9] rounded-lg transition-colors"
+      className="inline-flex items-center px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm font-medium text-white bg-[#007BFF] hover:bg-[#003E7B] rounded-lg transition-colors"
     >
       <FiPlus className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
       Create Your First Group
