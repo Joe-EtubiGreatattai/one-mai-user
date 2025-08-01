@@ -18,7 +18,7 @@ function DashBoard({ welcomeOnly = undefined }) {
   const { user } = useAuthStore();
   const {
     balance,
-    currency = "USD",
+    currency = "EUR",
     initializeWallet,
     error: walletError,
   } = useWalletStore();

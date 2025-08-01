@@ -12,7 +12,7 @@ const GroupTransfer = ({
   handleGroupTransfer,
   walletLoading,
   groupsLoading,
-  currency
+  currency = 'EUR' // Default to EUR
 }) => {
   const { user } = useAuthStore();
 
@@ -107,7 +107,7 @@ const GroupTransfer = ({
       <form onSubmit={handleGroupTransfer}>
         <div className="mb-4">
           <label className={`block mb-2 font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Amount ({currency})
+            Amount (€)
           </label>
           <input
             type="number"
@@ -119,7 +119,7 @@ const GroupTransfer = ({
                 ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500' 
                 : 'bg-white border-gray-300 text-gray-800 focus:ring-blue-500'
             }`}
-            placeholder="Enter amount"
+            placeholder="Enter amount in EUR"
             min="1"
             step="0.01"
             required

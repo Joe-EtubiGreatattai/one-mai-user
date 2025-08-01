@@ -112,7 +112,7 @@ const RecentTransactions = () => {
   };
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
+    <div className="w-full rounded-lg shadow-sm overflow-hidden border border-gray-100">
       {/* Header */}
       <div className="p-3 sm:p-4 border-b border-gray-100 flex justify-between items-center">
         <div>
@@ -163,14 +163,11 @@ const RecentTransactions = () => {
               key={transaction._id}
               className="p-3 sm:p-4 hover:bg-gray-50 transition-colors duration-150 relative"
             >
-              {/* Timeline connector line */}
-              {index !== transactions.slice(0, 5).length - 1 && (
-                <div className="absolute left-8 sm:left-10 top-12 bottom-0 w-0.5 bg-gray-200"></div>
-              )}
+            
               
               <div className="flex items-start gap-3 sm:gap-4">
                 {/* Timeline Icon */}
-                <div className="relative z-10 p-1.5 sm:p-2 rounded-full bg-white border-2 border-gray-200 flex-shrink-0">
+                <div className="relative z-10 p-1.5 sm:p-2 rounded-full border-2 border-gray-200 flex-shrink-0">
                   {getTransactionIcon(transaction.type)}
                 </div>
 

@@ -6,7 +6,7 @@ import useBankStore from './useBankStore';
 const useWalletStore = create((set, get) => ({
   // User Wallet State
   balance: 0,
-  currency: 'USD',
+  currency: 'EUR',
   loading: false,
   error: null,
   transactions: [],
@@ -35,7 +35,7 @@ const useWalletStore = create((set, get) => ({
       
       set({ 
         balance: response.data.data.balance,
-        currency: response.data.data.currency || 'USD',
+        currency: response.data.data.currency || 'EUR',
         walletConnected: true,
         loading: false 
       });

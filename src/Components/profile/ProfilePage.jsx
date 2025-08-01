@@ -29,9 +29,11 @@ const ProfilePage = () => {
   const { fetchMyReferrals } = useReferralStore();
 
   const [activeTab, setActiveTab] = useState("profile");
-  const [darkMode, setDarkMode] = useState(
-    localStorage.getItem("darkMode") === "true"
-  );
+  const [darkMode, setDarkMode] = useState(() => {
+    // Initialize from localStorage to match Layout component
+    const saved = localStorage.getItem('darkMode');
+    return saved ? JSON.parse(saved) : false;
+  });
   const [localError, setLocalError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,11 +52,37 @@ const ProfilePage = () => {
     }
   }, [bankError, walletError, clearBankError, clearWalletError]);
 
+  // Sync with localStorage and document class changes from Layout
   useEffect(() => {
-    const savedDarkMode = localStorage.getItem("darkMode");
-    if (savedDarkMode !== null) {
-      setDarkMode(savedDarkMode === "true");
-    }
+    const handleStorageChange = () => {
+      const saved = localStorage.getItem('darkMode');
+      const newDarkMode = saved ? JSON.parse(saved) : false;
+      setDarkMode(newDarkMode);
+    };
+
+    // Listen for storage changes (when Layout updates localStorage)
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also check for document class changes as a fallback
+    const observer = new MutationObserver(() => {
+      const hasDarkClass = document.documentElement.classList.contains('dark');
+      setDarkMode(hasDarkClass);
+    });
+    
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    // Initial sync
+    const saved = localStorage.getItem('darkMode');
+    const initialDarkMode = saved ? JSON.parse(saved) : false;
+    setDarkMode(initialDarkMode);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      observer.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -119,16 +147,6 @@ const ProfilePage = () => {
   }, [activeTab, loadTabData]);
 
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("darkMode", "true");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("darkMode", "false");
-    }
-  }, [darkMode]);
-
-  useEffect(() => {
     const timer = setTimeout(() => {
       if (localError) setLocalError(null);
       if (success) setSuccess(null);
@@ -176,6 +194,20 @@ const ProfilePage = () => {
     setSuccess(null);
   };
 
+  // Updated toggle function to sync with Layout's approach
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
+    
+    // Apply dark mode to document (same as Layout)
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
   return (
     <div
       className={`flex flex-col md:flex-row min-h-screen w-full transition-colors duration-300 ${
@@ -202,7 +234,7 @@ const ProfilePage = () => {
       <div className="md:hidden p-3 border-b dark:border-gray-700 flex justify-between items-center">
         <h1 className="text-lg font-bold">Profile Settings</h1>
         <button
-          onClick={() => setDarkMode(!darkMode)}
+          onClick={toggleDarkMode}
           className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
           aria-label="Toggle dark mode"
         >
@@ -215,7 +247,7 @@ const ProfilePage = () => {
         activeTab={activeTab}
         setActiveTab={handleTabChange}
         darkMode={darkMode}
-        toggleDarkMode={() => setDarkMode(!darkMode)}
+        toggleDarkMode={toggleDarkMode}
         handleLogout={logout}
         isLoading={isLoading}
       />

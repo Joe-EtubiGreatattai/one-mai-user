@@ -16,6 +16,14 @@ const WalletOverview = ({
   cards,
   setShowCardModal
 }) => {
+  // Format currency with Euro symbol after the amount
+  const formatEuroAmount = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount) + ' €';
+  };
+
   return (
     <div className="space-y-4 md:space-y-8 w-full">
       {/* Balance Card */}
@@ -61,7 +69,7 @@ const WalletOverview = ({
 
           <div className="mb-8">
             <p className={`text-4xl md:text-5xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-2`}>
-              {balanceVisible ? formatCurrency(balance) : '••••••'}
+              {balanceVisible ? formatEuroAmount(balance) : '•••••• €'}
             </p>
             {balanceVisible && (
               <div className="flex items-center">
@@ -179,7 +187,7 @@ const WalletOverview = ({
                           ? (darkMode ? 'text-green-400' : 'text-green-600')
                           : (darkMode ? 'text-red-400' : 'text-red-600')
                       }`}>
-                        {tx.type === 'deposit' ? '+' : '-'}{formatCurrency(tx.amount)}
+                        {tx.type === 'deposit' ? '+' : '-'}{formatEuroAmount(tx.amount)}
                       </p>
                       {tx.status === 'completed' && (
                         <FiCheck className={`h-4 w-4 mt-1 ${darkMode ? 'text-green-400' : 'text-green-500'}`} />

@@ -1,5 +1,5 @@
 import React from "react";
-import { FiEdit, FiLogOut, FiHelpCircle, FiSun, FiMoon } from "react-icons/fi";
+import { FiEdit, FiLogOut, FiHelpCircle } from "react-icons/fi";
 import { FaUserCircle } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineSecurity } from "react-icons/md";
@@ -12,7 +12,6 @@ const ProfileSidebar = ({
   activeTab,
   setActiveTab,
   darkMode,
-  toggleDarkMode,
   handleLogout,
   isLoading,
 }) => {
@@ -43,71 +42,12 @@ const ProfileSidebar = ({
     {
       title: "Others",
       items: [
-        { type: "darkMode", label: "Dark Mode" },
         { type: "logout", label: "Logout" },
       ],
     },
   ];
 
   const renderMenuItem = (item) => {
-    if (item.type === "darkMode") {
-      return (
-        <li
-          key="darkMode"
-          className="flex justify-between items-center cursor-pointer"
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleDarkMode();
-          }}
-        >
-          <span
-            className={`flex items-center ${
-              darkMode ? "text-gray-300" : "text-gray-700"
-            }`}
-          >
-            {darkMode ? (
-              <FiMoon className="mr-2 h-4 w-4" />
-            ) : (
-              <FiSun className="mr-2 h-4 w-4" />
-            )}
-            {item.label}
-          </span>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              className="sr-only peer"
-              checked={darkMode}
-              onChange={toggleDarkMode}
-              aria-label="Toggle dark mode"
-            />
-            <div
-              className={`w-11 h-6 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${
-                darkMode
-                  ? "bg-gray-700 peer-checked:bg-[#3390d5] after:border-gray-600"
-                  : "bg-gray-200 peer-checked:bg-[#3390d5] after:border-gray-300"
-              }`}
-            ></div>
-          </label>
-        </li>
-      );
-    }
-
-    if (item.type === "faq") {
-      return (
-        <li
-          key="faq"
-          className={`flex items-center cursor-pointer ${
-            darkMode
-              ? "text-gray-300 hover:text-[#3390d5]"
-              : "text-gray-700 hover:text-[#3390d5]"
-          }`}
-        >
-          <FiHelpCircle className="mr-2 h-4 w-4" />
-          {item.label}
-        </li>
-      );
-    }
-
     if (item.type === "logout") {
       return (
         <li

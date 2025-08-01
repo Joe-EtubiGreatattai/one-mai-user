@@ -16,7 +16,7 @@ const DepositWithdraw = ({
   accounts,
   bankLoading,
   handleWithdraw,
-  currency,
+  currency = 'EUR', // Default to EUR
   getReturnUrl
 }) => {
   const [withdrawError, setWithdrawError] = useState('');
@@ -27,7 +27,7 @@ const DepositWithdraw = ({
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency || 'EUR',
+      currency: 'EUR',
       minimumFractionDigits: 2
     }).format(amount);
   };
@@ -39,7 +39,7 @@ const DepositWithdraw = ({
     try {
       const payload = {
         amount: Number(formData.amount),
-        currency: "eur"
+        currency: "eur" // Always use EUR for Stripe
       };
 
       const res = await axios.post("/api/wallet/create_intent", payload);
@@ -116,7 +116,7 @@ const DepositWithdraw = ({
           {!showStripeForm ? (
             <div>
               <label className={`block mb-2 font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Amount ({currency})
+                Amount (€)
               </label>
               <input
                 type="number"
@@ -127,7 +127,7 @@ const DepositWithdraw = ({
                 className={`w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-300 ${
                   darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-100 border-gray-300'
                 } ${amountError ? 'border-red-500' : ''}`}
-                placeholder={`Enter amount in ${currency}`}
+                placeholder="Enter amount in EUR"
                 min="1"
                 step="0.01"
                 required
@@ -210,7 +210,7 @@ const DepositWithdraw = ({
           <form onSubmit={handleWithdrawSubmit} className="space-y-4">
             <div>
               <label className={`block mb-2 font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Amount ({currency})
+                Amount (€)
               </label>
               <input
                 type="number"
@@ -220,7 +220,7 @@ const DepositWithdraw = ({
                 className={`w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-300 ${
                   darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-100 border-gray-300'
                 }`}
-                placeholder={`Enter amount in ${currency}`}
+                placeholder="Enter amount in EUR"
                 min="1"
                 step="0.01"
                 required

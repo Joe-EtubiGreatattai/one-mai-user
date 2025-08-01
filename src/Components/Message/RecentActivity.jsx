@@ -8,7 +8,9 @@ import {
   FiRepeat,
   FiArrowLeft,
   FiCalendar,
-  FiInfo
+  FiInfo,
+  FiPlus,
+  FiDollarSign
 } from 'react-icons/fi';
 import { FaCrown, FaEuroSign } from 'react-icons/fa';
 import useGroupStore from '../../Store/group';
@@ -44,6 +46,9 @@ const RecentActivity = () => {
   const [showSwapRequestModal, setShowSwapRequestModal] = useState(false);
   const [swapTargetMember, setSwapTargetMember] = useState(null);
   const [isRequestingSwap, setIsRequestingSwap] = useState(false);
+  const [showDepositModal, setShowDepositModal] = useState(false);
+  const [depositAmount, setDepositAmount] = useState('');
+  const [isProcessingDeposit, setIsProcessingDeposit] = useState(false);
 
   const [groupSettings, setGroupSettings] = useState({
     name: currentGroup?.name || '',
@@ -251,6 +256,26 @@ const RecentActivity = () => {
     }
   };
 
+  const handleDeposit = async () => {
+    if (!depositAmount || parseFloat(depositAmount) <= 0) {
+      toast.error('Please enter a valid deposit amount');
+      return;
+    }
+
+    setIsProcessingDeposit(true);
+    try {
+      // Add your deposit logic here
+      // await depositToGroup(currentGroup._id, parseFloat(depositAmount));
+      toast.success(`Successfully deposited $${depositAmount} to the group wallet`);
+      setShowDepositModal(false);
+      setDepositAmount('');
+    } catch (error) {
+      toast.error(error.message || 'Failed to process deposit');
+    } finally {
+      setIsProcessingDeposit(false);
+    }
+  };
+
   return (
     <div className="p-3 sm:p-4 space-y-4">
       {showPayoutSwapManagement ? (
@@ -342,6 +367,28 @@ const RecentActivity = () => {
             </div>
           </div>
 
+          {/* Payout and Deposit Buttons */}
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => setShowDepositModal(true)}
+              className="bg-[#00C9A7] text-white font-medium py-3 rounded-lg hover:bg-green-600 transition-colors text-sm flex items-center justify-center gap-2"
+            >
+              <FiPlus size={16} />
+              <span>Deposit</span>
+            </button>
+            
+            {isAdmin && (
+              <button
+                onClick={() => setShowPayoutConfirmation(true)}
+                className="bg-[#3390d5] text-white font-medium py-3 rounded-lg hover:bg-[#2980b9] transition-colors text-sm flex items-center justify-center gap-2"
+                disabled={!nextRecipient || currentGroup?.nextPayoutAmount <= 0}
+              >
+                <FiDollarSign size={16} />
+                <span>Payout</span>
+              </button>
+            )}
+          </div>
+
           {/* Next Recipient Info */}
           {nextRecipient && (
             <div className="p-3 rounded-lg">
@@ -365,16 +412,6 @@ const RecentActivity = () => {
                     )}
                   </div>
                 </div>
-                {isAdmin && currentGroup?.nextPayoutAmount > 0 && (
-                  <button
-                    onClick={() => setShowPayoutConfirmation(true)}
-                    className="bg-[#00C9A7]0 text-white px-3 py-1 rounded text-xs flex items-center gap-1 hover:bg-green-600 transition-colors"
-                    disabled={isProcessingPayout}
-                  >
-                    <FaEuroSign className="w-3 h-3" />
-                    <span>Pay Out</span>
-                  </button>
-                )}
               </div>
             </div>
           )}
@@ -394,27 +431,27 @@ const RecentActivity = () => {
           <div className="grid grid-cols-3 gap-2">
             <button
               onClick={() => setShowMemberManagement(true)}
-              className="flex flex-col items-center bg-gray-100 p-3 rounded hover:bg-gray-200 transition-colors"
+              className="flex flex-col items-center bg-[#003E7B] p-3 rounded hover:bg-[#003E7B] transition-colors"
               aria-label="Manage members"
             >
-              <FiUsers className="text-gray-700 w-5 h-5" />
-              <span className="text-xs mt-1 font-medium">Members</span>
+              <FiUsers className="text-white w-5 h-5" />
+              <span className="text-xs mt-1 text-white font-medium">Members</span>
             </button>
             <button
               onClick={() => currentGroup?._id && leaveGroup(currentGroup._id)}
-              className="flex flex-col items-center bg-gray-100 p-3 rounded hover:bg-gray-200 transition-colors"
+              className="flex flex-col items-center bg-[#003E7B] p-3 rounded hover:bg-[#003E7B] transition-colors"
               aria-label="Leave group"
             >
-              <FiArrowLeft className="text-gray-700 w-5 h-5" />
-              <span className="text-xs mt-1 font-medium">Leave</span>
+              <FiArrowLeft className="text-white w-5 h-5" />
+              <span className="text-xs mt-1 text-white font-medium">Leave</span>
             </button>
             <button
               onClick={copyGroupLink}
-              className="flex flex-col items-center bg-gray-100 p-3 rounded hover:bg-gray-200 transition-colors"
+              className="flex flex-col items-center bg-[#003E7B] p-3 rounded hover:bg-[#003E7B] transition-colors"
               aria-label="Copy group invite code"
             >
-              <FiLink className="text-gray-700 w-5 h-5" />
-              <span className="text-xs mt-1 font-medium">Invite</span>
+              <FiLink className="text-white w-5 h-5" />
+              <span className="text-xs mt-1 text-white font-medium">Invite</span>
             </button>
           </div>
 
@@ -543,6 +580,72 @@ const RecentActivity = () => {
                     <p className="text-xs mt-1">Activity will appear here as members contribute and receive payouts</p>
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* Deposit Modal */}
+          {showDepositModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md">
+                <div className="flex justify-between items-center mb-3 sm:mb-4">
+                  <h3 className="text-base sm:text-lg font-semibold">Deposit to Group Wallet</h3>
+                  <button
+                    onClick={() => setShowDepositModal(false)}
+                    className="text-gray-500 hover:text-gray-700 transition-colors"
+                    aria-label="Close modal"
+                  >
+                    <FiX size={20} className="sm:w-6 sm:h-6" />
+                  </button>
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Deposit Amount ($)
+                  </label>
+                  <input
+                    type="number"
+                    value={depositAmount}
+                    onChange={(e) => setDepositAmount(e.target.value)}
+                    placeholder="Enter amount"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00C9A7] focus:border-transparent text-lg"
+                    min="0.01"
+                    step="0.01"
+                  />
+                  <p className="text-xs text-gray-500 mt-2">
+                    Current group wallet balance: ${currentGroup?.walletBalance?.toFixed(2) || '0.00'}
+                  </p>
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => setShowDepositModal(false)}
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-xs sm:text-sm"
+                    disabled={isProcessingDeposit}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleDeposit}
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#00C9A7] text-white rounded-md hover:bg-green-600 transition-colors text-xs sm:text-sm flex items-center gap-1"
+                    disabled={isProcessingDeposit || !depositAmount || parseFloat(depositAmount) <= 0}
+                  >
+                    {isProcessingDeposit ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <FiPlus className="w-3 h-3" />
+                        Deposit ${depositAmount}
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -857,14 +960,14 @@ const RecentActivity = () => {
           )}
 
           {/* Delete Button (only show for admin) */}
-          {isAdmin && (
+          {/* {isAdmin && (
             <button
               onClick={() => currentGroup?._id && leaveGroup(currentGroup._id)}
               className="w-full bg-red-100 text-red-600 font-medium py-2 rounded hover:bg-red-200 transition-colors text-xs sm:text-sm"
             >
               Delete Group
             </button>
-          )}
+          )} */}
         </>
       )}
     </div>

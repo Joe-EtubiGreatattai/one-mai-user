@@ -306,7 +306,7 @@ const CreateAccount = () => {
             </button>
 
             {/* 🔵 Google Sign-in */}
-            <GoogleAuthButton buttonText="Sign in with Google" />
+            {/* <GoogleAuthButton buttonText="Sign in with Google" /> */}
             <div className="text-center text-sm text-gray-600">
               Already have an account?{" "}
               <Link to="/signin" className="font-medium text-blue">

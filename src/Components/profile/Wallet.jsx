@@ -21,7 +21,7 @@ const Wallet = ({ darkMode }) => {
   const { user } = useAuthStore();
   const {
     balance,
-    currency = "USD",
+    currency = "EUR",
     transactions,
     cards,
     loading: walletLoading,
