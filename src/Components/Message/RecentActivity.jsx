@@ -266,7 +266,7 @@ const RecentActivity = () => {
     try {
       // Add your deposit logic here
       // await depositToGroup(currentGroup._id, parseFloat(depositAmount));
-      toast.success(`Successfully deposited $${depositAmount} to the group wallet`);
+      toast.success(`Successfully deposited €${depositAmount} to the group wallet`);
       setShowDepositModal(false);
       setDepositAmount('');
     } catch (error) {
@@ -313,7 +313,7 @@ const RecentActivity = () => {
               </span>
               <span className="flex items-center gap-1">
                 <FiCalendar className="w-3 h-3" />
-                {getFrequencyText(currentGroup?.frequency)} - ${currentGroup?.savingsAmount || 0}
+                {getFrequencyText(currentGroup?.frequency)} - €{currentGroup?.savingsAmount || 0}
               </span>
             </div>
           </div>
@@ -325,10 +325,10 @@ const RecentActivity = () => {
               <div className="text-center">
                 <p className="text-xs text-white font-medium">Group Wallet</p>
                 <p className="font-bold text-lg text-white">
-                  ${currentGroup?.walletBalance?.toFixed(2) || '0.00'}
+                  €{currentGroup?.walletBalance?.toFixed(2) || '0.00'}
                 </p>
                 <p className="text-xs text-white mt-1">
-                  Total: ${currentGroup?.totalContributions?.toFixed(2) || '0.00'}
+                  Total: €{currentGroup?.totalContributions?.toFixed(2) || '0.00'}
                 </p>
               </div>
             </div>
@@ -338,7 +338,7 @@ const RecentActivity = () => {
               <div className="text-center">
                 <p className="text-xs text-white font-medium">Next Payout</p>
                 <p className="font-bold text-lg text-white">
-                  ${currentGroup?.nextPayoutAmount?.toFixed(2) || '0.00'}
+                  €{currentGroup?.nextPayoutAmount?.toFixed(2) || '0.00'}
                 </p>
                 <p className="text-xs text-white mt-1">
                   {formatNextPayoutDate(currentGroup?.nextPayoutDate)}
@@ -383,7 +383,7 @@ const RecentActivity = () => {
                 className="bg-[#3390d5] text-white font-medium py-3 rounded-lg hover:bg-[#2980b9] transition-colors text-sm flex items-center justify-center gap-2"
                 disabled={!nextRecipient || currentGroup?.nextPayoutAmount <= 0}
               >
-                <FiDollarSign size={16} />
+                <FaEuroSign size={16} />
                 <span>Payout</span>
               </button>
             )}
@@ -601,7 +601,7 @@ const RecentActivity = () => {
 
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Deposit Amount ($)
+                    Deposit Amount (€)
                   </label>
                   <input
                     type="number"
@@ -613,7 +613,7 @@ const RecentActivity = () => {
                     step="0.01"
                   />
                   <p className="text-xs text-gray-500 mt-2">
-                    Current group wallet balance: ${currentGroup?.walletBalance?.toFixed(2) || '0.00'}
+                    Current group wallet balance: €{currentGroup?.walletBalance?.toFixed(2) || '0.00'}
                   </p>
                 </div>
 
@@ -641,7 +641,7 @@ const RecentActivity = () => {
                     ) : (
                       <>
                         <FiPlus className="w-3 h-3" />
-                        Deposit ${depositAmount}
+                        Deposit €{depositAmount}
                       </>
                     )}
                   </button>
@@ -666,7 +666,7 @@ const RecentActivity = () => {
                 </div>
 
                 <div className="mb-4 text-sm sm:text-base">
-                  <p>Are you sure you want to process the payout of <span className="font-semibold">${currentGroup?.nextPayoutAmount?.toFixed(2)}</span> to:</p>
+                  <p>Are you sure you want to process the payout of <span className="font-semibold">€{currentGroup?.nextPayoutAmount?.toFixed(2)}</span> to:</p>
                   <div className="flex items-center gap-3 mt-3 bg-gray-50 p-3 rounded-lg">
                     <img
                       src={nextRecipient?.user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(nextRecipient?.user?.email)}&background=random&size=40`}
@@ -768,7 +768,7 @@ const RecentActivity = () => {
                     </div>
 
                     <div>
-                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Amount ($)</label>
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Amount (€)</label>
                       <input
                         type="number"
                         name="savingsAmount"
@@ -810,7 +810,7 @@ const RecentActivity = () => {
 
                   {groupSettings.allowLatePayments && (
                     <div>
-                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Late Payment Fee ($)</label>
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Late Payment Fee (€)</label>
                       <input
                         type="number"
                         name="latePaymentFee"

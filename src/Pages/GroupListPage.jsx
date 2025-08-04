@@ -176,6 +176,11 @@ const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleIn
     return Math.round((currentCycleContributions.length / totalMembers) * 100);
   };
 
+  // Helper function to capitalize status
+  const capitalizeStatus = (status) => {
+    return status ? status.charAt(0).toUpperCase() + status.slice(1) : '';
+  };
+
   return (
     <div className="rounded-lg shadow-sm border border-[#66B2FF] border-opacity-30 overflow-hidden hover:shadow-md transition-shadow">
       {/* Header Section */}
@@ -202,7 +207,7 @@ const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleIn
                     ? 'bg-[#00C9A7] text-white' 
                     : 'bg-[#F4E8D0] text-[#003E7B]'
                 }`}>
-                  {group.status}
+                  {capitalizeStatus(group.status)}
                 </span>
                 {isUserAdmin && (
                   <span className="inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium bg-[#D8B7DD] text-[#003E7B]">
@@ -366,11 +371,11 @@ const GroupCard = ({ group, onJoinRequest, currentUser, getGroupDetails, titleIn
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-4 text-xs sm:text-sm">
           <div className="text-center">
             <p className="text-[#fff] opacity-70 mb-1">Wallet</p>
-            <p className="font-medium text-[#fff]">${group.walletBalance || 0}</p>
+            <p className="font-medium text-[#fff]">€{group.walletBalance || 0}</p>
           </div>
           <div className="text-center">
             <p className="text-[#fff] opacity-70 mb-1">Total Cont.</p>
-            <p className="font-medium text-[#fff]">${group.totalContributions || 0}</p>
+            <p className="font-medium text-[#fff]">€{group.totalContributions || 0}</p>
           </div>
           <div className="text-center">
             <p className="text-[#fff] opacity-70 mb-1">Payouts</p>
