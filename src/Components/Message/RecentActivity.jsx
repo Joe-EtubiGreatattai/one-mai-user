@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
 import {
   FiLink,
   FiUsers,
@@ -18,6 +19,10 @@ import MemberManagement from '../Message/MemberManagement';
 import PayoutSwapManagement from '../Message/PayoutSwapManagement';
 import { toast } from 'react-hot-toast';
 import useAuthStore from "../../Store/Auth";
+import DepositWithdraw from '../../Components/profile/Wallet/DepositWithdraw';
+
+// Initialize Stripe with the same key used in Wallet.jsx
+const stripePromise = loadStripe("pk_test_51RUUUSP8EVNH0Oikg8cTjV51i1Iy1p3WL9HOUyCejRoumJYpRMpJJvmhTqV9anMgzpwzeKwwVr7lPg7kqQZ7cIat005cGwt8P1");
 
 const RecentActivity = () => {
   const {
@@ -47,8 +52,8 @@ const RecentActivity = () => {
   const [swapTargetMember, setSwapTargetMember] = useState(null);
   const [isRequestingSwap, setIsRequestingSwap] = useState(false);
   const [showDepositModal, setShowDepositModal] = useState(false);
-  const [depositAmount, setDepositAmount] = useState('');
-  const [isProcessingDeposit, setIsProcessingDeposit] = useState(false);
+  const [formData, setFormData] = useState({ amount: '', selectedAccount: '' });
+  const [amountError, setAmountError] = useState('');
 
   const [groupSettings, setGroupSettings] = useState({
     name: currentGroup?.name || '',
@@ -62,6 +67,46 @@ const RecentActivity = () => {
 
   const currentUserId = useAuthStore.getState().user?._id;
   const isAdmin = currentGroup?.admin?._id === currentUserId;
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "amount" && amountError) setAmountError("");
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const validateAmount = () => {
+    const amount = parseFloat(formData.amount);
+    if (isNaN(amount) || amount <= 0) {
+      setAmountError('Please enter a valid amount');
+      return false;
+    }
+    setAmountError('');
+    return true;
+  };
+
+  const getReturnUrl = () => {
+    return `${window.location.origin}${window.location.pathname}?payment=completed`;
+  };
+
+  const handleDepositSuccess = () => {
+    setShowDepositModal(false);
+    setFormData({ amount: '', selectedAccount: '' });
+    setAmountError('');
+    toast.success('Deposit successful! Group wallet updated.');
+    // Refresh group data if there's a function for it
+    if (window.refreshGroupData) {
+      window.refreshGroupData();
+    }
+  };
+
+  // Dummy withdraw handler for the deposit component
+  const handleWithdraw = (e) => {
+    e.preventDefault();
+    toast.error('Withdrawal is not available in group context');
+  };
 
   // Helper function to get members sorted by join date
   const getSortedMembersByJoinDate = () => {
@@ -253,26 +298,6 @@ const RecentActivity = () => {
       toast.error(error.message || 'Failed to send swap request');
     } finally {
       setIsRequestingSwap(false);
-    }
-  };
-
-  const handleDeposit = async () => {
-    if (!depositAmount || parseFloat(depositAmount) <= 0) {
-      toast.error('Please enter a valid deposit amount');
-      return;
-    }
-
-    setIsProcessingDeposit(true);
-    try {
-      // Add your deposit logic here
-      // await depositToGroup(currentGroup._id, parseFloat(depositAmount));
-      toast.success(`Successfully deposited €${depositAmount} to the group wallet`);
-      setShowDepositModal(false);
-      setDepositAmount('');
-    } catch (error) {
-      toast.error(error.message || 'Failed to process deposit');
-    } finally {
-      setIsProcessingDeposit(false);
     }
   };
 
@@ -587,7 +612,7 @@ const RecentActivity = () => {
           {/* Deposit Modal */}
           {showDepositModal && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md">
+              <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-3 sm:mb-4">
                   <h3 className="text-base sm:text-lg font-semibold">Deposit to Group Wallet</h3>
                   <button
@@ -599,53 +624,21 @@ const RecentActivity = () => {
                   </button>
                 </div>
 
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Deposit Amount (€)
-                  </label>
-                  <input
-                    type="number"
-                    value={depositAmount}
-                    onChange={(e) => setDepositAmount(e.target.value)}
-                    placeholder="Enter amount"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00C9A7] focus:border-transparent text-lg"
-                    min="0.01"
-                    step="0.01"
-                  />
-                  <p className="text-xs text-gray-500 mt-2">
-                    Current group wallet balance: €{currentGroup?.walletBalance?.toFixed(2) || '0.00'}
-                  </p>
-                </div>
-
-                <div className="flex justify-end gap-2">
-                  <button
-                    onClick={() => setShowDepositModal(false)}
-                    className="px-3 sm:px-4 py-1.5 sm:py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-xs sm:text-sm"
-                    disabled={isProcessingDeposit}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleDeposit}
-                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#00C9A7] text-white rounded-md hover:bg-green-600 transition-colors text-xs sm:text-sm flex items-center gap-1"
-                    disabled={isProcessingDeposit || !depositAmount || parseFloat(depositAmount) <= 0}
-                  >
-                    {isProcessingDeposit ? (
-                      <>
-                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <FiPlus className="w-3 h-3" />
-                        Deposit €{depositAmount}
-                      </>
-                    )}
-                  </button>
-                </div>
+                <DepositWithdraw
+                  darkMode={false}
+                  activeTab="deposit"
+                  formData={formData}
+                  handleInputChange={handleInputChange}
+                  validateAmount={validateAmount}
+                  amountError={amountError}
+                  stripePromise={stripePromise}
+                  walletLoading={false}
+                  accounts={[]} // Empty accounts for group deposit
+                  bankLoading={false}
+                  handleWithdraw={handleWithdraw}
+                  currency="EUR"
+                  getReturnUrl={getReturnUrl}
+                />
               </div>
             </div>
           )}
@@ -690,7 +683,7 @@ const RecentActivity = () => {
                   </button>
                   <button
                     onClick={handleInitiatePayout}
-                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#00C9A7]0 text-white rounded-md hover:bg-green-600 transition-colors text-xs sm:text-sm flex items-center gap-1"
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#00C9A7] text-white rounded-md hover:bg-green-600 transition-colors text-xs sm:text-sm flex items-center gap-1"
                     disabled={isProcessingPayout}
                   >
                     {isProcessingPayout ? (
@@ -958,16 +951,6 @@ const RecentActivity = () => {
               </div>
             </div>
           )}
-
-          {/* Delete Button (only show for admin) */}
-          {/* {isAdmin && (
-            <button
-              onClick={() => currentGroup?._id && leaveGroup(currentGroup._id)}
-              className="w-full bg-red-100 text-red-600 font-medium py-2 rounded hover:bg-red-200 transition-colors text-xs sm:text-sm"
-            >
-              Delete Group
-            </button>
-          )} */}
         </>
       )}
     </div>
