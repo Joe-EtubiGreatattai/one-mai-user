@@ -292,7 +292,7 @@ const SignIn = () => {
                 )}
               </button>
               {/* 🔵 Google Sign-in */}
-              <GoogleAuthButton buttonText="Sign in with Google" />
+              {/* <GoogleAuthButton buttonText="Sign in with Google" /> */}
             </form>
 
             <div className="mt-4 sm:mt-6 text-center space-y-2">
