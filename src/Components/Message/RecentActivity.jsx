@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import {
+  Elements,
+  CardElement,
+  useElements,
+  useStripe
+} from '@stripe/react-stripe-js';
+import {
   FiLink,
   FiUsers,
   FiBell,
@@ -13,16 +19,79 @@ import {
   FiPlus,
   FiDollarSign
 } from 'react-icons/fi';
-import { FaCrown, FaEuroSign } from 'react-icons/fa';
+import { FaCrown, FaEuroSign, FaHandHoldingUsd } from 'react-icons/fa';
 import useGroupStore from '../../Store/group';
 import MemberManagement from '../Message/MemberManagement';
 import PayoutSwapManagement from '../Message/PayoutSwapManagement';
 import { toast } from 'react-hot-toast';
 import useAuthStore from "../../Store/Auth";
 import DepositWithdraw from '../../Components/profile/Wallet/DepositWithdraw';
+import axios from 'axios';
 
-// Initialize Stripe with the same key used in Wallet.jsx
+// Initialize Stripe
 const stripePromise = loadStripe("pk_test_51RUUUSP8EVNH0Oikg8cTjV51i1Iy1p3WL9HOUyCejRoumJYpRMpJJvmhTqV9anMgzpwzeKwwVr7lPg7kqQZ7cIat005cGwt8P1");
+
+const ContributeForm = ({ currentGroup, setIsProcessing, onClose }) => {
+  const elements = useElements();
+  const stripe = useStripe();
+  const token = useAuthStore.getState().accessToken;
+
+  const handleContribute = async () => {
+    if (!stripe || !elements) return;
+
+    setIsProcessing(true);
+
+    try {
+      const response = await axios.post(
+        `https://api.joinonemai.com/api/wallet/group/${currentGroup._id}/contribute`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.success && response.data.clientSecret) {
+        const cardElement = elements.getElement(CardElement);
+
+        const { error } = await stripe.confirmCardPayment(response.data.clientSecret, {
+          payment_method: {
+            card: cardElement,
+          },
+          return_url: `${window.location.origin}${window.location.pathname}?payment=completed`,
+        });
+
+        if (error) {
+          throw new Error(error.message);
+        } else {
+          toast.success('Contribution successful!');
+          onClose();
+        }
+      } else {
+        throw new Error('Failed to initiate payment');
+      }
+    } catch (error) {
+      toast.error(error.message || 'Failed to process contribution');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="border rounded p-3">
+        <CardElement options={{ style: { base: { fontSize: '16px' } } }} />
+      </div>
+      <button
+        onClick={handleContribute}
+        className="w-full bg-[#00C9A7] text-white font-medium py-3 rounded-lg hover:bg-green-600 transition-colors text-sm flex items-center justify-center gap-2"
+      >
+        Contribute Now
+      </button>
+    </div>
+  );
+};
 
 const RecentActivity = () => {
   const {
@@ -54,6 +123,8 @@ const RecentActivity = () => {
   const [showDepositModal, setShowDepositModal] = useState(false);
   const [formData, setFormData] = useState({ amount: '', selectedAccount: '' });
   const [amountError, setAmountError] = useState('');
+  const [isProcessingContribution, setIsProcessingContribution] = useState(false);
+  const [showContributeModal, setShowContributeModal] = useState(false);
 
   const [groupSettings, setGroupSettings] = useState({
     name: currentGroup?.name || '',
@@ -96,13 +167,11 @@ const RecentActivity = () => {
     setFormData({ amount: '', selectedAccount: '' });
     setAmountError('');
     toast.success('Deposit successful! Group wallet updated.');
-    // Refresh group data if there's a function for it
     if (window.refreshGroupData) {
       window.refreshGroupData();
     }
   };
 
-  // Dummy withdraw handler for the deposit component
   const handleWithdraw = (e) => {
     e.preventDefault();
     toast.error('Withdrawal is not available in group context');
@@ -270,13 +339,11 @@ const RecentActivity = () => {
   };
 
   const handleRequestSwap = (member) => {
-    // Don't allow swapping with yourself
     if (member.user._id === currentUserId) {
       toast.error("You cannot swap with yourself");
       return;
     }
 
-    // Check if the member is already next in line
     if (currentGroup?.nextRecipient === member.user._id) {
       toast.error("This member is already next in line for payout");
       return;
@@ -381,16 +448,36 @@ const RecentActivity = () => {
               </div>
               <div>
                 <span className="text-gray-600">Status:</span>
-                <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-medium ${
-                  currentGroup?.status === 'active' 
-                    ? 'bg-[#00C9A7] text-white' 
-                    : 'bg-gray-100 text-gray-800'
-                }`}>
+                <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-medium ${currentGroup?.status === 'active'
+                  ? 'bg-[#00C9A7] text-white'
+                  : 'bg-gray-100 text-gray-800'
+                  }`}>
                   {currentGroup?.status || 'Unknown'}
                 </span>
               </div>
             </div>
           </div>
+
+          <button
+            onClick={() => setShowContributeModal(true)}
+            className="w-full bg-[#00C9A7] text-white font-medium py-3 rounded-lg hover:bg-green-600 transition-colors text-sm flex items-center justify-center gap-2 mb-4"
+            disabled={isProcessingContribution}
+          >
+            {isProcessingContribution ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Processing...
+              </>
+            ) : (
+              <>
+                <FaHandHoldingUsd size={16} />
+                <span>Contribute</span>
+              </>
+            )}
+          </button>
 
           {/* Payout and Deposit Buttons */}
           <div className="grid grid-cols-2 gap-3">
@@ -401,7 +488,7 @@ const RecentActivity = () => {
               <FiPlus size={16} />
               <span>Deposit</span>
             </button>
-            
+
             {isAdmin && (
               <button
                 onClick={() => setShowPayoutConfirmation(true)}
@@ -513,7 +600,7 @@ const RecentActivity = () => {
                           <FaCrown className="absolute -bottom-1 -right-1 text-yellow-500 bg-white rounded-full p-0.5 w-4 h-4" />
                         )}
                       </div>
-                      
+
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm truncate">
                           {member.user.email}
@@ -580,7 +667,7 @@ const RecentActivity = () => {
                   View all members
                 </button>
               </div>
-              
+
               <div className="space-y-3">
                 {currentGroup?.activities?.length > 0 ? (
                   currentGroup.activities.slice(0, 3).map((activity) => (
@@ -609,6 +696,31 @@ const RecentActivity = () => {
             </div>
           )}
 
+          {/* Contribution Modal */}
+          {showContributeModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">Contribute to Group</h3>
+                  <button
+                    onClick={() => setShowContributeModal(false)}
+                    className="text-gray-600 hover:text-black"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <Elements stripe={stripePromise}>
+                  <ContributeForm
+                    currentGroup={currentGroup}
+                    setIsProcessing={setIsProcessingContribution}
+                    onClose={() => setShowContributeModal(false)}
+                  />
+                </Elements>
+              </div>
+            </div>
+          )}
+
           {/* Deposit Modal */}
           {showDepositModal && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -633,7 +745,7 @@ const RecentActivity = () => {
                   amountError={amountError}
                   stripePromise={stripePromise}
                   walletLoading={false}
-                  accounts={[]} // Empty accounts for group deposit
+                  accounts={[]}
                   bankLoading={false}
                   handleWithdraw={handleWithdraw}
                   currency="EUR"
@@ -759,6 +871,7 @@ const RecentActivity = () => {
                         <option value="monthly">Monthly</option>
                       </select>
                     </div>
+
 
                     <div>
                       <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Amount (€)</label>
