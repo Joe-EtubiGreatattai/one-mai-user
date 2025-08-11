@@ -71,6 +71,11 @@ function DashBoard({ welcomeOnly = undefined }) {
     }).format(amount || 0);
   };
 
+  // Format balance with commas for display
+  const formatBalance = (amount) => {
+    return new Intl.NumberFormat("en-US").format(amount || 0);
+  };
+
   if (loading) {
     return (
       <div className="w-full max-w-4xl mx-auto p-4 sm:p-6">
@@ -137,7 +142,7 @@ function DashBoard({ welcomeOnly = undefined }) {
           </h3>
           <div className="flex items-center justify-between w-full">
             <p className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">
-              {balanceVisible ? formatCurrency(balance) : "••••••"}
+              {balanceVisible ? `${formatBalance(balance)} €` : "••••••"}
             </p>
             <button
               onClick={toggleBalanceVisibility}

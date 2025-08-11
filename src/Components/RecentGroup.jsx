@@ -1,202 +1,185 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { FiUsers, FiCalendar, FiEye, FiPlus } from "react-icons/fi";
-import Money from "../assets/money.jpeg";
+// GroupListPage.jsx
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  FiExternalLink,
+  FiMoreVertical,
+  FiUsers,
+  FiAward,
+} from "react-icons/fi";
 import useGroupStore from "../Store/group";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import useAuthStore from "../Store/Auth";
-import { toast } from "react-hot-toast";
 
-const RecentGroup = () => {
-  const {
-    groups,
-    fetchUserGroups,
-    loading: groupLoading,
-    error: groupError,
-    joinGroup,
-    joinGroupRoom,
-    socket,
-  } = useGroupStore();
+const GroupListTable = () => {
+  const { groups = [], loading, error, fetchUserGroups } = useGroupStore();
+  const { user: currentUser } = useAuthStore();
+  const navigate = useNavigate();
 
-  const { user } = useAuthStore();
-  const [joinStatus, setJoinStatus] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(null); // Track open menu
 
   useEffect(() => {
-    fetchUserGroups().catch(console.error);
-  }, [fetchUserGroups]);
+    if (currentUser?._id) fetchUserGroups();
+  }, [fetchUserGroups, currentUser]);
 
-  useEffect(() => {
-    if (!socket || !groups?.data?.[0]?._id) return;
+  const initials = (name = "") =>
+    name
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((s) => (s[0] || "").toUpperCase())
+      .join("");
 
-    const handleRoomJoined = () => {
-      setJoinStatus("joined");
-      fetchUserGroups();
-      toast.success("Successfully joined the group!");
-    };
+  const isAdmin = (g) => g?.admin?._id === currentUser?._id;
 
-    const handleJoinPending = () => {
-      setJoinStatus("pending");
-      fetchUserGroups();
-      toast.success("Join request submitted for approval");
-    };
+  const membersCount = (g) => g?.members?.length ?? 0;
 
-    socket.on("roomJoined", handleRoomJoined);
-    socket.on("joinGroupPending", handleJoinPending);
-
-    return () => {
-      socket.off("roomJoined", handleRoomJoined);
-      socket.off("joinGroupPending", handleJoinPending);
-    };
-  }, [socket, groups, fetchUserGroups]);
-
-  const currentGroup = useMemo(() => groups?.data?.[0] || null, [groups]);
-
-  const userMembership = useMemo(() => {
-    if (!currentGroup?.members || !user) return null;
-    return currentGroup.members.find((member) => member.user._id === user._id);
-  }, [currentGroup, user]);
-
-  const activeMembersCount = useMemo(() => {
-    if (!currentGroup?.members) return 0;
-    return currentGroup.members.filter(
-      (member) => member.status === "active" && member.isActive
-    ).length;
-  }, [currentGroup]);
-
-  const handleJoinClick = async () => {
-    if (!currentGroup?._id || !user?._id) return;
-
-    try {
-      setJoinStatus("pending");
-      await joinGroup(currentGroup._id);
-      joinGroupRoom(currentGroup._id);
-    } catch (error) {
-      console.error("Failed to join group:", error);
-      setJoinStatus("error");
-      toast.error(
-        error.response?.data?.message || "Failed to send join request"
-      );
-    }
+  const percent = (g) => {
+    const p = Number(g?.progress ?? 10);
+    return Math.max(0, Math.min(100, isNaN(p) ? 10 : p));
   };
 
-  if (groupLoading) {
-    return (
-      <div className="w-full sm:w-[240px]">
-        <Skeleton height={160} />
-        <Skeleton height={20} count={3} />
-      </div>
-    );
-  }
+  const nextRecipient = (g) =>
+    g?.nextRecipient?.username ||
+    g?.nextRecipient?.handle ||
+    g?.nextRecipient ||
+    "edimark357";
 
-  if (groupError) {
-    return (
-      <div className="w-full sm:w-[240px] p-4 bg-red-50 text-red-600 rounded-lg">
-        {groupError}
-      </div>
-    );
-  }
-
-  const renderStatusButton = () => {
-    const isPendingMember = userMembership?.status === "pending";
-    const isActiveMember =
-      userMembership?.status === "active" && userMembership?.isActive;
-
-    if (isActiveMember) {
-      return (
-        <button
-          className="p-2 bg-white rounded-full shadow-md text-gray-600 hover:text-[#3390d5] transition-colors"
-          title="View Group"
-          onClick={() => joinGroupRoom(currentGroup._id)}
-        >
-          <FiEye className="w-4 h-4" />
-        </button>
-      );
-    }
-
-    if (isPendingMember || joinStatus === "pending") {
-      return (
-        <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
-          Pending
-        </span>
-      );
-    }
-
-    return (
-      <button
-        onClick={handleJoinClick}
-        className="flex items-center px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs rounded-full shadow-md hover:opacity-90 transition-all"
-        disabled={joinStatus === "pending"}
-      >
-        {joinStatus === "pending" ? (
-          "Requesting..."
-        ) : (
-          <>
-            <FiPlus className="mr-1" />
-            Join Group
-          </>
-        )}
-      </button>
-    );
+  const handleStepIn = (groupId) => {
+    setMenuOpen(null); // close menu
+    navigate(`/group/${groupId}`);
   };
 
   return (
-    <>
-      <h3 className="text-base md:text-lg font-semibold text-[#2E2E2E] dark:text-[#e2e2e2] mt-5 mb-5">
-        Recent Groups
-      </h3>
-      <div className="flex gap-4 items-stretch flex-wrap">
-        {groups?.map((group) => (
-          <div
-            key={group.id}
-            className="w-full sm:w-[240px] rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-white via-blue-50 to-white border border-gray-200 hover:shadow-md transition-all duration-200 flex flex-col"
-          >
-            <div className="flex-grow-0">
-              <img
-                src={`https://api.joinonemai.com${group?.image}` || Money}
-                alt="Savings Group"
-                className="w-full h-auto max-h-40 object-cover"
-                loading="lazy"
-              />
-            </div>
-
-            <div className="p-4 flex flex-col flex-grow">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 truncate">
-                {group?.name || "Family and Friends Savings"}
-              </h3>
-
-              <div className="mb-4">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-medium text-gray-600">
-                    Progress
-                  </span>
-                  <span className="text-xs font-semibold text-[#3390d5]">
-                    {group?.progress || 0}%
-                  </span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-1.5">
-                  <div
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 h-1.5 rounded-full"
-                    style={{ width: `${group?.progress || 0}%` }}
-                  ></div>
-                </div>
-              </div>
-
-              <div className="mt-auto flex justify-between items-center text-xs font-medium">
-                <div className="flex items-center text-gray-500">
-                  <FiUsers className="w-3 h-3 mr-1" />
-                  <span>{group.members.length} members</span>
-                </div>
-                <div className="flex items-center text-gray-500">
-                  <FiCalendar className="w-3 h-3 mr-1" />
-                  <span>{group?.daysLeft || 0} days left</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+    <section className="w-full relative">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
+          Investment Groups
+        </h2>
+        <Link
+          to="/groupList"
+          className="text-sm text-blue-500 hover:text-blue-600 inline-flex items-center"
+        >
+          View All <FiExternalLink className="ml-1" />
+        </Link>
       </div>
-    </>
+
+      {/* Error */}
+      {error && (
+        <div className="mb-4 rounded-lg bg-red-50 text-red-700 px-3 py-2">
+          {error}
+        </div>
+      )}
+
+      {/* Loading */}
+      {loading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="h-44 rounded-2xl bg-gray-100 animate-pulse"
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Empty */}
+      {!loading && groups.length === 0 && (
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center text-gray-500">
+          No groups yet.
+        </div>
+      )}
+
+      {/* Cards */}
+      {!loading && groups.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {groups.map((g) => (
+            <div
+              key={g._id || g.id}
+              className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden relative"
+            >
+              {/* Top row */}
+              <div className="p-5 flex items-start justify-between">
+                <div className="flex items-start">
+                  <div className="w-12 h-12 mr-3 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <span className="text-blue-600 font-semibold">
+                      {initials(g?.name)}
+                    </span>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-base font-semibold text-gray-900">
+                        {g?.name || "Group Name"}
+                      </h4>
+                      {isAdmin(g) && (
+                        <span className="inline-flex items-center px-2 py-0.5 text-[11px] rounded-full border border-orange-300 bg-orange-50 text-orange-600">
+                          <FiAward className="mr-1" /> Admin
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      {membersCount(g)} Members
+                    </p>
+                  </div>
+                </div>
+
+                {/* More icon */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    aria-label="More"
+                    onClick={() =>
+                      setMenuOpen(menuOpen === g._id ? null : g._id)
+                    }
+                    className="p-1 text-gray-500 hover:text-gray-700"
+                  >
+                    <FiMoreVertical />
+                  </button>
+
+                  {/* Dropdown menu */}
+                  {menuOpen === g._id && (
+                    <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
+                      <button
+                        onClick={() => handleStepIn(g._id)}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Step In
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Progress */}
+              <div className="px-5 pb-5">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm font-medium text-gray-800">
+                    Cycle Progress
+                  </p>
+                  <p className="text-sm text-gray-500">{percent(g)}%</p>
+                </div>
+                <div className="w-full h-2.5 rounded-full bg-gray-200">
+                  <div
+                    className="h-2.5 rounded-full bg-gray-800"
+                    style={{ width: `${percent(g)}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="px-5 py-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between rounded-b-2xl">
+                <div className="flex items-center text-sm text-gray-600">
+                  <FiUsers className="mr-2" />
+                  <span>Next Recipient</span>
+                </div>
+                <span className="text-sm text-gray-700">{nextRecipient(g)}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
   );
 };
 
-export default RecentGroup;
+export default GroupListTable;
