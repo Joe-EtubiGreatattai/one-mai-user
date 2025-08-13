@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Family from "../assets/Family.jpeg";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+
+import Image1 from "../assets/0.png";
+import Image2 from "../assets/1.png";
+import Image3 from "../assets/2.png";
+import Image4 from "../assets/3.png";
 import useAuthStore from "../Store/Auth";
 
 const OtpVerification = () => {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [countdown, setCountdown] = useState(60); // Changed to 60 seconds for better UX
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [countdown, setCountdown] = useState(60);
   const [canResend, setCanResend] = useState(false);
   const { verifySignup, loading, error, clearError, resendOtp } =
     useAuthStore();
@@ -61,13 +67,13 @@ const OtpVerification = () => {
   const handlePaste = (e) => {
     e.preventDefault();
     const pasteData = e.clipboardData.getData("text/plain").trim();
-    if (!/^\d{6}$/.test(pasteData)) return;
+    if (!/^\d{4}$/.test(pasteData)) return;
 
-    const pastedOtp = pasteData.split("").slice(0, 6);
+    const pastedOtp = pasteData.split("").slice(0, 4);
     setOtp(pastedOtp);
 
     // Focus on the last input after paste
-    document.getElementById(`otp-5`).focus();
+    document.getElementById(`otp-3`).focus();
   };
 
   const handleSubmit = async (e) => {
@@ -83,7 +89,7 @@ const OtpVerification = () => {
       navigate("/create-pin");
     } catch (error) {
       console.error("OTP verification error:", error);
-      setOtp(["", "", "", "", "", ""]);
+      setOtp(["", "", "", ""]);
       document.getElementById("otp-0").focus();
     }
   };
@@ -92,46 +98,37 @@ const OtpVerification = () => {
     if (!canResend) return;
     clearError();
     try {
-      await resendOtp(
-        // phone: signupData.phoneNumber,
-        signupData.email
-      );
+      await resendOtp(signupData.email);
       setCountdown(60);
       setCanResend(false);
-      setOtp(["", "", "", "", "", ""]);
+      setOtp(["", "", "", ""]);
       document.getElementById("otp-0").focus();
     } catch (error) {
       console.error("Resend OTP error:", error);
     }
   };
 
-  const formatPhoneNumber = (phone) => {
-    if (!phone) return "";
-    // Format phone number for display (e.g., +1 (234) 567-8901)
-    return phone.replace(/(\+\d{1,3})(\d{3})(\d{3})(\d{4})/, "$1 ($2) $3-$4");
-  };
-
   return (
-    <div className="h-dvh flex flex-col md:flex-row overflow-hidden bg-white relative">
+    <div className="min-h-screen flex flex-col md:flex-row">
       {/* Left side - Form */}
-      <div className="w-full md:w-1/2 flex flex-col p-4 sm:p-6 h-full flex-center">
-        <div className="w-full max-w-md ">
-          <div className="mb-4 sm:mb-6 text-center">
-            <h2 className="text-2xl font-semibold text-[#2E2E2E]">
+      <div className="w-full md:w-1/2 sm:bg-gray-50 flex flex-col items-center justify-center px-4 py-14 sm:p-6 lg:p-8">
+        <div className="w-full max-w-md space-y-6 sm:space-y-8">
+          <div className="text-left sm:text-center">
+            <h2 className="text-2xl max-sm:text-start sm:text-3xl font-semibold sm:font-bold text-gray-900 mb-1 sm:mb-2">
               OTP Verification
             </h2>
-            <p className="text-[#9A9A9A] font-normal mt-2 text-sm">
+            <p className="text-base sm:text-lg max-sm:text-start max-sm:text-sm text-gray-500">
               Please type the verification code sent to your email
             </p>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm border border-red-200">
+            <div className="p-3 bg-red-50 text-red-700 rounded-lg text-sm border border-red-200">
               {error}
             </div>
           )}
 
-          <div>
+          <div className="sm:bg-white sm:p-8 rounded-lg sm:shadow-md">
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               <div className="flex justify-center space-x-2 sm:space-x-3">
                 {[0, 1, 2, 3].map((index) => (
@@ -144,36 +141,43 @@ const OtpVerification = () => {
                     value={otp[index]}
                     onChange={(e) => handleChange(e, index)}
                     onKeyDown={(e) => handleKeyDown(e, index)}
-                    onPaste={index === 0 ? handlePaste : null} // Only attach paste handler to first input
+                    onPaste={index === 0 ? handlePaste : null}
                     autoFocus={index === 0}
                     ref={(el) => (otpRefs.current[index] = el)}
-                    className="w-16 h-18 sm:w-16 sm:h-18 text-center text-xl sm:text-2xl font-semibold border border-[#F3F4F6] rounded-md 
-                              focus:outline-none bg-[#F9FAFB] focus:ring-2 focus:ring-blue focus:border-blue"
+                    className="w-16 h-16 sm:w-16 sm:h-16 text-center text-xl sm:text-2xl font-semibold border border-gray-300 rounded-md 
+                              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 ))}
               </div>
 
               <div className="text-center">
-                <p className="text-[#9A9A9A] text-sm font-normal">
-                  Didnt Receive OTP code ?
+                <p className="text-sm text-gray-500">
+                  Didn't receive OTP code?{" "}
                   {canResend ? (
                     <button
                       type="button"
                       onClick={handleResend}
-                      className="text-blue hover:underline cursor-pointer"
+                      className="font-medium text-[#3390d5] hover:text-[#3390d5] cursor-pointer"
                     >
                       Resend
                     </button>
                   ) : (
-                    `Resend code in ${countdown} seconds`
+                    <span className="text-gray-400">
+                      Resend code in {countdown} seconds
+                    </span>
                   )}
                 </p>
               </div>
+
               <button
                 id="verify-button"
                 type="submit"
                 disabled={loading || otp.join("").length !== 4}
-                className={`cursor-pointer w-full mt-6 py-2 sm:py-2 px-4 text-white text-base sm:text-lg font-medium rounded-md transition-colors bg-blue`}
+                className={`max-sm:mt-4 w-full py-2 px-4 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${
+                  loading
+                    ? "bg-[#3390d5] cursor-not-allowed"
+                    : "bg-[#3390d5] hover:bg-blue-700"
+                }`}
               >
                 {loading ? (
                   <span className="flex items-center justify-center">
@@ -208,23 +212,32 @@ const OtpVerification = () => {
         </div>
       </div>
 
-      {/* Right side - Image (hidden on mobile) */}
-      <div className="hidden md:flex md:w-1/2 relative bg-blue-900">
-        <img
-          src={Family}
-          alt="Family enjoying savings"
-          className="absolute inset-0 w-full h-full object-cover opacity-90"
-        />
-        <div className="absolute inset-0 bg-[#00182b] opacity-40"></div>
-        <div className="relative z-10 flex flex-col justify-end h-full p-6 sm:p-8">
-          <div className="max-w-md mx-auto text-center text-white">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">
-              OneMAI... Group Power. Personal Gains Savings
-            </h2>
-            <p className="text-base sm:text-lg mb-4 sm:mb-6">
-              Join forces with friends and family to save for your dreams!
-            </p>
-          </div>
+      {/* Right Column - Full Screen Carousel */}
+      <div className="hidden md:block md:w-1/2 relative">
+        <div className="h-screen w-full">
+          <Carousel
+            autoPlay
+            infiniteLoop
+            showThumbs={false}
+            showStatus={false}
+            showIndicators={false}
+            showArrows={false}
+            interval={5000}
+            transitionTime={800}
+            swipeable
+            emulateTouch
+            className="h-full"
+          >
+            {[Image1, Image2, Image3, Image4].map((src, idx) => (
+              <div key={idx} className="h-screen relative">
+                <img
+                  src={src}
+                  alt={`Slide ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </Carousel>
         </div>
       </div>
     </div>
