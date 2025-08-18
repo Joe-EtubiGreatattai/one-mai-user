@@ -334,7 +334,7 @@ const CreateAccount = () => {
             emulateTouch
             className="h-full"
           >
-            {[Image1, Image2, Image3, Image4].map((src, idx) => (
+            {[Image3, Image4].map((src, idx) => (
               <div key={idx} className="h-screen relative">
                 <img
                   src={src}
